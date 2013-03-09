@@ -208,6 +208,6 @@ receiving a large amount of traffic.
 
 These tests were done using R15B03, but I've done similar ones in R14 and found similar results. I have not tested R16.
 
-[0] http://learnyousomeerlang.com/buckets-of-sockets
-[1] http://www.erlang.org/doc/man/gen_tcp.html#examples
-[2] http://erlycoder.com/25/erlang-tcp-server-tcp-client-sockets-with-gen_tcp
+* [0] http://learnyousomeerlang.com/buckets-of-sockets
+* [1] http://www.erlang.org/doc/man/gen_tcp.html#examples
+* [2] http://erlycoder.com/25/erlang-tcp-server-tcp-client-sockets-with-gen_tcp
