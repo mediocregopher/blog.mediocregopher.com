@@ -1,0 +1,59 @@
+# Go and project root
+
+Compared to other languages go has some strange behavior regarding its project root settings. If you
+import a library called `somelib`, go will look for a `src/somelib` folder in all of the folders in
+the `$GOPATH` environment variable. This works nicely for globally installed packages, but it makes
+encapsulating a project with a specific version, or modified version, rather tedious. Whenever you go
+to work on this project you'll have to add its path to your `$GOPATH`, or add the path permanently,
+which could break other projects which may use a different version of `somelib`.
+
+My solution is in the form of a simple script I'm calling go+. go+ will search in currrent directory
+and all of its parents for a file called `GOPROJROOT`. If it finds that file in a directory, it
+prepends that directory's absolute path to your `$GOPATH` and stops the search. Regardless of whether
+or not `GOPROJROOT` was found go+ will passthrough all arguments to the actual go call. The
+modification to `$GOPATH` will only last the duration of the call.
+
+As an example, consider the following:
+```
+/tmp
+    /hello
+        GOPROJROOT
+        /src
+            /somelib/somelib.go
+            /hello.go
+```
+
+If `hello.go` depends on `somelib`, as long as you run go+ from `/tmp/hello` or one of its children
+your project will still compile
+
+Here is the source code for go+:
+
+```bash
+#!/bin/sh
+
+SEARCHING_FOR=GOPROJROOT
+ORIG_DIR=$(pwd)
+
+STOPSEARCH=0
+SEARCH_DIR=$ORIG_DIR
+while [ $STOPSEARCH = 0 ]; do
+
+    RES=$( find $SEARCH_DIR -maxdepth 1 -type f -name $SEARCHING_FOR | \
+           grep -P "$SEARCHING_FOR$" | \
+           head -n1 )
+
+    if [ "$RES" = "" ]; then
+        if [ "$SEARCH_DIR" = "/" ]; then
+            STOPSEARCH=1
+        fi
+        cd ..
+        SEARCH_DIR=$(pwd)
+    else
+        export GOPATH=$SEARCH_DIR:$GOPATH
+        STOPSEARCH=1
+    fi
+done
+
+cd "$ORIG_DIR"
+exec go $@
+```
