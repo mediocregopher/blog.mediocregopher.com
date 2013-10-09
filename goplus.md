@@ -60,3 +60,14 @@ done
 cd "$ORIG_DIR"
 exec go $@
 ```
+
+# UPDATE: Goat
+
+I'm leaving this post for posterity, but go+ has some serious flaws in it. For
+one, it doesn't allow for specifying the version of a dependency you want to
+use. To this end, I wrote [goat][0] which does all the things go+ does, plus
+real dependency management, PLUS it is built in a way that if you've been
+following go's best-practices for code organization you shouldn't have to change
+any of your existing code AT ALL. It's cool, check it out.
+
+[0]: http://github.com/mediocregopher/goat
