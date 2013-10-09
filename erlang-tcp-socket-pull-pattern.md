@@ -1,46 +1,62 @@
 # Erlang, tcp sockets, and active true
 
-If you don't know erlang then [you're missing out](http://learnyousomeerlang.com/content).
-If you do know erlang, you've probably at some point done something with tcp sockets. Erlang's
-highly concurrent model of execution lends itself well to server programs where a high number
-of active connections is desired. Each thread can autonomously handle its single client,
-greatly simplifying the logic of the whole application while still retaining
-[great performance characteristics](http://www.metabrew.com/article/a-million-user-comet-application-with-mochiweb-part-1).
+If you don't know erlang then [you're missing out][0].  If you do know erlang,
+you've probably at some point done something with tcp sockets. Erlang's highly
+concurrent model of execution lends itself well to server programs where a high
+number of active connections is desired. Each thread can autonomously handle its
+single client, greatly simplifying the logic of the whole application while
+still retaining [great performance characteristics][1].
 
 # Background
 
-For an erlang thread which owns a single socket there are three different ways to receive data
-off of that socket. These all revolve around the `active` [setopts](http://www.erlang.org/doc/man/inet.html#setopts-2)
-flag. A socket can be set to one of:
+For an erlang thread which owns a single socket there are three different ways
+to receive data off of that socket. These all revolve around the `active`
+[setopts][2] flag. A socket can be set to one of:
 
-* `{active,false}` - All data must be obtained through [recv/2](http://www.erlang.org/doc/man/gen_tcp.html#recv-2)
-                     calls. This amounts to syncronous socket reading.
-* `{active,true}`  - All data on the socket gets sent to the controlling thread as a normal erlang
-                     message. It is the thread's responsibility to keep up with the buffered data
-                     in the message queue. This amounts to asyncronous socket reading.
-* `{active,once}`  - When set the socket is placed in `{active,true}` for a single packet. That
-                     is, once set the thread can expect a single message to be sent to when data
-                     comes in. To receive any more data off of the socket the socket must either
-                     be read from using [recv/2](http://www.erlang.org/doc/man/gen_tcp.html#recv-2)
-                     or be put in `{active,once}` or `{active,true}`.
+* `{active,false}` - All data must be obtained through [recv/2][3] calls. This
+                     amounts to syncronous socket reading.
+
+* `{active,true}`  - All data on the socket gets sent to the controlling thread
+                     as a normal erlang message. It is the thread's
+                     responsibility to keep up with the buffered data in the
+                     message queue. This amounts to asyncronous socket reading.
+
+* `{active,once}`  - When set the socket is placed in `{active,true}` for a
+                     single packet. That is, once set the thread can expect a
+                     single message to be sent to when data comes in. To receive
+                     any more data off of the socket the socket must either be
+                     read from using [recv/2][3] or be put in `{active,once}` or
+                     `{active,true}`.
 
 # Which to use?
 
-Many (most?) tutorials advocate using `{active,once}` in your application [0][1][2]. This has to do with usability and
-security. When in `{active,true}` it's possible for a client to flood the connection faster than the receiving process
-will process those messages, potentially eating up a lot of memory in the VM. However, if you want to be able to receive
-both tcp data messages as well as other messages from other erlang processes at the same time you can't use `{active,false}`.
-So `{active,once}` is generally preferred because it deals with both of these problems quite well.
+Many (most?) tutorials advocate using `{active,once}` in your application
+\[0]\[1]\[2]. This has to do with usability and security. When in `{active,true}`
+it's possible for a client to flood the connection faster than the receiving
+process will process those messages, potentially eating up a lot of memory in
+the VM. However, if you want to be able to receive both tcp data messages as
+well as other messages from other erlang processes at the same time you can't
+use `{active,false}`.  So `{active,once}` is generally preferred because it
+deals with both of these problems quite well.
 
 # Why not to use `{active,once}`
 
-Here's what your classic `{active,once}` enabled tcp socket implementation will probably look like:
+Here's what your classic `{active,once}` enabled tcp socket implementation will
+probably look like:
 
 ```erlang
 -module(tcp_test).
 -compile(export_all).
 
--define(TCP_OPTS, [binary, {packet, raw}, {nodelay,true}, {active, false}, {reuseaddr, true}, {keepalive,true}, {backlog,500}]).
+-define(TCP_OPTS, [
+    binary,
+    {packet, raw},
+    {nodelay,true},
+    {active, false},
+    {reuseaddr, true},
+    {keepalive,true},
+    {backlog,500}
+]).
 
 %Start listening
 listen(Port) ->
@@ -66,15 +82,16 @@ read_loop(Socket) ->
     end.
 ```
 
-This code isn't actually usable for a production system; it doesn't even spawn a new process for the new socket. But that's not
-the point I'm making. If I run it with `tcp_test:listen(8000)`, and in other window do:
+This code isn't actually usable for a production system; it doesn't even spawn a
+new process for the new socket. But that's not the point I'm making. If I run it
+with `tcp_test:listen(8000)`, and in other window do:
 
 ```bash
 while [ 1 ]; do echo "aloha"; done | nc localhost 8000
 ```
 
-We'll be flooding the the server with data pretty well. Using [eprof](http://www.erlang.org/doc/man/eprof.html) we can get an idea
-of how our code performs, and where the hang-ups are:
+We'll be flooding the the server with data pretty well. Using [eprof][4] we can
+get an idea of how our code performs, and where the hang-ups are:
 
 ```erlang
 1> eprof:start().
@@ -111,18 +128,30 @@ inet:setopts/2                  12303598   5.72   4533863  [      0.37]
 erlang:port_control/3           12303600  77.13  61085040  [      4.96]
 ```
 
-eprof shows us where our process is spending the majority of its time. The `%` column indicates percentage of time the process spent
-during profiling inside any function. We can pretty clearly see that the vast majority of time was spent inside `erlang:port_control/3`,
-the BIF that `inet:setopts/2` uses to switch the socket to `{active,once}` mode. Amongst the calls which were called on every loop,
-it takes up by far the most amount of time. In addition all of those other calls are also related to `inet:setopts/2`.
+eprof shows us where our process is spending the majority of its time. The `%`
+column indicates percentage of time the process spent during profiling inside
+any function. We can pretty clearly see that the vast majority of time was spent
+inside `erlang:port_control/3`, the BIF that `inet:setopts/2` uses to switch the
+socket to `{active,once}` mode. Amongst the calls which were called on every
+loop, it takes up by far the most amount of time. In addition all of those other
+calls are also related to `inet:setopts/2`.
 
-I'm gonna rewrite our little listen server to use `{active,true}`, and we'll do it all again:
+I'm gonna rewrite our little listen server to use `{active,true}`, and we'll do
+it all again:
 
 ```erlang
 -module(tcp_test).
 -compile(export_all).
 
--define(TCP_OPTS, [binary, {packet, raw}, {nodelay,true}, {active, false}, {reuseaddr, true}, {keepalive,true}, {backlog,500}]).
+-define(TCP_OPTS, [
+    binary,
+    {packet, raw},
+    {nodelay,true},
+    {active, false},
+    {reuseaddr, true},
+    {keepalive,true},
+    {backlog,500}
+]).
 
 %Start listening
 listen(Port) ->
@@ -194,20 +223,30 @@ erlang:port_control/3                  3    0.00        59  [     19.67]
 tcp_test:read_loop/1            20716370  100.00  12187488  [      0.59]
 ```
 
-This time our process spent almost no time at all (according to eprof, 0%) fiddling with the socket opts.
-Instead it spent all of its time in the read_loop doing the work we actually want to be doing.
+This time our process spent almost no time at all (according to eprof, 0%)
+fiddling with the socket opts.  Instead it spent all of its time in the
+read_loop doing the work we actually want to be doing.
 
 # So what does this mean?
 
-I'm by no means advocating never using `{active,once}`. The security concern is still a completely valid concern and one
-that `{active,once}` mitigates quite well. I'm simply pointing out that this mitigation has some fairly serious performance
-implications which have the potential to bite you if you're not careful, especially in cases where a socket is going to be
-receiving a large amount of traffic.
+I'm by no means advocating never using `{active,once}`. The security concern is
+still a completely valid concern and one that `{active,once}` mitigates quite
+well. I'm simply pointing out that this mitigation has some fairly serious
+performance implications which have the potential to bite you if you're not
+careful, especially in cases where a socket is going to be receiving a large
+amount of traffic.
 
 # Meta
 
-These tests were done using R15B03, but I've done similar ones in R14 and found similar results. I have not tested R16.
+These tests were done using R15B03, but I've done similar ones in R14 and found
+similar results. I have not tested R16.
 
-* [0] http://learnyousomeerlang.com/buckets-of-sockets
-* [1] http://www.erlang.org/doc/man/gen_tcp.html#examples
-* [2] http://erlycoder.com/25/erlang-tcp-server-tcp-client-sockets-with-gen_tcp
+* \[0] http://learnyousomeerlang.com/buckets-of-sockets
+* \[1] http://www.erlang.org/doc/man/gen_tcp.html#examples
+* \[2] http://erlycoder.com/25/erlang-tcp-server-tcp-client-sockets-with-gen_tcp
+
+[0]: http://learnyousomeerlang.com/content
+[1]: http://www.metabrew.com/article/a-million-user-comet-application-with-mochiweb-part-1
+[2]: http://www.erlang.org/doc/man/inet.html#setopts-2
+[3]: http://www.erlang.org/doc/man/gen_tcp.html#recv-2
+[4]: http://www.erlang.org/doc/man/eprof.html
