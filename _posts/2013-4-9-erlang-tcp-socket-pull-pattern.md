@@ -1,4 +1,9 @@
-# Erlang, tcp sockets, and active true
+---
+layout: post
+title: "Erlang, tcp sockets, and active true"
+categories:
+- erlang
+---
 
 If you don't know erlang then [you're missing out][0].  If you do know erlang,
 you've probably at some point done something with tcp sockets. Erlang's highly

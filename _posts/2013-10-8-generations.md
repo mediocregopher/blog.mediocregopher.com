@@ -1,4 +1,9 @@
-# Generations
+---
+layout: post
+title: Generations
+categories:
+- crypticio
+---
 
 A simple file distribution strategy for very large scale, high-availability
 file-services.
