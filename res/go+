@@ -1,0 +1,27 @@
+#!/bin/sh
+
+SEARCHING_FOR=GOPROJROOT
+ORIG_DIR=$(pwd)
+
+STOPSEARCH=0
+SEARCH_DIR=$ORIG_DIR
+while [ $STOPSEARCH = 0 ]; do
+
+    RES=$( find $SEARCH_DIR -maxdepth 1 -type f -name $SEARCHING_FOR | \
+           grep -P "$SEARCHING_FOR$" | \
+           head -n1 )
+
+    if [ "$RES" = "" ]; then
+        if [ "$SEARCH_DIR" = "/" ]; then
+            STOPSEARCH=1
+        fi
+        cd ..
+        SEARCH_DIR=$(pwd)
+    else
+        export GOPATH=$SEARCH_DIR:$GOPATH
+        STOPSEARCH=1
+    fi
+done
+
+cd "$ORIG_DIR"
+exec go $@
