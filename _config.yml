@@ -1,0 +1,24 @@
+# General Jekyll Config
+pygments: true
+url: http://mediocregopher.com
+lsi: false
+exclude: [LICENSE, CNAME, README.md, .gitignore]
+markdown: redcarpet
+
+# Theme customization - please change from the defaults!
+theme:
+  # Color for top bar, links, etc
+  highlight_color: '#434343'
+
+  # Profile links on the left sidebar, leave blank to ignore
+  social:
+    github: mediocregopher
+    hacker_news: mediocregopher
+
+  # "Hi, I'm _______"
+  name: Brian Picciano
+  email: mediocregopher@gmail.com
+  tagline: "A blog about code, languages, and systems"
+
+  # Toggle "Postings are my own" disclaimer in footer
+  show_disclaimer: false
