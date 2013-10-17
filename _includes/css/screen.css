@@ -120,8 +120,8 @@ nav hr {
 
 #post pre {
   border: 1px solid #ddd;
-  background-color: #eef;
-  padding: 0 .4em;
+  line-height: 1.1;
+  padding: 1em 1em;
   margin-bottom: 20px !important;
 }
 
@@ -132,7 +132,8 @@ nav hr {
 
 #post code {
   border: 1px solid #ddd;
-  background-color: #eef;
+  font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu
+  Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
   font-size: 85%;
   padding: 0 .2em;
 }
