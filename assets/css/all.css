@@ -1,5 +1,7 @@
 ---
+layout: nil
 ---
+
 {% include css/font-awesome.css %}
 {% include css/base.css %}
 {% include css/skeleton.css %}
