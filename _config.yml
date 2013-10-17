@@ -4,6 +4,7 @@ url: http://mediocregopher.com
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
 markdown: redcarpet
+permalink: none
 
 # Theme customization - please change from the defaults!
 theme:

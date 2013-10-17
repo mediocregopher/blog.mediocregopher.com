@@ -1,8 +1,6 @@
 ---
 layout: post
 title: "Erlang, tcp sockets, and active true"
-categories:
-- erlang
 ---
 
 If you don't know erlang then [you're missing out][0].  If you do know erlang,
