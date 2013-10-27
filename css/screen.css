@@ -142,6 +142,19 @@ nav hr {
   border: none;
 }
 
+#post a:link {
+    color: #0014FF;
+}
+
+#post a:visited {
+    color: #0014FF;
+}
+
+#post a:hover {
+    color: #0014FF;
+    text-decoration: underline;
+}
+
 .sidebar {
   padding-top: 25px;
 }
