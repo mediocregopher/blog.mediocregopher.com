@@ -3,20 +3,99 @@ layout: post
 title: Namecoin, A Replacement For SSL
 ---
 
-This is a long post, and it could very well be two posts disguised as one. I'm
-first going to make a case for namecoins, explaining what they are and why
-they're better than existing solutions. I'm then going to make a case for why
-and how namecoins could be used to replace SSL (amongst other things).
+At [cryptic.io][cryptic] we are attempting to create a client-side, in-browser
+encryption system where a user can upload their already encrypted content to our
+storage system and be 100% confident that their data can never be decrypted by
+anyone but them.
+
+On of the main problems with this approach is that the client has to be sure
+that the code that's being run in their browser is the correct code; that is,
+that they aren't the subject of a man-in-the-middle attack where an attacker is
+turning our strong encryption into weak encryption that they could later break.
+
+A component of our current solution is to deliver the site's javascript (and all
+other assets, for that matter) using SSL encryption. This protects the files
+from tampering in-between leaving our servers and being received by the client.
+Unfortunately, SSL isn't 100% foolproof. This post aims to show why SSL is
+faulty, and propose a solution using.
+
+# SSL
+
+SSL is the mechanism by which web-browsers establish an encrypted connection to
+web-servers. The goal of this connection is that only the destination
+web-browser and the server know what data is passing between them. Anyone spying
+on the connection would only see gibberish. To do this a secret key is first
+established between the client and the server, and used to encrypt/decrypt all
+data. As long as no-one but those parties knows that key, that data will never
+be decrypted by anyone else.
+
+SSL is what's used to establish that secret key on a per-session basis, so that
+a key isn't ever re-used and so only the client and the server know it.
+
+## Public-Private Key Cryptography
+
+There exists something called public-private key cryptography. In this system
+person A has a public and a private key. They can give the public key to anyone
+at all that they want to talk with, doing so can't hurt them. They must keep the
+private key secure from everyone but themselves. If they give their public key
+to person B, then person B can use it to create a message that can only be
+decrypted by the private key. Additionaly, person A can sign messages with their
+private key, so that anyone with the public key can verify that the message came
+from person A and that the contents of the message haven't been tampered with.
+
+There are two problems with public-private key cryptography. First, it's slower
+then normal cryptography where both parties simply share the same key. Second,
+it assumes that the public key given to person B hasn't been tampered with. If
+person C intercepted A's message to B and instead gave B a different public key,
+then when B encrypted a message with that key C would be able to read it instead
+of A.
+
+## How does SSL work?
+
+SSL is at its heart a public-private key system. The client uses the server's
+public key to send the server an encrypted message with the symmetric key it
+wants to use. Since it's only used in the initial setup of the connection to
+negotiate a symmetric key the speed isn't as much of a factor. But getting the
+client the server's public key is.
+
+SSL uses a trust-chain to verify that a public key is the intended one. Your web
+browser has a built-in set of public keys, called the root certificates, that it
+implicitly trusts. These root certificates are managed by a small number of
+companies designated by some agency who decides on these things. These companies
+sign intermediate certificates for intermediary companies. These intermediary
+companies then sign certificates for websites to serve with SSL. So when you get
+a servers SSL certificate (its public key) you also get the signing chain. Your
+browser sees that the server's key is signed by an intermediate public key, and
+that that intermediate public key is signed by one of the root public keys. As
+long as all signatures check out, the public key for the server you're talking
+to also checks out.
+
+## How SSL doesn't work
+
+SSL has a few glaring problems. One, it implies we trust the companies holding
+the root certificates to not be compromised. If some malicious agency was to get
+ahold of a root certificate they could man-in-the-middle any connection on the
+internet they came across. They could trivially steal any data we send on the
+internet. Alternatively, the NSA could, [theoretically][nsa], get ahold of a
+root certificate and do the same.
+
+The second problem is that it's expensive. Really expensive. If you're running a
+business you'll have to shell out about $200 a year to keep your SSL certificate
+signed (those signatures have an expiration date attached, of course). Since
+there's very few root authorities there's an effective monopoly on signatures,
+and there's nothing we can do about it. For 200 bucks I know most people simply
+say "no thanks" and go unencrypted. The solution is causing the problem.
 
 # Bitcoins
 
-This post is about namecoins. But namecoins are based on bitcoins, so you need
-to know how those work first.
+Time to switch gears, and propose a solution to the above issues: namecoins. I'm
+going to first talk about what namecoins are, how they work, and why we need
+them. To start with, namecoins are based on bitcoins.
 
-If you haven't yet checked out bitcoins, [I highly encourage you to do so][0].
-They're awesome, and I think they have a chance of really changing the way we
-think of and use money in the future. At the moment they're still a bit of a
-novelty in the tech realm, but they're growing in popularity.
+If you haven't yet checked out bitcoins, [I highly encourage you to do
+so][bitcoins]. They're awesome, and I think they have a chance of really
+changing the way we think of and use money in the future. At the moment they're
+still a bit of a novelty in the tech realm, but they're growing in popularity.
 
 The rest of this post assumes you know more or less what bitcoins are, and how
 they work.
@@ -50,7 +129,7 @@ DHT stands for Distributed Hash-Table. I'm not going to go too into how they
 work, but suffice it to say that they are essentially a distributed key-value
 store. Like namecoin. The difference is in the operation. DHTs operate by
 spreading and replicating keys and their values across nodes in a P2P mesh. They
-have [lots of issues][1] as far as security goes, the main one being that it's
+have [lots of issues][dht] as far as security goes, the main one being that it's
 fairly easy for an attacker to forge the value for a given key, and very
 difficult to stop them from doing so or even to detect that it's happened.
 
@@ -110,78 +189,13 @@ what they can or can't change with regards to the behavior of the chain, since
 improving performance for one use-case may hurt the performance of the other.
 With two separate chains the maintainers of each are free to do what they see
 fit to keep their respective chains operating as smoothly as possible.
-Additionally, if for some reason bitcoins fall out of favor and fall by the
-wayside, namecoin will still have a shot at continuing operation since it isn't
-tied to the former. Tldr: separation of concerns.
-
-# SSL
-
-Time to switch gears. SSL is the mechanism by which web-browsers establish an
-encrypted connection to web-servers. The goal of this connection is that only
-the destination web-browser and the server know what data is passing between
-them. Anyone spying on the connection would only see gibberish. To do this a
-secret key is first established between the client and the server, and used to
-encrypt/decrypt all data. As long as no-one but those parties knows that key,
-that data will never be decrypted by anyone else.
-
-SSL is what's used to establish that secret key on a per-session basis, so that
-a key isn't ever re-used and so only the client and the server know it.
-
-## Public-Private Key Cryptography
-
-There exists something called public-private key cryptography. In this system
-person A has a public and a private key. They can give the public key to anyone
-at all that they want to talk with, doing so can't hurt them. They must keep the
-private key secure from everyone but themselves. If they give their public key
-to person B, then person B can use it to create a message that can only be
-decrypted by the private key. Additionaly, person A can sign messages with their
-private key, so that anyone with the public key can verify that the message came
-from person A and that the contents of the message haven't been tampered with.
-
-There are two problems with public-private key cryptography. First, it's slower
-then normal cryptography where both parties simply share the same key. Second,
-it assumes that the public key given to person B hasn't been tampered with. If
-person C intercepted A's message to B and instead gave B a different public key,
-then when B encrypted a message with that key C would be able to read it instead
-of A.
-
-## How does SSL work?
-
-SSL is at its heart a public-private key system. The client uses the server's
-public key to send the server an encrypted message with the symmetric key it
-wants to use. Since it's only used in the initial setup of the connection to
-negotiate a symmetric key the speed isn't as much of a factor. But getting the
-client the server's public key is.
-
-SSL uses a trust-chain to verify that a public key is the intended one. Your web
-browser has a built-in set of public keys, called the root certificates, that it
-implicitly trusts. These root certificates are managed by a small number of
-companies designated by some agency who decides on these things. These companies
-sign intermediate certificates for intermediary companies. These intermediary
-companies then sign certificates for websites to serve with SSL. So when you get
-a servers SSL certificate (its public key) you also get the signing chain. Your
-browser sees that the server's key is signed by an intermediate public key, and
-that that intermediate public key is signed by one of the root public keys. As
-long as all signatures check out, the public key for the server you're talking
-to also checks out.
-
-## How SSL doesn't work
-
-SSL has a few glaring problems. One, it implies we trust the companies holding
-the root certificates to not be compromised. If some malicious agency was to get
-ahold of a root certificate they could man-in-the-middle any connection on the
-internet they came across. They could trivially steal any data we send on the
-internet. Alternatively, the NSA could, [theoretically][2], get ahold of a root
-certificate and do the same.
-
-The second problem is that it's expensive. Really expensive. If you're running a
-business you'll have to shell out about $200 a year to keep your SSL certificate
-signed (those signatures have an expiration date attached, of course). Since
-there's very few root authorities there's an effective monopoly on signatures,
-and there's nothing we can do about it. For 200 bucks I know most people simply
-say "no thanks" and go unencrypted. The solution is causing the problem.
+Additionally, if for some reason bitcoins fall by the wayside, namecoin will
+still have a shot at continuing operation since it isn't tied to the former.
+Tldr: separation of concerns.
 
 # Namecoin as an alternative to SSL
+
+And now to tie it all together.
 
 There are already a number of proposed formats for standardizing how we store
 data on the namecoin chain so that we can start building tools around it. I'm
@@ -212,6 +226,20 @@ that it's run by a centralized agency that we have to pay arbitrarily high fees
 to. By switching our DNS and SSL infrastructure to use namecoin we could kill
 two horribly annoying, monopolized, expensive birds with a single stone.
 
-[0]: http://vimeo.com/63502573
-[1]: http://www.globule.org/publi/SDST_acmcs2009.pdf
-[2]: https://www.schneier.com/blog/archives/2013/09/new_nsa_leak_sh.html
+That's it. If we use the namecoin chain as a DNS service we get security almost
+for free, along with lots of other benefits. To make this happen we need
+cooperation from browser makers, and to standardize on a simple way of
+retrieving DNS information from the chain that the browsers can use. The
+protocol doesn't need to be very complex, I think HTTP/REST should suffice,
+since the meat of the data will be embedded in the JSON value on the namecoin
+chain.
+
+If you want to contribute or learn more please check out [namecoin][nmc] and
+specifically the [d namespace proposal][dns] for it.
+
+[cryptic]: http://cryptic.io
+[bitcoins]: http://vimeo.com/63502573
+[dht]: http://www.globule.org/publi/SDST_acmcs2009.pdf
+[nsa]: https://www.schneier.com/blog/archives/2013/09/new_nsa_leak_sh.html
+[nmc]: http://dot-bit.org/Main_Page
+[dns]: http://dot-bit.org/Namespace:Domain_names_v2.0
