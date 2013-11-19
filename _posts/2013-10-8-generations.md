@@ -8,15 +8,15 @@ file-services.
 
 # The problem
 
-Working at a shop where we have millions of different files, any of which could
-be arbitrarily chosen to serve to a file at any given time. These files are
-uploaded by users of the app and retrieved by others.
+At [cryptic.io][cryptic] we plan on having millions of different
+files, any of which could be arbitrarily chosen to be served any given time.
+These files are uploaded by users at arbitrary times.
 
-Scaling such a system is no easy task. The chosen solution involves shuffling
-files around on a nearly constant basis, making sure that files which are more
-"popular" are on fast drives, while at the same time making sure that no drives
-are at capicty and at the same time that all files, even newly uploaded ones,
-are stored redundantly.
+Scaling such a system is no easy task. The solution I've seen implemented in the
+past involves shuffling files around on a nearly constant basis, making sure
+that files which are more "popular" are on fast drives, while at the same time
+making sure that no drives are at capicty and at the same time that all files,
+even newly uploaded ones, are stored redundantly.
 
 The problem with this solution is one of coordination. At any given moment the
 app needs to be able to "find" a file so it can give the client a link to
@@ -56,7 +56,9 @@ starting a project from scratch
 
 * Minimal information about where a file "is" needs to be stored. When a file is
 uploaded all that's needed is to know what generation it is in, and then what
-nodes/drives are in that generation.
+nodes/drives are in that generation. If the file's name is generated
+server-side, then the file's generation could be *part* of its name, making
+lookup even faster.
 
 * Drives don't need to "know" about each other. What I mean by this is that
 whatever is running as the receive point for file-uploads on each drive doesn't
@@ -86,7 +88,7 @@ from (given you have easy access to information about specific drives).
 
 The big caveat here is that this is just an idea. It has NOT been tested in
 production. But we have enough faith in it that we're going to give it a shot at
-cryptic.io. I'll keep this page updated.
+[cryptic.io][cryptic]. I'll keep this page updated.
 
 The second caveat is that this scheme does not inherently support caching. If a
 file suddenly becomes super popular the world over your hard-disks might not be
@@ -94,5 +96,6 @@ able to keep up, and it's probably not feasible to have an FIO drive in *every*
 generation. I think that [groupcache][1] may be the answer to this problem,
 assuming your files are reasonably small, but again I haven't tested it yet.
 
+[cryptic]: https://cryptic.io
 [0]: https://github.com/cryptic-io/marlin
 [1]: https://github.com/golang/groupcache
