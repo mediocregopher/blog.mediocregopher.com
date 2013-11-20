@@ -142,15 +142,15 @@ nav hr {
   border: none;
 }
 
-#post a:link {
+p a:link {
     color: #0014FF;
 }
 
-#post a:visited {
+p a:visited {
     color: #0014FF;
 }
 
-#post a:hover {
+p a:hover {
     color: #0014FF;
     text-decoration: underline;
 }
