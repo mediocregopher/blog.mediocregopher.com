@@ -17,7 +17,7 @@ A component of our current solution is to deliver the site's javascript (and all
 other assets, for that matter) using SSL encryption. This protects the files
 from tampering in-between leaving our servers and being received by the client.
 Unfortunately, SSL isn't 100% foolproof. This post aims to show why SSL is
-faulty, and propose a solution using.
+faulty, and propose a solution.
 
 # SSL
 
@@ -34,57 +34,59 @@ a key isn't ever re-used and so only the client and the server know it.
 
 ## Public-Private Key Cryptography
 
-There exists something called public-private key cryptography. In this system
-person A has a public and a private key. They can give the public key to anyone
-at all that they want to talk with, doing so can't hurt them. They must keep the
-private key secure from everyone but themselves. If they give their public key
-to person B, then person B can use it to create a message that can only be
-decrypted by the private key. Additionaly, person A can sign messages with their
-private key, so that anyone with the public key can verify that the message came
-from person A and that the contents of the message haven't been tampered with.
+SSL is based around public-private key cryptography. In a public-private key
+system, you have both a public key which is generated from a private key. The
+public key can be given to anyone, but the private key must remain hidden. There
+are two main uses for these two keys:
 
-There are two problems with public-private key cryptography. First, it's slower
-then normal cryptography where both parties simply share the same key. Second,
-it assumes that the public key given to person B hasn't been tampered with. If
-person C intercepted A's message to B and instead gave B a different public key,
-then when B encrypted a message with that key C would be able to read it instead
-of A.
+* Someone can encrypt a message with your public key, and only you (with the
+  private key) can decrypt it.
+
+* You can sign a message with your private key, and anyone with your public key
+  can verify that it was you and not someone else who signed it.
+
+These are both extremely useful functions, not just for internet traffic but for
+any kind of communication form. Unfortunately, there remains a fundamental flaw.
+At some point you must give your public key to the other person in an insecure
+way. If an attacker was to intercept your message containing your public key and
+swap it for their own, then all future communications could be compromised. That
+attacker could create messages the other person would think are from you, and
+the other person would encrypt messages meant for you but which would be
+decrypt-able by the attacker.
 
 ## How does SSL work?
 
-SSL is at its heart a public-private key system. The client uses the server's
-public key to send the server an encrypted message with the symmetric key it
-wants to use. Since it's only used in the initial setup of the connection to
-negotiate a symmetric key the speed isn't as much of a factor. But getting the
-client the server's public key is.
+SSL is at its heart a public-private key system, but its aim is to be more
+secure against the attack described above.
 
 SSL uses a trust-chain to verify that a public key is the intended one. Your web
 browser has a built-in set of public keys, called the root certificates, that it
 implicitly trusts. These root certificates are managed by a small number of
-companies designated by some agency who decides on these things. These companies
-sign intermediate certificates for intermediary companies. These intermediary
-companies then sign certificates for websites to serve with SSL. So when you get
-a servers SSL certificate (its public key) you also get the signing chain. Your
-browser sees that the server's key is signed by an intermediate public key, and
-that that intermediate public key is signed by one of the root public keys. As
-long as all signatures check out, the public key for the server you're talking
-to also checks out.
+companies designated by some agency who decides on these things.
+
+When you receive a server's SSL certificate (its public key) that certificate
+will be signed by a root certificate. You can verify that signature since you
+have the root certificate's public key built into your browser. If the signature
+checks out then you know a certificate authority trusts the public key the site
+gave you, which means you can trust it too.
+
+There's a bit (a lot!) more to SSL than this, but this is enough to understand
+the fundamental problems with it.
 
 ## How SSL doesn't work
 
 SSL has a few glaring problems. One, it implies we trust the companies holding
 the root certificates to not be compromised. If some malicious agency was to get
-ahold of a root certificate they could man-in-the-middle any connection on the
-internet they came across. They could trivially steal any data we send on the
-internet. Alternatively, the NSA could, [theoretically][nsa], get ahold of a
-root certificate and do the same.
+ahold of a root certificate they could listen in on any connection on the
+internet by swapping a site's real certificate with one they generate on the
+fly. They could trivially steal any data we send on the internet.
 
 The second problem is that it's expensive. Really expensive. If you're running a
 business you'll have to shell out about $200 a year to keep your SSL certificate
-signed (those signatures have an expiration date attached, of course). Since
-there's very few root authorities there's an effective monopoly on signatures,
-and there's nothing we can do about it. For 200 bucks I know most people simply
-say "no thanks" and go unencrypted. The solution is causing the problem.
+signed (those signatures have an expiration date attached). Since there's very
+few root authorities there's an effective monopoly on signatures, and there's
+nothing we can do about it. For 200 bucks I know most people simply say "no
+thanks" and go unencrypted. The solution is creating a bigger problem.
 
 # Bitcoins
 
@@ -103,7 +105,7 @@ they work.
 # Namecoins
 
 Few people actually know about bitcoins. Even fewer know that there's other
-cryptocurrencies besides bitcoins. Basically, developers of these alternative
+crypto-currencies besides bitcoins. Basically, developers of these alternative
 currencies (altcoins, in the parlance of our times) took the original bitcoin
 source code and modified it to produce a new, separate blockchain from the
 original bitcoin one. The altcoins are based on the same idea as bitcoins
@@ -133,7 +135,7 @@ have [lots of issues][dht] as far as security goes, the main one being that it's
 fairly easy for an attacker to forge the value for a given key, and very
 difficult to stop them from doing so or even to detect that it's happened.
 
-Namecoins don't have this problem. To forge a particular key an attacker whould
+Namecoins don't have this problem. To forge a particular key an attacker would
 essentially have to create a new blockchain from a certain point in the existing
 chain, and then replicate all the work put into the existing chain into that new
 compromised one so that the new one is longer and other clients in the network
@@ -152,18 +154,19 @@ constantly increasing). When they find one they broadcast it out on the network.
 Assuming the block is legitimate they receive some number of coins as
 compensation.
 
-This last step is the crucial piece. Receiving compensation for doing the work
-of putting a block onto the chain is what keeps the bitcoin style of
-crypto-currency going. If there were no compensation there would be no reason to
-mine except out of goodwill, so far fewer people would do it. Since the chain
-can be compromised if a malicious group has more computing power then all
-legitimate miners combined, having few legitimate miners is a serious problem.
+When a block-chain based currency like bitcoin and namecoin, the element of the
+system that keeps the currency going is there is compensation for doing the work
+of getting items placed on the blockchain.  If there were no compensation there
+would be no reason to mine except out of goodwill, so far fewer people would do
+it. Since the chain can be compromised if a malicious group has more computing
+power than all legitimate miners combined, having few legitimate miners is a
+serious problem.
 
 In the case of namecoins, there's even more reason to involve a currency. Since
 you have to spend money to make changes to the chain there's a disincentive for
 attackers (read: idiots) to spam the chain with frivolous changes to keys.
 
-### Why a new currency?
+### Why a *new* currency?
 
 I'll admit, it's a bit annoying to see all these altcoins popping up. I'm sure
 many of them have some solid ideas backing them, but it also makes things
@@ -176,9 +179,9 @@ about this problem my instinct was to just use the existing bitcoin blockchain
 as a key-value storage. However, the maintainers of the bitcoin clients
 (who are, in effect, the maintainers of the chain) don't want the bitcoin
 blockchain polluted with non-commerce related data. At first I disagreed; it's a
-P2P network, no-one gets to say what I can or can't use the chain for, and they
-can't stop me! And that's true. But things work out better for everyone involved
-if there's two chains.
+P2P network, no-one gets to say what I can or can't use the chain for!  And
+that's true. But things work out better for everyone involved if there's two
+chains.
 
 Bitcoin is a currency. Namecoin is a key-value store (with a currency as its
 driving force). Those are two completely different use-cases, with two
