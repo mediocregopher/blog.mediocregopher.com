@@ -3,10 +3,10 @@ layout: post
 title: Namecoin, A Replacement For SSL
 ---
 
-At [cryptic.io][cryptic] we are attempting to create a client-side, in-browser
-encryption system where a user can upload their already encrypted content to our
-storage system and be 100% confident that their data can never be decrypted by
-anyone but them.
+At [cryptic.io][cryptic] we are creating a client-side, in-browser encryption
+system where a user can upload their already encrypted content to our storage
+system and be 100% confident that their data can never be decrypted by anyone
+but them.
 
 On of the main problems with this approach is that the client has to be sure
 that the code that's being run in their browser is the correct code; that is,
@@ -154,13 +154,11 @@ constantly increasing). When they find one they broadcast it out on the network.
 Assuming the block is legitimate they receive some number of coins as
 compensation.
 
-When a block-chain based currency like bitcoin and namecoin, the element of the
-system that keeps the currency going is there is compensation for doing the work
-of getting items placed on the blockchain.  If there were no compensation there
-would be no reason to mine except out of goodwill, so far fewer people would do
-it. Since the chain can be compromised if a malicious group has more computing
-power than all legitimate miners combined, having few legitimate miners is a
-serious problem.
+That compensation is what keeps a blockchain based currency going.  If there
+were no compensation there would be no reason to mine except out of goodwill, so
+far fewer people would do it. Since the chain can be compromised if a malicious
+group has more computing power than all legitimate miners combined, having few
+legitimate miners is a serious problem.
 
 In the case of namecoins, there's even more reason to involve a currency. Since
 you have to spend money to make changes to the chain there's a disincentive for
