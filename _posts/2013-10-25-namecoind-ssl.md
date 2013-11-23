@@ -8,7 +8,7 @@ system where a user can upload their already encrypted content to our storage
 system and be 100% confident that their data can never be decrypted by anyone
 but them.
 
-On of the main problems with this approach is that the client has to be sure
+One of the main problems with this approach is that the client has to be sure
 that the code that's being run in their browser is the correct code; that is,
 that they aren't the subject of a man-in-the-middle attack where an attacker is
 turning our strong encryption into weak encryption that they could later break.
