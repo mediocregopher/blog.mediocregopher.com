@@ -1,1 +1,2 @@
 * Cross-compilation with go
+* Erlang caveats: timestamp, rpc
