@@ -11,6 +11,9 @@ walkthrough of how I tackled the problem in clojure and the results. You can
 find the [leiningen][lein] repo [here][repo] and follow along within that, or
 simply read the code below to get an idea.
 
+Also, Marco ported my code into clojurescript, so you can get random terrain
+in your browser. [Check it out!][marco]
+
 ```clojure
 (ns diamond-square.core)
 
@@ -481,6 +484,7 @@ simply read the code below to get an idea.
 ; could help.
 ```
 
+[marco]: http://marcopolo.io/diamond-square/
 [terrain]: /img/dsqr-terrain.png
 [diamondsquare]: http://www.gameprogrammer.com/fractal.html
 [lein]: https://github.com/technomancy/leiningen
