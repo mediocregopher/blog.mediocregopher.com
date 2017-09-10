@@ -1,6 +1,6 @@
 # General Jekyll Config
 pygments: true
-url: http://mediocregopher.com
+url: http://blog.mediocregopher.com
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
 markdown: redcarpet
@@ -15,11 +15,12 @@ theme:
   social:
     github: mediocregopher
     hacker_news: mediocregopher
+    twitter: mediocre_gopher
 
   # "Hi, I'm _______"
   name: Brian Picciano
   email: mediocregopher@gmail.com
-  tagline: "A blog about code, languages, and systems"
+  tagline: "A blog whose general purpose I haven't really landed on yet"
 
   # Toggle "Postings are my own" disclaimer in footer
   show_disclaimer: false
