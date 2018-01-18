@@ -1,26 +1,56 @@
-# General Jekyll Config
-pygments: true
-url: http://blog.mediocregopher.com
-lsi: false
-exclude: [LICENSE, CNAME, README.md, .gitignore]
-markdown: redcarpet
-permalink: none
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server
+# process.
 
-# Theme customization - please change from the defaults!
-theme:
-  # Color for top bar, links, etc
-  highlight_color: '#434343'
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+title: The Mediocre Blog
+name: Brian Picciano
+email: mediocregopher@gmail.com
+description: >-
+  A mix of tech, art, travel, and who knows what else.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: https://blog.mediocregopher.com # the base hostname & protocol for your site, e.g. http://example.com
+repository: mediocregopher/blog.mediocregopher.com
+twitter_username: mediocre_gopher
+github_username:  mediocregopher
 
-  # Profile links on the left sidebar, leave blank to ignore
-  social:
-    github: mediocregopher
-    hacker_news: mediocregopher
-    twitter: mediocre_gopher
+# Build settings
+markdown: kramdown
+remote_theme: "mmistakes/minimal-mistakes"
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
 
-  # "Hi, I'm _______"
-  name: Brian Picciano
-  email: mediocregopher@gmail.com
-  tagline: "A blog whose general purpose I haven't really landed on yet"
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+# exclude:
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
 
-  # Toggle "Postings are my own" disclaimer in footer
-  show_disclaimer: false
+# minimal mistakes stuff
+paginate: 20
+title_separator: "-"
+defaults:
+  # _posts
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single

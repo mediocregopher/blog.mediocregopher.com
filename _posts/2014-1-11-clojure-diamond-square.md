@@ -1,5 +1,4 @@
 ---
-layout: post
 title: Random Terrain Generation, A Clojure Walkthrough
 ---
 

@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Erlang, tcp sockets, and active true"
 ---
 

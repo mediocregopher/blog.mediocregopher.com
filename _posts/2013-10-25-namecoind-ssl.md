@@ -1,5 +1,4 @@
 ---
-layout: post
 title: Namecoin, A Replacement For SSL
 ---
 
