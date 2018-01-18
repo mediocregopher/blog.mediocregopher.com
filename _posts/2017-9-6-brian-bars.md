@@ -35,6 +35,7 @@ Nuts and seeds. Most of this recipe is nuts and seeds. Here's the ones I used:
 * 1 cup almonds
 * 1 cup peanuts
 * 1 cup walnuts
+* 1 cup coconut flakes/shavings/whatever
 * 1/2 cup flax seeds
 * 1/2 cup sesame seeds
 
@@ -51,8 +52,8 @@ The other ingredients are:
 ## Grind up the nuts
 
 Throw the nuts into the food processor and grind them into a powder. Then throw
-that powder into a bowl along with the seeds, raisins, and oats, and mix em
-good.
+that powder into a bowl along with the seeds, coconuts, raisins, and oats, and
+mix em good.
 
 I don't _completely_ grind up the nuts, instead leaving some chunks in it here
 and there, but you do you.
