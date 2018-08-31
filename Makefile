@@ -1,4 +1,5 @@
-BUNDLE := ~/.gem/ruby/2.5.0/bin/bundle
+# pacman -Sy ruby ruby-bundler
+BUNDLE := bundle
 
 serve:
 	${BUNDLE} exec jekyll serve

@@ -243,6 +243,7 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
+  jekyll (~> 3.6.2)
   jekyll-feed (~> 0.6)
   jekyll-paginate
   minima (~> 2.0)
@@ -250,4 +251,4 @@ DEPENDENCIES
   tzinfo-data
 
 BUNDLED WITH
-   1.16.1
+   1.16.4
