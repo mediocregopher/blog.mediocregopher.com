@@ -1,5 +1,7 @@
 ---
 title: "Erlang, tcp sockets, and active true"
+description: >-
+    Using `{active:once}` isn't always the best way to handle connections.
 ---
 
 If you don't know erlang then [you're missing out][0].  If you do know erlang,
@@ -9,7 +11,7 @@ number of active connections is desired. Each thread can autonomously handle its
 single client, greatly simplifying the logic of the whole application while
 still retaining [great performance characteristics][1].
 
-# Background
+## Background
 
 For an erlang thread which owns a single socket there are three different ways
 to receive data off of that socket. These all revolve around the `active`
@@ -30,7 +32,7 @@ to receive data off of that socket. These all revolve around the `active`
                      read from using [recv/2][3] or be put in `{active,once}` or
                      `{active,true}`.
 
-# Which to use?
+## Which to use?
 
 Many (most?) tutorials advocate using `{active,once}` in your application
 \[0]\[1]\[2]. This has to do with usability and security. When in `{active,true}`
@@ -41,7 +43,7 @@ well as other messages from other erlang processes at the same time you can't
 use `{active,false}`.  So `{active,once}` is generally preferred because it
 deals with both of these problems quite well.
 
-# Why not to use `{active,once}`
+## Why not to use `{active,once}`
 
 Here's what your classic `{active,once}` enabled tcp socket implementation will
 probably look like:
@@ -229,7 +231,7 @@ This time our process spent almost no time at all (according to eprof, 0%)
 fiddling with the socket opts.  Instead it spent all of its time in the
 read_loop doing the work we actually want to be doing.
 
-# So what does this mean?
+## So what does this mean?
 
 I'm by no means advocating never using `{active,once}`. The security concern is
 still a completely valid concern and one that `{active,once}` mitigates quite
@@ -238,7 +240,7 @@ performance implications which have the potential to bite you if you're not
 careful, especially in cases where a socket is going to be receiving a large
 amount of traffic.
 
-# Meta
+## Meta
 
 These tests were done using R15B03, but I've done similar ones in R14 and found
 similar results. I have not tested R16.

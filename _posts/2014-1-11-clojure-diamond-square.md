@@ -1,5 +1,8 @@
 ---
 title: Random Terrain Generation, A Clojure Walkthrough
+description: >-
+    Tackling the problem of semi-realistic looking terrain generation in
+    clojure.
 ---
 
 ![terrain][terrain]

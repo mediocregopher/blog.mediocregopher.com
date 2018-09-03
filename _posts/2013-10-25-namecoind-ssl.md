@@ -1,5 +1,8 @@
 ---
 title: Namecoin, A Replacement For SSL
+description: >-
+    If we use the namecoin chain as a DNS service we get security almost for
+    free, along with lots of other benefits.
 ---
 
 At [cryptic.io][cryptic] we are creating a client-side, in-browser encryption
@@ -18,7 +21,7 @@ from tampering in-between leaving our servers and being received by the client.
 Unfortunately, SSL isn't 100% foolproof. This post aims to show why SSL is
 faulty, and propose a solution.
 
-# SSL
+## SSL
 
 SSL is the mechanism by which web-browsers establish an encrypted connection to
 web-servers. The goal of this connection is that only the destination
@@ -31,7 +34,7 @@ be decrypted by anyone else.
 SSL is what's used to establish that secret key on a per-session basis, so that
 a key isn't ever re-used and so only the client and the server know it.
 
-## Public-Private Key Cryptography
+### Public-Private Key Cryptography
 
 SSL is based around public-private key cryptography. In a public-private key
 system, you have both a public key which is generated from a private key. The
@@ -53,7 +56,7 @@ attacker could create messages the other person would think are from you, and
 the other person would encrypt messages meant for you but which would be
 decrypt-able by the attacker.
 
-## How does SSL work?
+### How does SSL work?
 
 SSL is at its heart a public-private key system, but its aim is to be more
 secure against the attack described above.
@@ -72,7 +75,7 @@ gave you, which means you can trust it too.
 There's a bit (a lot!) more to SSL than this, but this is enough to understand
 the fundamental problems with it.
 
-## How SSL doesn't work
+### How SSL doesn't work
 
 SSL has a few glaring problems. One, it implies we trust the companies holding
 the root certificates to not be compromised. If some malicious agency was to get
@@ -87,7 +90,7 @@ few root authorities there's an effective monopoly on signatures, and there's
 nothing we can do about it. For 200 bucks I know most people simply say "no
 thanks" and go unencrypted. The solution is creating a bigger problem.
 
-# Bitcoins
+## Bitcoins
 
 Time to switch gears, and propose a solution to the above issues: namecoins. I'm
 going to first talk about what namecoins are, how they work, and why we need
@@ -101,7 +104,7 @@ still a bit of a novelty in the tech realm, but they're growing in popularity.
 The rest of this post assumes you know more or less what bitcoins are, and how
 they work.
 
-# Namecoins
+## Namecoins
 
 Few people actually know about bitcoins. Even fewer know that there's other
 crypto-currencies besides bitcoins. Basically, developers of these alternative
@@ -118,13 +121,13 @@ You spend namecoins to claim arbitrary keys (once you've claimed it, you own it
 for a set period of time) and to give those keys arbitrary values. Anyone else
 with namecoind running can see these values.
 
-## Why use it?
+### Why use it?
 
 A blockchain based on a digital currency seems like a weird idea at first. I
 know when I first read about it I was less than thrilled. How is this better
 than a DHT? It's a key-value store, why is there a currency involved?
 
-### DHT
+#### DHT
 
 DHT stands for Distributed Hash-Table. I'm not going to go too into how they
 work, but suffice it to say that they are essentially a distributed key-value
@@ -140,7 +143,7 @@ chain, and then replicate all the work put into the existing chain into that new
 compromised one so that the new one is longer and other clients in the network
 will except it. This is extremely non-trivial.
 
-### Why a currency?
+#### Why a currency?
 
 To answer why a currency needs to be involved, we need to first look at how
 bitcoin/namecoin work. When you take an action (send someone money, set a value
@@ -163,7 +166,7 @@ In the case of namecoins, there's even more reason to involve a currency. Since
 you have to spend money to make changes to the chain there's a disincentive for
 attackers (read: idiots) to spam the chain with frivolous changes to keys.
 
-### Why a *new* currency?
+#### Why a *new* currency?
 
 I'll admit, it's a bit annoying to see all these altcoins popping up. I'm sure
 many of them have some solid ideas backing them, but it also makes things
@@ -193,7 +196,7 @@ Additionally, if for some reason bitcoins fall by the wayside, namecoin will
 still have a shot at continuing operation since it isn't tied to the former.
 Tldr: separation of concerns.
 
-# Namecoin as an alternative to SSL
+## Namecoin as an alternative to SSL
 
 And now to tie it all together.
 

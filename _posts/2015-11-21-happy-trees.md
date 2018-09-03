@@ -1,5 +1,7 @@
 ---
 title: Happy Trees
+description: >-
+    Visualizing a forest of happy trees.
 ---
 
 Source code related to this post is available [here](https://github.com/mediocregopher/happy-tree).

@@ -1,11 +1,11 @@
 ---
 title: Generations
+description: >-
+    A simple file distribution strategy for very large scale, high-availability
+    file-services.
 ---
 
-A simple file distribution strategy for very large scale, high-availability
-file-services.
-
-# The problem
+## The problem
 
 At [cryptic.io][cryptic] we plan on having millions of different
 files, any of which could be arbitrarily chosen to be served any given time.
@@ -25,7 +25,7 @@ file lives need to be up-to-date at all times, and even then there are
 race-conditions and network failures to contend with, while at all times the
 requirements of the app evolve and change.
 
-# A simpler solution
+## A simpler solution
 
 Let's say you want all files which get uploaded to be replicated in triplicate
 in some capacity. You buy three identical hard-disks, and put each on a separate
@@ -40,13 +40,13 @@ going to be generation 1. Repeat until you run out of money.
 
 That's it.
 
-## That's it?
+### That's it?
 
 It seems simple and obvious, and maybe it's the standard thing which is done,
 but as far as I can tell no-one has written about it (though I'm probably not
 searching for the right thing, let me know if this is the case!).
 
-## Advantages
+### Advantages
 
 * It's so simple to implement, you could probably do it in a day if you're
 starting a project from scratch
@@ -83,7 +83,7 @@ go.
 replicated, or how many countries it's in, or what hardware it's being served
 from (given you have easy access to information about specific drives).
 
-## Caveats
+### Caveats
 
 The big caveat here is that this is just an idea. It has NOT been tested in
 production. But we have enough faith in it that we're going to give it a shot at

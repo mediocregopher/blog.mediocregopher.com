@@ -1,0 +1,49 @@
+ul {
+    list-style: circle;
+}
+
+#title-header  {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #AAA;
+}
+
+#title-header .title {
+    margin: 0;
+}
+
+#title-header .title a {
+    color: #222;
+    text-decoration: none;
+}
+
+#posts-list {
+    margin-top: 3rem;
+    list-style: none;
+}
+
+#posts-list h2 {
+    margin: 0;
+}
+
+#posts-list h2 a {
+    color: #222;
+    text-decoration: none;
+}
+
+#post-header {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+#post-headline {
+    margin: 0;
+}
+
+#post-sub-header {
+    color: #AAA;
+}
+
+#post-content ul {
+    margin-left: 1em;
+}

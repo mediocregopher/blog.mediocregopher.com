@@ -1,15 +1,18 @@
 ---
 title: Brian Bars
+description: >-
+    Cheap and easy to make, healthy, vegan, high-carb, high-protein. "The Good
+    Stuff".
 ---
 
 It actually blows my mind it's been 4 years since I used this blog. It was
 previously a tech blog, but then I started putting all my tech-related posts on
-[the cryptic blog](cryptic.io). As of now this is a lifestyle/travel blog. The
-me of 4 years ago would be horrified.
+[the cryptic blog](https://cryptic.io). As of now this is a lifestyle/travel
+blog. The me of 4 years ago would be horrified.
 
 Now I just have to come up with a lifestyle and do some traveling.
 
-# Brian Bars
+## Recipe
 
 This isn't a real recipe because I'm not going to preface it with my entire
 fucking life story. Let's talk about the food.
@@ -28,7 +31,7 @@ Brian bars:
 I've worked on this recipe for a bit, trying to make it workable, and will
 probably keep adjusting it (and this post) as time goes on.
 
-## Ingredients
+### Ingredients
 
 Nuts and seeds. Most of this recipe is nuts and seeds. Here's the ones I used:
 
@@ -49,7 +52,7 @@ The other ingredients are:
 * 1.5 lbs of pitted dates (no added sugar! you don't need it!)
 * 2 cups oats
 
-## Grind up the nuts
+### Grind up the nuts
 
 Throw the nuts into the food processor and grind them into a powder. Then throw
 that powder into a bowl along with the seeds, coconuts, raisins, and oats, and
@@ -58,7 +61,7 @@ mix em good.
 I don't _completely_ grind up the nuts, instead leaving some chunks in it here
 and there, but you do you.
 
-## Prepare the dates
+### Prepare the dates
 
 This is the harder part, and is what took me a couple tries to get right. The
 best strategy I've found is to steam the dates a bit over a stove to soften
@@ -70,7 +73,7 @@ Once processed you can add the dates to the mix from before and stir it all up.
 It'll end up looking something like cookie dough. Except unlike cookie dough
 it's completely safe to eat and maybe sorta healthy.
 
-## Bake it, Finish it
+### Bake it, Finish it
 
 Put the dough stuff in a pan of some sort, flatten it out, and stick it in the
 oven at like 250 or 300 for a few hours. You're trying to cook out the water you
@@ -83,7 +86,7 @@ filling and allow for pretty small portions. Wrap em in foil or plastic wrap and
 take them to-go, or keep them around for a snack. Or both. Or whatever you want
 to do, it's your food.
 
-## Cleanup
+### Cleanup
 
 Dates are simultaneously magical and the most annoying thing to work with, so
 there's cleanup problems you may run into with them:

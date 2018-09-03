@@ -1,5 +1,8 @@
 ---
 title: Erlang Pitfalls
+description: >-
+    Common pitfalls that people may run into when designing and writing
+    large-scale erlang applications.
 ---
 
 I've been involved with a large-ish scale erlang project at Grooveshark since

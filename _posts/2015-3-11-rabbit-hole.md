@@ -1,5 +1,7 @@
 ---
 title: Rabbit Hole
+description: >-
+    Complex systems sometimes require complex debugging.
 ---
 
 We've begun rolling out [SkyDNS][skydns] at my job, which has been pretty neat.
