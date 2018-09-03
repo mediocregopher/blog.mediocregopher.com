@@ -2,7 +2,7 @@
 BUNDLE := bundle
 
 serve:
-	${BUNDLE} exec jekyll serve
+	${BUNDLE} exec jekyll serve -w
 	
 update:
 	${BUNDLE} update

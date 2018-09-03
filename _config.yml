@@ -27,6 +27,7 @@ github_username:  mediocregopher
 
 # Build settings
 markdown: kramdown
+#theme: "minimal-mistakes-jekyll"
 remote_theme: "mmistakes/minimal-mistakes"
 plugins:
   - jekyll-feed
@@ -50,7 +51,6 @@ title_separator: "-"
 defaults:
   # _posts
   - scope:
-      path: ""
       type: posts
     values:
       layout: single
