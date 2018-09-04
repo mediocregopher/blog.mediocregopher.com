@@ -1,14 +1,25 @@
 <header id="title-header" role="banner">
   <div class="row">
-    <div class="six columns">
+    <div class="eight columns">
       <h5 class="title">
         <a href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
       </h5>
     </div>
-    <!--
-    <div class="six columns">
-      subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a>
+
+    <div class="four columns">
+      <div class="social">
+        <a>RSS/Social:</a>
+        <a href="{{ 'feed.xml' | relative_url }}">
+          <i class="fas fa-rss"></i>
+        </a>
+        <a href="https://github.com/{{ site.github_username }}">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://twitter.com/{{ site.twitter_username }}">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </div>
     </div>
-    -->
+
   </div>
 </header>
