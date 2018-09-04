@@ -22,10 +22,14 @@ ul {
     margin-top: 1rem;
 }
 
-#title-header .social a {
+#title-header .social .spaced {
     color: #AAA;
     text-decoration: none;
     margin-right: 1em;
+}
+
+#title-header .social a:hover {
+    color: #222;
 }
 
 #posts-list {
