@@ -7,16 +7,16 @@ layout: default
     <h1 id="post-headline" itemprop="name headline">
       {{ page.title | escape }}
     </h1>
-    <div id="post-sub-header">
-      <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <div class="light">
+      <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
         <span itemprop="name">{{ site.author }}</span>
       </span>
-      •
+      <!-- • -->
       <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
         {{ page.date | date: "%b %-d, %Y" }}
       </time>
       •
-      <span itemprop="about">{{ page.description }}</span>
+      <span itemprop="about"><em>{{ page.description }}</em></span>
     </div>
   </header>
 

@@ -2,15 +2,35 @@ ul {
     list-style: circle;
 }
 
+.light {
+    color: #666;
+}
+
+.light a {
+    color: #666 !important;
+}
+
+.light a:hover {
+    color: #222;
+}
+
+/* for making all content within a row be vertically centered */
+.row-vertically-centered .columns {
+   display: inline-block;
+   float: none;
+   margin-left: 0;
+   vertical-align: middle;
+}
+
 #title-header  {
-    border-bottom: 1px solid #AAA;
+    border-bottom: 1px solid #666;
+    padding-top: 2rem;
+    padding-bottom:2rem;
 }
 
 #title-header .title {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0;
+    font-weight: bold;
 }
 
 #title-header .title a {
@@ -18,18 +38,9 @@ ul {
     text-decoration: none;
 }
 
-#title-header .social {
-    margin-top: 1rem;
-}
-
 #title-header .social .spaced {
-    color: #AAA;
     text-decoration: none;
-    margin-right: 1em;
-}
-
-#title-header .social a:hover {
-    color: #222;
+    margin-right: 0.5em;
 }
 
 #posts-list {
@@ -53,10 +64,6 @@ ul {
 
 #post-headline {
     margin: 0;
-}
-
-#post-sub-header {
-    color: #AAA;
 }
 
 #post-content ul {

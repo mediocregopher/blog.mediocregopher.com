@@ -1,12 +1,12 @@
 <header id="title-header" role="banner">
-  <div class="row">
+  <div class="row row-vertically-centered">
     <div class="eight columns">
-      <h5 class="title">
+      <h1 class="title">
         <a href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
-      </h5>
+      </h1>
     </div>
 
-    <div class="four columns">
+    <div class="four columns light">
       <div class="social">
         <span class="spaced">RSS/Social:</span>
         <a class="spaced" href="{{ 'feed.xml' | relative_url }}">
@@ -18,6 +18,20 @@
         <a class="spaced" href="https://twitter.com/{{ site.twitter_username }}">
           <i class="fab fa-twitter"></i>
         </a>
+      </div>
+      <div class="donation">
+        <span>If you like what I do, consider donating!</span><br/>
+        <span>
+          <a href="https://cash.me/$mediocregopher">USD</a>
+          •
+          <a href="bitcoin:1KSqgPBQ7VWc5yxUT2DsB3VpsvRyahL2k8">BTC</a>
+          •
+          LTC
+          •
+          ETH
+          •
+          ZEC
+        </span>
       </div>
     </div>
 
