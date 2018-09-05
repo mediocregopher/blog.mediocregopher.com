@@ -43,6 +43,40 @@ ul {
     margin-right: 0.5em;
 }
 
+#crypto-display {
+    margin-right: 2rem;
+}
+
+/* the qr library uses a canvas to generate the qr code then base64's it into a
+ * separate img tag. For an instant the original canvas shows though, creating
+ * an annoying visual, so this ensures that that doesn't happen. */
+#crypto-display-qr canvas {
+    display: none;
+}
+
+#crypto-display-qr img {
+    width: 100%;
+}
+
+#crypto-display-addr {
+    word-wrap: break-word;
+    margin-top: 1em;
+}
+
+#crypto-display-x {
+    text-align: center;
+    margin-top: 1em;
+}
+
+#crypto-display-x span:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#crypto-display-x span {
+    cursor: pointer;
+}
+
 #posts-list {
     margin-top: 3rem;
     list-style: none;
