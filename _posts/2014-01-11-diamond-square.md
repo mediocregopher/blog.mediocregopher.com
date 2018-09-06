@@ -1,8 +1,9 @@
 ---
-title: Random Terrain Generation, A Clojure Walkthrough
+title: Diamond Square
 description: >-
     Tackling the problem of semi-realistic looking terrain generation in
     clojure.
+updated: 2018-09-06
 ---
 
 ![terrain][terrain]
@@ -37,7 +38,7 @@ in your browser. [Check it out!][marco]
 ;    decreasing amount of error for each iteration).
 ;
 ; This picture explains it better than I can:
-; https://raw2.github.com/mediocregopher/diamond-square/master/resources/dsalg.png
+; https://blog.mediocregopher.com/img/diamond-square/dsalg.png
 ; (http://nbickford.wordpress.com/2012/12/21/creating-fake-landscapes/dsalg/)
 ;
 ; == The Strategy ==
@@ -475,7 +476,7 @@ in your browser. [Check it out!][marco]
     (terrain 10)
     "resources/terrain.png")
 
-  ; https://raw2.github.com/mediocregopher/diamond-square/master/resources/terrain.png
+  ; https://blog.mediocregopher.com/img/diamond-square/terrain.png
 )
 
 ; == Conclusion ==
@@ -487,7 +488,7 @@ in your browser. [Check it out!][marco]
 ```
 
 [marco]: http://marcopolo.io/diamond-square/
-[terrain]: /img/dsqr-terrain.png
+[terrain]: /img/diamond-square/terrain.png
 [diamondsquare]: http://www.gameprogrammer.com/fractal.html
 [lein]: https://github.com/technomancy/leiningen
 [repo]: https://github.com/mediocregopher/diamond-square
