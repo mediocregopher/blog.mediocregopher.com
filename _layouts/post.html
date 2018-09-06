@@ -13,12 +13,12 @@ layout: default
       </span>
       <!-- • -->
       <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-        {{ page.date | date: "%b %-d, %Y" }}
+        {{ page.date | date: site.date_format }}
       </time>
       •
       {%- if page.updated %}
       <time datetime="{{ page.updated | date_to_xmlschema }}" itemprop="dateModified">
-        (Updated {{ page.updated | date: "%b %-d, %Y" }})
+        (Updated {{ page.updated | date: site.date_format }})
       </time>
       •
       {% endif -%}

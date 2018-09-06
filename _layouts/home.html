@@ -11,7 +11,10 @@ layout: default
         {{ post.title | escape }}
       </a>
     </h2>
-    <span>{{ post.date | date: "%b %-d, %Y" }}</span>
+    <span>{{ post.date | date: site.date_format }}</span>
+    {%- if post.updated %}
+    <span>(Updated {{ post.updated | date: site.date_format }})</span>
+    {% endif -%}
     <p>{{ post.description }}</p>
   </li>
   {%- endfor -%}
