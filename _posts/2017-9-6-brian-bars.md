@@ -3,6 +3,7 @@ title: Brian Bars
 description: >-
     Cheap and easy to make, healthy, vegan, high-carb, high-protein. "The Good
     Stuff".
+updated: 2018-01-18
 ---
 
 It actually blows my mind it's been 4 years since I used this blog. It was
