@@ -233,6 +233,3 @@ But I hit a roadblock at power of 7, in that there's actually a melancoil which
 occurs whose members are all greater than `FFFFFF`. This means that my strategy
 of repeating happifying until I get under `FFFFFF` doesn't work for any numbers
 which lead into that coil.
-
- All images linked to in this post are licensed under the [Do what the fuck you
- want to public license](http://www.wtfpl.net/txt/copying/).

@@ -6,21 +6,24 @@ ul {
     color: #666;
 }
 
+/* when in doubt, important it out */
+
 .light a {
     color: #666 !important;
 }
 
 .light a:hover {
-    color: #222;
+    color: #222 !important;
 }
 
-/* for making all content within a row be vertically centered */
+/* for making all content within a row be vertically centered
 .row-vertically-centered .columns {
    display: inline-block;
    float: none;
    margin-left: 0;
    vertical-align: middle;
 }
+*/
 
 #title-header  {
     border-bottom: 1px solid #666;
@@ -30,6 +33,7 @@ ul {
 
 #title-header .title {
     margin: 0;
+    font-size: 4.4rem; /* magic number yooooo */
     font-weight: bold;
 }
 
@@ -38,28 +42,30 @@ ul {
     text-decoration: none;
 }
 
-#title-header .social .spaced {
-    text-decoration: none;
+#title-header .social span {
+    margin-right: 0.5em;
+    white-space: nowrap;
+}
+
+#title-header .social .author-icons a {
     margin-right: 0.5em;
 }
 
+#title-header .social a {
+    text-decoration: none;
+}
+
 #crypto-display {
-    margin-right: 2rem;
+    min-width: 1px;
 }
 
-/* the qr library uses a canvas to generate the qr code then base64's it into a
- * separate img tag. For an instant the original canvas shows though, creating
- * an annoying visual, so this ensures that that doesn't happen. */
-#crypto-display-qr canvas {
-    display: none;
-}
-
-#crypto-display-qr img {
+#crypto-display-qr img,canvas {
     width: 100%;
+    max-width: 512px;
 }
 
 #crypto-display-addr {
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     margin-top: 1em;
 }
 

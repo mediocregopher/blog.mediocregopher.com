@@ -21,9 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     var cryptoDisplay = document.querySelector('#crypto-display');
     var clearCryptoDisplay = () => {
-        while(cryptoDisplay.firstChild) {
-            cryptoDisplay.removeChild(cryptoDisplay.firstChild);
-        }
+        cryptoDisplay.innerHTML = '&nbsp;';
     };
 
     console.log("setting up crypto buttons");
