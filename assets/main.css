@@ -109,3 +109,7 @@ ul {
 #post-content ul {
     margin-left: 1em;
 }
+
+#post-content img {
+    max-width: 100%;
+}
