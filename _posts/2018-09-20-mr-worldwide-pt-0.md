@@ -47,7 +47,7 @@ something). Going to Japan might as well have been a trip to an alien planet,
 and yet it was also familiar. I learned that no matter how different our
 cultures are, the individuals of the world aren't that different at all. By the
 end of that trip I felt as at-home in Japan as I did in Denver, if not more so,
-because of how much time I was able to spend exploring (rather than being couped
+because of how much time I was able to spend exploring (rather than being cooped
 up working).
 
 {% include image.html
@@ -166,12 +166,12 @@ described is really my current wardrobe.
 
 The trip was deliberately not planned out. I knew I would show up in Munich,
 because I have a friend who lives there as well as a distant relative. But
-passed that I figured "show up and look around" would suffice. My motto for the
+past that I figured "show up and look around" would suffice. My motto for the
 trip would eventually become "plans are just lists of things which won't
-happen". From start to finish the only plans I had figured out at any moment
-was a general trajectory and my next destination. Rarely was my next place to
-sleep booked more than a week ahead of time, or my next bus or train ticket
-bought more than a day before.
+happen". From start to finish the only plans I had figured out at any moment was
+a general trajectory and my next destination. Rarely was my next place to sleep
+booked more than a week ahead of time, or my next bus or train ticket bought
+more than a day before.
 
 It could not have worked any other way. For a short trip it might be viable to
 have an itinerary with a list of destinations/sights which will be visited and
