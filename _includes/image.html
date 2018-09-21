@@ -1,0 +1,21 @@
+<div style="
+  box-sizing: border-box;
+  text-align: center;
+  padding-left: 2em;
+  padding-right: 2em;
+  margin-bottom: 1em;
+  {%- if include.float %}
+  float: {{ include.float }};
+  {% endif -%}
+  {%- if include.float or include.inline %}
+  max-width: 49%;
+  {% endif -%}
+  {%- if include.inline %}
+  display: inline-block;
+  {% endif -%}
+  ">
+  <a href="/img/{{ include.src }}" target="_blank">
+    <img style="max-height: 60vh;"
+         src="/img/{{ include.src }}" alt="{{ include.descr }}" /></a>
+  {%- if include.descr %}<br/><em>{{ include.descr }}</em>{%- endif %}
+</div>
