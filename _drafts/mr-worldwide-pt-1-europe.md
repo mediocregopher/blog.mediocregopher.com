@@ -380,3 +380,90 @@ with a ton of things left unseen, but without any regret about it. Italy itself
 had far too much for me to do in this trip, and I knew I'd be back one day, both
 to Italy and to Rome itself. On the third day I hopped on a plane, flew across
 the sea, and landed in Spain.
+
+## Barcelona, Spain
+
+Barcelona definitely made my list of favorite places I visited. Having come from
+a city which didn't feel like much more than a playground for tourists, it was
+refreshing to be in one which felt more real. Spaniards seemed to be friendlier
+than Italians as well, and my hostel was filled with characters from the UK to
+Brazil to Russia.
+
+There was an architect in Barcelona named Antoni Gaudí, who died in 1926, but
+left an indelible impression on the city. If I hadn't known when he lived and
+died I might have thought he founded the place, he's that ubiquitous. His style
+is completely strange; his exteriors look like something out of Candy Land,
+while the interiors seem to come from a utopian sci-fi.
+
+What blows my mind is that, for whatever reason, they let him build a church.
+
+La Sagrada Familia isn't actually completed yet. Gaudí took it over in 1883, a
+year after it had been started, and worked on it until the day he died. He knew
+he wouldn't live to see the completion of the project, and so laid out the plans
+such that it could be completed without him. The church has been slowly
+constructed using private funds and donations since then.
+
+<div style="text-align: center;">
+{% include image.html
+    src="mr-worldwide/sagrada-familia-outside-2018-0.jpg"
+    inline=true
+    %}
+
+{% include image.html
+    src="mr-worldwide/sagrada-familia-outside-2018-1.jpg"
+    inline=true
+    %}
+<p><em>Outside faces of La Sagrada Familia, Barcelona, 2018</em></p>
+</div>
+
+The outside presents two faces, one a mishmash of sculpture which resembles
+melting ice-cream and the other highly geometrical, both filled with biblical
+scenes and small details. Neither really prepares you for what the inside will
+be like.
+
+<div style="text-align: center;">
+{% include image.html
+    src="mr-worldwide/sagrada-familia-inside-2018-0.jpg"
+    inline=true
+    %}
+{% include image.html
+    src="mr-worldwide/sagrada-familia-inside-2018-1.jpg"
+    inline=true
+    %}
+{% include image.html
+    src="mr-worldwide/sagrada-familia-inside-2018-2.jpg"
+    inline=true
+    %}
+<p><em>The incredible interior of La Sagrada Familia, Barcelona, 2018</em></p>
+</div>
+
+I'd been in a lot of churches and cathedrals up till this point. Even when they
+were as mind blowing as Milan's Duomo, they all followed a similar pattern:
+gothic, brooding, ornate, almost dark in a way.
+
+La Sagrada Familia is none of those things; it shirks the gothic style almost
+completely, instead adopting one inspired by natural shapes and patterns. It
+feels more like being under a canopy of trees than being in a building. There's
+light, and color, and organic shapes, like the tree-trunk-like columns and the
+flower ceiling. And yet there's also a geometric patterness to everything, which
+hints at an order and intent for everything in sight, so your eye is drawn in
+to investigate every detail without needing ornamentation to grab it.
+
+It's lucky that I hadn't made any other plans for that day, because I spent
+nearly two hours at that church, walking around, taking it all in, sitting
+and contemplating, holding back tears a lot of the time, not being successful at
+it the rest. This might have been the first building I'd ever felt gratitude
+for. Where the traditional catholic building has as a foundation a call to
+authority, this one had a call to nature and humanity. And rather than being the
+crackpot dream of a single person, it had been carried on and supported and
+built by many others long after he had died. It was a reflection of an ongoing
+change in a society which I was grateful to see.
+
+I left Barcelona with a new understanding of churches, and what they represent,
+even for someone who's not catholic, and even for someone who's not christian.
+They're a space that's been set aside with the fundamental purpose of sitting
+quietly and thinking about things larger than oneself. Thinking about one's
+place in society, or in nature, or in the universe, and thinking about how that
+affects one's actions. Every society on earth has these spaces, though they go
+by different names, and have lots of different decorations. Each one carries a
+message about what that society has ascribed importance to.
