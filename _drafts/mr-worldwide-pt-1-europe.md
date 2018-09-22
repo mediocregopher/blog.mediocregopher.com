@@ -434,6 +434,10 @@ be like.
     src="mr-worldwide/sagrada-familia-inside-2018-2.jpg"
     inline=true
     %}
+{% include image.html
+    src="mr-worldwide/sagrada-familia-inside-2018-3.jpg"
+    inline=true
+    %}
 <p><em>The incredible interior of La Sagrada Familia, Barcelona, 2018</em></p>
 </div>
 
@@ -467,3 +471,32 @@ place in society, or in nature, or in the universe, and thinking about how that
 affects one's actions. Every society on earth has these spaces, though they go
 by different names, and have lots of different decorations. Each one carries a
 message about what that society has ascribed importance to.
+
+## Madrid, Spain
+
+Originally I hadn't planned on going to Madrid at all, but in Florence I met
+someone who lived there and so decided to spend a couple nights hanging out.
+Going on a tour of a city is one thing, but going with a local is something
+completely different. We saw some of the things a tourist is supposed to see,
+like the opera house, the palace, and whatever this building is:
+
+{% include image.html
+    src="mr-worldwide/madrid-2018.jpg"
+    descr="This Schweppes building is called the Edificio Carrión, and is famous for reasons. Madrid, 2018"
+    %}
+
+But more than that, I got to see what it was like to actually live in a city
+like Madrid, as a normal person. A fancy tapas restaurant is too expensive
+there, so we went to a local bar that did it more simply and cheaply. We also
+ate kebab, which is the European equivalent of the corner mexican or chinese
+joint in the states; a place with cheap, good food, open late, run by
+immigrants.
+
+Mostly, we walked around and talked. We talked about colonialism, and oppression
+and guilt, and about the Spanish Civil War and fascism, and about Catalan and
+its desire for independence, about capitalism, and the pain it causes, and about
+tourism and gentrification, and about royalty and aristocracy, and about
+language and culture.
+
+I only spent one full day in Madrid, and afterwards took a bus, continuing
+south, down to Córdoba.
