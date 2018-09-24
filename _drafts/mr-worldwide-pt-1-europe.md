@@ -500,3 +500,53 @@ language and culture.
 
 I only spent one full day in Madrid, and afterwards took a bus, continuing
 south, down to Córdoba.
+
+## Córdoba, Spain
+
+It was on the bus to Córdoba that I remembered to actually book a place to stay
+there. I quickly grabbed an AirBnB in town, though as it turned out messed it up
+so that when it didn't go through. So there was an hour there, waiting at
+the Córdoba bus station, where I was trully homeless. I spent it booking another
+AirBnB, properly this time, and eating some bread and cheese from my backpack,
+and watching some birds fight over a loaf someone else had dropped.
+
+This was the first AirBnB I'd gotten in Europe so far, up till this it had been
+only hostels (and one hotel, in Ravenna). While I'd enjoyed hostel life
+initially, especially my first taste of it in Milan, it had begun to wear on me.
+
+What I'd found is that, first and foremost, hostels were trying to hit a certain
+feel. _Good vibes_ were words which I saw in many a hostel description and
+review, though didn't often actually experience. It's in the public
+consciousness that backpacking through Europe, going from hostel to hostel, is a
+journey filled with new experiences, new people, and lots of partying. And while
+that is _true_, a lot of hostels ignore hospitality in favor of playing up to
+that fantasy, to their own detriment.
+
+A hostel's primary goal, like a normal hotel or AirBnB or whatever, shouldn't be
+to provide you with experiences, or help you meet new people, or enable your
+drinking and partying. These are certainly secondary goals it might have, if it
+wants. But the primary goal should be to make you feel comfortable and at home.
+And while the conceit of a hostel is that you are exchanging some physical
+comfort for cost, by having shared bunk rooms and common bathrooms and all that,
+comfort can be established through more than a fluffy bed. Some hostels I stayed
+at got this, most didn't.
+
+If someone feels comfortable in a hostel they'll open up on their own, and
+naturally want to meet the people around them, go out partying, and have cool
+experiences. Or not. They'll do whatever the fuck they want to. But if a hostel
+is too focused on being cool and hip and showing off how good its vibes are it's
+neglecting the basics, and there is no partying and the vibes aren't good.
+
+So I was tired of party hostels, as I began calling them, having just been in
+one in Barcelona a few days prior, and grabbed instead spent the night in what
+turned out to be a brutally cold old building which had neither heat, sealed
+windows, or cooking device with which to make a hot meal. So that's what I get
+for being a snob, I guess.
+
+In the morning I visted the Mosque/Cathedral of Córdoba. This site has had the
+odd history of having originally been a church, having then been converted to a
+mosque when the Moors took Spain in the 700s, and then converted back to a
+christian church in the 1200s when the catholics took Spain back, and has since
+been designated a cathedral. It retains much of the Moorish architecture, but
+with a church in the middle, and is an utterly fascinating place which I
+neglected to take any pictures of.
