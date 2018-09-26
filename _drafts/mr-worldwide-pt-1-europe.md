@@ -550,3 +550,68 @@ christian church in the 1200s when the catholics took Spain back, and has since
 been designated a cathedral. It retains much of the Moorish architecture, but
 with a church in the middle, and is an utterly fascinating place which I
 neglected to take any pictures of.
+
+## Granada, Spain
+
+This was probably one of the most interesting places I visited while traveling.
+It was once one of the most important Moorish cities in Spain, then briefly
+became a Jewish state, and then the seat of the Nasrid dynasty (the last Muslim
+dynasty in Spain), and then eventually went back to being a part of the Catholic
+empire. During this time it also had a large influx of Romani, and out of this
+mishmash of culture it became one of the birthplaces of flamenco.
+
+My bus got in at night, but I was lucky enough to catch the last public bus from
+the bus station towards my hostel. It dropped me off in the Albaicín, an old
+Muslim quarter in the city, where the houses retain the old architectural style
+and the streets are narrow and winding. From there I walked uphill a ways to
+the Sacromonte neighborhood, the traditional home of the Romani in Granada. Here
+the people had dug out caves in the side of the mountain, and made them into
+homes. My hostel was in one of these caves.
+
+{% include image.html
+    src="mr-worldwide/granada-2018-0.jpg"
+    descr="The view from my hostel, Alhambra on the left. Granada, 2018"
+    %}
+
+The hostel was small and quiet, overlooking both the Alhambra (the castle on a
+hill, built by the Nasrids) and the rest of the city, and the guys running it
+were chill. One was Scottish, but he had come to Granada to live and study
+flamenco, and it was obvious from how he spoke about it that he was completely
+in love with the art and the people. On one night they took me out to a "real
+gypsy bar", as they called it.
+
+The flamenco artists in town, the singers and guitarists and dancers, make a
+living performing for tourists, but this bar is, according to my guides, where
+they would go after the shows to hang out. There was no music in the bar,
+but, as the night went on, three or four cliques formed up naturally, each
+around a guitar player and singer, with dancers circling around, the rest
+clapping to an indecipherable rhythm. The Scott knew the names of a few of the
+people playing, and told me that it was at gatherings like this that the
+musicians tried out new things and pushed the art further. It was the "real"
+flamenco.
+
+After that we got kebab and went back to the cave.
+
+Sacromonte is situated on the face of a valley, with the Alhambra being on the
+opposite side. So to get to the Alhambra I had to venture down to the valley
+floor, where Granada proper is, and found a very familiar tourist district
+filled with all the crap I'd seen in every other city. The Alhambra itself was
+interesting, but also packed, and I hadn't realized they only sell a limited
+number of tickets per day to get inside the castle, so I missed a lot of it. So
+I went back to the peace and quiet of Sacromonte.
+
+{% include image.html
+    src="mr-worldwide/granada-2018-1.jpg"
+    descr="Sacromonte and the valley below. Granada, 2018"
+    %}
+
+Being uphill, difficult to access by car, it was in many ways warded off from
+the wave of tourism which has swept the world and sucked the heart out of many
+cities. Only those willing to carry their bags 20 minutes uphill could disturb
+it. I found the absolute best spot possible, with benches overlooking the
+Alhambra and the city and the sunset, sitting and drawing for hours, and was
+only disturbed by one or two couples sharing the view in all that time.
+
+I had originally planned to head back to Munich after Granada, but after talking
+with a lot of people who told me I _had_ to go to Portugal, I booked a bus to
+Lisbon at the last minute and set off. And damn I'm glad I did.
