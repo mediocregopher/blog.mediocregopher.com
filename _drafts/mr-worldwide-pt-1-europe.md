@@ -615,3 +615,79 @@ only disturbed by one or two couples sharing the view in all that time.
 I had originally planned to head back to Munich after Granada, but after talking
 with a lot of people who told me I _had_ to go to Portugal, I booked a bus to
 Lisbon at the last minute and set off. And damn I'm glad I did.
+
+## Lisbon, Portugal
+
+Sometimes called the San Fransisco of Europe, Lisbon is a city with beaches,
+historical buildings, perfect weather all-year round, earthquakes, and a large
+orange-red suspension bridge across a bay. Unlike San Fransisco, it's an
+affordable place to visit and the people who live there haven't been priced out
+by tech companies ([yet][google-lisbon]).
+
+Part of why I liked Lisbon so much is that, while tourism is an absolutely huge
+industry, it didn't really feel that way. The Baixa district, where my hostel
+was, was certainly an area just for tourists. But it wasn't very big, and once
+outside of it you find yourself in somewhere like Alfama, which has been a
+blue-collar district since the Moorish invasion, and retains its winding
+cobblestone streets and narrow alleys. If you look at the skyline of Lisbon you
+won't find any highrises or office buildings, just 4 to 5 story apartment
+buildings and churches. It's a city meant for people to live, first and
+foremost, with business being secondary. And so, despite being the biggest city
+in the country, and 9th most visited city in Southern Europe, it still feels
+quiet and cozy.
+
+{% include image.html
+    src="mr-worldwide/lisbon-2018.jpg"
+    descr="The facade of a museum I was too poor to go in. Lisbon, 2018"
+    %}
+
+Another part of what made Lisbon stand out to me was the hostel I stayed in, and
+the people I met there. The hostel was _cozy_. There was a small dining area
+with a single long table, a small living room with couches and chairs
+arranges in a circle, a decked out kitchen that anyone could use, and free
+sangria every evening. Rather than focus on partying and yolo and whatever, the
+owners focused on making it a home, where people would cook and eat and talk and
+hang out together. So that's what we did, every night, and in the mornings we'd
+meet up one more time to eat unlimited free pancakes from the kitchen. It was an
+amazing time.
+
+While I was there, a museum had an exhibit devoted to M.C. Escher, the Dutch
+artist known for his tesselations, fractals, and generally paradoxical work.
+Escher had always been an artist I was aware of, and then I read the book
+_Gödel, Escher, Bach_ by Douglas Hofstadter and became even more interested. So
+I couldn't pass up the chance to see his work in person. And boy, did it leave
+an impression on me.
+
+Having traveled to Córdoba and Granada in his early twenties, Escher was
+impressed by the Moorish architecture, specifically the tesselating tile
+patterns they used in decoration. He began trying to replicate their work, and
+ended up following what amounted to a mathematical investigation of geometry, in
+the context of art. The museum presented his work in largely chronological
+order, and, in seeing the progression of his ideas over decades, it really
+struck me both what a genius he was and how dedicated he must have been to have
+spun his wheels on the same problems for most of his life.
+
+<div style="text-align: center;">
+{% include image.html
+    src="mr-worldwide/lisbon-escher-2018-0.jpg"
+    inline=true
+    %}
+{% include image.html
+    src="mr-worldwide/lisbon-escher-2018-1.jpg"
+    inline=true
+    %}
+<p><em>Tesselations, paradoxes, and tricks of perspective, Lisbon, 2018</em></p>
+</div>
+
+For the rest of my trip, even through Asia, I would spend my time doodling
+tesselations of my own, trying to find the tricks that Escher found which let
+him make such complex images. I would find some, but certainly Escher still has
+the leg up on me.
+
+Having traveled most of Southern Europe at this point I flew back to homebase,
+Munich, to recuperate and take figure out what my next steps would be. I left
+Lisbon promising myself that I'd be back, even considering finding a way to live
+there one day. While my life plans have since changed, it's not something I've
+totally ruled out.
+
+[google-lisbon]: https://econews.pt/2018/01/29/from-google-to-amazon-technological-companies-are-moving-to-portugal-why/
