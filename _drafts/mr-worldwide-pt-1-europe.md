@@ -170,6 +170,11 @@ there were also beautiful people in expensive looking clothes, driving fancy
 cars, and eating at fancy cafes. Where Munich was simple and wealthy, Milan was
 lavish and disparate.
 
+{% include image.html
+    dir="mr-worldwide" file="milan-street-2018.jpg" width=4048
+    descr="The streets of Milan, 2018"
+    %}
+
 My hostel in Milan was called the Ostello Bello, and was probably the best one I
 could have gotten as my first hostel in Europe. The hostel's downstairs area was
 a restaurant/bar, with tables reserved for hostel guests. Upon arriving they
@@ -195,6 +200,22 @@ people were erecting and maintaining incredible structures like the Milan's
 Duomo in their honor floored me. There's a lot of criticism which could and
 should be leveled towards the Catholic Church, but damnit they know how to build
 a building.
+
+{% include image.html
+    dir="mr-worldwide" file="milan-duomo-2018-0.jpg" width=1292
+    descr="Milan's Duomo. In the lower left, tourists being scammed by a dude with pigeon food, 2018"
+    %}
+
+{% include image.html
+    dir="mr-worldwide" file="milan-duomo-interior-2018-0.jpg" width=4048
+    descr="Interior of Milan's Duomo, 2018"
+    %}
+
+{% include image.html
+    dir="mr-worldwide" file="milan-duomo-interior-2018-1.jpg" width=727
+    descr="Milan Duomo's creepy ass statue of Saint Bartholomew, 2018"
+    float="right"
+    %}
 
 Besides the Duomo I also visited some museums and other sights, like the Sforza
 Castle, walking from one to the other as the days went on. Walking became a
@@ -223,6 +244,17 @@ the 6th century. While not as glamorous and fast-paced as Milan, Ravenna really
 hit me with the depth of its history. As someone from the US I'm not accustomed
 to seeing anything built before 1500, and yet here were buildings in excellent
 condition which were built a thousand years prior.
+
+{% include image.html
+    dir="mr-worldwide" file="ravenna-mosaic-2018-0.jpg" width=4048
+    descr="Mausoleum of Galla Placidia, Ravenna, 2018"
+    %}
+
+{% include image.html
+    dir="mr-worldwide" file="ravenna-mosaic-2018-1.jpg" width=727
+    descr="Basilica of San Vitale, Ravenna, 2018"
+    float="right"
+    %}
 
 Another thing which took some time to get accustomed to was using cash. By this
 point in the trip it had become somewhat second-nature, but only by way of many
@@ -272,11 +304,21 @@ targeted at tourists and priced accordingly. My strategy for finding food
 involved marking off hole-in-the-wall spots in my maps app whenever I came
 across them during the day.
 
+{% include image.html
+    dir="mr-worldwide" file="florence-2018-0.jpg" width=4048
+    descr="Florence's Duomo near sunset, 2018"
+    %}
+
 On my second day in Florence I was sitting by the Uffizi, eating a panini, and I
 randomly met an art history student from Madrid who was also visiting Florence.
 Together we went to a bunch of museums, saw the David, and just generally hung
 out. I asked her a lot of questions at the museums, because, to be honest, I'd
 never understood what to make of art in museums.
+
+{% include image.html
+    dir="mr-worldwide" file="florence-2018-1.jpg" width=2688
+    descr="River Arno, and the houses which still stand on it, Florence, 2018"
+    %}
 
 I'd already learned that, even if I could see a picture of something online,
 seeing it in person is way different. In person the colors in a painting pop out
@@ -287,6 +329,20 @@ and the history of art is effectively the history of the world. So museums had
 become a meditative place for me; I could go to one and just wander, taking in
 art pieces at whatever rate I liked, learning and thinking about history as I
 went.
+
+<div style="text-align: center;">
+{% include image.html
+    dir="mr-worldwide" file="florence-painting-2018-0.jpg" width=2688
+    inline=true
+    %}
+
+{% include image.html
+    dir="mr-worldwide" file="florence-painting-2018-1.jpg" width=2688
+    inline=true
+    %}
+<p><em>Not pictured, the crowd of selfie-ers behind my trying to get a shot with
+The Birth of Venus, Florence, 2018</em></p>
+</div>
 
 What had always confused me, though, was how to _judge_ art. As in, what makes
 one piece better than another, or what makes one artist better than another? Why
@@ -325,6 +381,11 @@ world, but being rushed I wasn't able to enjoy it like Milan's Duomo, and a lot
 of it was closed off unless you wanted to pay more. I wasn't able to spend
 enough time in it to enjoy it.
 
+{% include image.html
+    dir="mr-worldwide" file="rome-2018-3.jpg" width=4048
+    descr="Pope for the day, Rome, 2018"
+    %}
+
 The Vatican museum was more enjoyable than I thought it would be. For starters
 it's huge, with tons and tons of things to see, including, obviously, the
 Sistene Chapel. I took my time wandering around. After the museum I left the
@@ -334,6 +395,11 @@ out, everything became impossibly crowded. It was difficult to really enjoy
 anything, what with everyone taking their phones out to capture anything and
 everything the guidebook said to, without really taking the time to take in the
 thing itself.
+
+{% include image.html
+    dir="mr-worldwide" file="rome-2018-2.jpg" width=4048
+    descr="Did you know that Rome has more Egyptian obelisks than any other city in the world? That's a rock fact. Rome, 2018"
+    %}
 
 This was something I began to struggle with while I was in Rome. It wasn't
 always clear to me _why_ these people cared about these sights, with myself
@@ -373,6 +439,19 @@ to meet people from all different cultures and see all the ways they live, but
 doing so is, often, detrimental to those cultures. It was tough to find a
 balance I was comfortable with, and I'm still not sure a "correct" balance
 actually exists.
+
+<div style="text-align: center;">
+{% include image.html
+    dir="mr-worldwide" file="rome-2018-0.jpg" width=4048
+    inline=true
+    %}
+
+{% include image.html
+    dir="mr-worldwide" file="rome-2018-1.jpg" width=1920
+    inline=true
+    %}
+<p><em>All that said, the Colosseum was pretty baller. Rome, 2018</em></p>
+</div>
 
 My second day in Rome I spent at the Colosseum and the Palatino, but I was so
 utterly exhausted and brain-melted I barely remember them. I left Rome
