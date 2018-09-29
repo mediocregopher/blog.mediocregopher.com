@@ -13,7 +13,7 @@ for my entire life, up until that point, and it felt like a change was needed.
 Denver was certainly a change, and ultimately I think it was one in the right
 direction, but it turned out to not be enough.
 
-{% include image.html src="mr-worldwide/denver-2017.jpg" %}
+{% include image.html dir="mr-worldwide" file="denver-2017.jpg" width=1696 %}
 
 While in Denver I'd rented a tiny studio apartment, which over the
 course of two years I'd learned to live in. Living large is pretty easy; for
@@ -51,7 +51,7 @@ because of how much time I was able to spend exploring (rather than being cooped
 up working).
 
 {% include image.html
-    src="mr-worldwide/kyoto-2017.jpg"
+    dir="mr-worldwide" file="kyoto-2017.jpg" width=5257
     descr="Kyoto at sunset, 2017" %}
 
 By the end of 2016 I knew I wanted to travel and see as much as possible, while
@@ -78,7 +78,7 @@ gave me a small notebook to take notes in as I traveled, with some helpful
 phrases that might aid me along the way
 
 {% include image.html
-    src="mr-worldwide/notebook.jpg"
+    dir="mr-worldwide" file="notebook.jpg" width=3036
     descr="Ibrahim made sure I was covered if I ever found myself in a tight spot"
     %}
 
@@ -104,13 +104,13 @@ some things with you. The big bag/day bag combo is a classic amongst ~~the
 homeless~~ backpackers.
 
 {% include image.html
-    src="mr-worldwide/loadout-packed.jpg"
+    dir="mr-worldwide" file="loadout-packed.jpg" width=4048
     descr="All packed up, one for overhead and the other for under the seat"
     inline=true
     %}
 
 {% include image.html
-    src="mr-worldwide/loadout-unpacked.jpg"
+    dir="mr-worldwide" file="loadout-unpacked.jpg" width=4048
     descr="(Almost) everything, unpacked"
     inline=true
     %}

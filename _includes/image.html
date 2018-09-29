@@ -14,8 +14,26 @@
   display: inline-block;
   {% endif -%}
   ">
-  <a href="/img/{{ include.src }}" target="_blank">
-    <img style="max-height: 60vh;"
-         src="/img/{{ include.src }}" alt="{{ include.descr }}" /></a>
+  <a href="/img/{{ include.dir }}/{{ include.file }}" target="_blank">
+    <picture>
+      {%- if include.width %}
+      {%- for targetWidth in site.img_widths reversed -%}
+      {% if include.width <= targetWidth %}{% continue %}{% endif %}
+      {%- if targetWidth > 1000 %}
+      <source media="(min-width: 1000px) and (min-resolution: {{ targetWidth | divided_by: 1000.0 }}dppx)"
+      {%- elsif targetWidth > 500 %}
+      <source media="(min-width: 500px), (min-resolution: 1.1dppx)"
+      {%- else %}
+      <source
+      {% endif %}
+              srcset="/img/{{ include.dir }}/{{ targetWidth }}px/{{ include.file }}"
+              >
+      {%- endfor %}
+      {%- endif %}
+      <img style="max-height: 60vh;"
+           src="/img/{{ include.dir }}/{{ include.file }}"
+           alt="{{ include.descr }}" />
+    </picture>
+  </a>
   {%- if include.descr %}<br/><em>{{ include.descr }}</em>{%- endif %}
 </div>

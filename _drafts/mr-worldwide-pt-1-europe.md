@@ -114,7 +114,7 @@ down to the center of the city, and she showed me around the sights, like
 Marienplatz and the Frauenkirche (one of many famous churches in Munich).
 
 {% include image.html
-    src="mr-worldwide/munich-victory-gate-2018.jpg"
+    dir="mr-worldwide" file="munich-victory-gate-2018.jpg" width=4048
     descr="Siegestor (Victory Gate), Munich, 2018"
     %}
 
@@ -127,7 +127,7 @@ all; like how even in a large city like Munich everything can still be closed on
 a Sunday.
 
 {% include image.html
-    src="mr-worldwide/munich-moosach-2018.jpg"
+    dir="mr-worldwide" file="munich-moosach-2018.jpg" width=3036
     descr="Moosach neighborhood, Munich, 2018"
     float="right"
     %}
@@ -405,12 +405,12 @@ constructed using private funds and donations since then.
 
 <div style="text-align: center;">
 {% include image.html
-    src="mr-worldwide/sagrada-familia-outside-2018-0.jpg"
+    dir="mr-worldwide" file="sagrada-familia-outside-2018-0.jpg" width=1080
     inline=true
     %}
 
 {% include image.html
-    src="mr-worldwide/sagrada-familia-outside-2018-1.jpg"
+    dir="mr-worldwide" file="sagrada-familia-outside-2018-1.jpg" width=1080
     inline=true
     %}
 <p><em>Outside faces of La Sagrada Familia, Barcelona, 2018</em></p>
@@ -423,19 +423,19 @@ be like.
 
 <div style="text-align: center;">
 {% include image.html
-    src="mr-worldwide/sagrada-familia-inside-2018-0.jpg"
+    dir="mr-worldwide" file="sagrada-familia-inside-2018-0.jpg" width=1080
     inline=true
     %}
 {% include image.html
-    src="mr-worldwide/sagrada-familia-inside-2018-1.jpg"
+    dir="mr-worldwide" file="sagrada-familia-inside-2018-1.jpg" width=1080
     inline=true
     %}
 {% include image.html
-    src="mr-worldwide/sagrada-familia-inside-2018-2.jpg"
+    dir="mr-worldwide" file="sagrada-familia-inside-2018-2.jpg" width=1080
     inline=true
     %}
 {% include image.html
-    src="mr-worldwide/sagrada-familia-inside-2018-3.jpg"
+    dir="mr-worldwide" file="sagrada-familia-inside-2018-3.jpg" width=1080
     inline=true
     %}
 <p><em>The incredible interior of La Sagrada Familia, Barcelona, 2018</em></p>
@@ -481,7 +481,7 @@ completely different. We saw some of the things a tourist is supposed to see,
 like the opera house, the palace, and whatever this building is:
 
 {% include image.html
-    src="mr-worldwide/madrid-2018.jpg"
+    dir="mr-worldwide" file="madrid-2018.jpg" width=3036
     descr="This Schweppes building is called the Edificio Carrión, and is famous for reasons. Madrid, 2018"
     %}
 
@@ -569,7 +569,7 @@ the people had dug out caves in the side of the mountain, and made them into
 homes. My hostel was in one of these caves.
 
 {% include image.html
-    src="mr-worldwide/granada-2018-0.jpg"
+    dir="mr-worldwide" file="granada-2018-0.jpg" width=1329
     descr="The view from my hostel, Alhambra on the left. Granada, 2018"
     %}
 
@@ -601,7 +601,7 @@ number of tickets per day to get inside the castle, so I missed a lot of it. So
 I went back to the peace and quiet of Sacromonte.
 
 {% include image.html
-    src="mr-worldwide/granada-2018-1.jpg"
+    dir="mr-worldwide" file="granada-2018-1.jpg" width=1329
     descr="Sacromonte and the valley below. Granada, 2018"
     %}
 
@@ -637,7 +637,7 @@ in the country, and 9th most visited city in Southern Europe, it still feels
 quiet and cozy.
 
 {% include image.html
-    src="mr-worldwide/lisbon-2018.jpg"
+    dir="mr-worldwide" file="lisbon-2018.jpg" width=1772
     descr="The facade of a museum I was too poor to go in. Lisbon, 2018"
     %}
 
@@ -669,11 +669,11 @@ spun his wheels on the same problems for most of his life.
 
 <div style="text-align: center;">
 {% include image.html
-    src="mr-worldwide/lisbon-escher-2018-0.jpg"
+    dir="mr-worldwide" file="lisbon-escher-2018-0.jpg" width=513
     inline=true
     %}
 {% include image.html
-    src="mr-worldwide/lisbon-escher-2018-1.jpg"
+    dir="mr-worldwide" file="lisbon-escher-2018-1.jpg" width=341
     inline=true
     %}
 <p><em>Tesselations, paradoxes, and tricks of perspective, Lisbon, 2018</em></p>
