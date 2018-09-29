@@ -31,7 +31,11 @@
       {%- endfor %}
       {%- endif %}
       <img style="max-height: 60vh;"
+           {% if include.width < 1000 %}
            src="/img/{{ include.dir }}/{{ include.file }}"
+           {% else %}
+           src="/img/{{ include.dir }}/1000px/{{ include.file }}"
+           {% endif %}
            alt="{{ include.descr }}" />
     </picture>
   </a>
