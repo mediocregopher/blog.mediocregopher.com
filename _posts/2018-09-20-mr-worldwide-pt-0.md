@@ -3,6 +3,7 @@ title: >-
     Mr. Worldwide, Pt. 0: Bailtrain to Bailtown
 description: >-
     Wherein I quit my job and prepare to leave the country
+series: mr-worldwide
 ---
 
 ## Denver
@@ -198,4 +199,4 @@ have to do".
 
 ## Bailing
 
-In the next post I will actually leave and begin my _adventure_. Stay tuned!
+In the next post I will actually leave and begin my _adventure_.
