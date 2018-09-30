@@ -66,8 +66,8 @@ bright and sunny Milan.
 ## Milan, Italy
 
 My first impression of Milan was: "Wow, this place is sketchy". The streets were
-dirty, old, and covered in graffiti. There were homeless everywhere, people
-selling bootleg clothes in the street, scammers targeting tourists, and a
+dirty, old, and covered in graffiti. There were homeless people everywhere,
+people selling bootleg clothes in the street, scammers targeting tourists, and a
 general disheveldness which Munich didn't have. But on the other side of that
 coin, Milan is one of the fashion capitals of the world, and everywhere I looked
 there were also beautiful people in expensive looking clothes, driving fancy
@@ -558,7 +558,7 @@ homes. My hostel was in one of these caves.
 
 The hostel was small and quiet, overlooking both the Alhambra (the castle on a
 hill, built by the Nasrids) and the rest of the city. The guys running it
-were chill; the owner was Dutch, and the other was Scottish. The Scott had come
+were chill; the owner was Dutch, and the other was Scottish. The Scot had come
 to Granada to live and study flamenco, and it was obvious from how he spoke
 about it that he was completely in love with the art and the people. On one
 night they took me out to a "real gypsy bar", as they called it.
@@ -568,7 +568,7 @@ living performing for tourists, but this bar is, according to my guides, where
 they go after the shows to hang out. There was no music in the bar, but, as the
 night went on, three or four cliques formed up naturally, each around a guitar
 player and singer, with dancers circling around, the rest clapping to an
-indecipherable rhythm. The Scott knew the names of a few of the people playing,
+indecipherable rhythm. The Scot knew the names of a few of the people playing,
 and told me that it was at gatherings like this that the musicians tried out new
 things and pushed the art further. It was the "real" flamenco.
 
