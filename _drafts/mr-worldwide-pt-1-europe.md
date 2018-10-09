@@ -200,3 +200,66 @@ about worker's rights.
 While it was a funny situation, in a way, it did make my life quite a bit
 harder. Once I finally got back to the hostel I stayed in for the night, and the
 next day headed on to Bruges.
+
+## Bruges, Belgium
+
+I'll be honest and say that 90% of the reason I wanted to go to Bruges was
+because of the movie, _In Bruges_, which is one of my all time favorites. The
+movie was shot almost completely in the city, and makes a lot of fun out of
+tourists coming to see it. "It's a fucking fairytale" is a common refrain in it.
+Bruges always had a pretty solid tourist game, but after the movie it really
+took off, so that most of the other people in my hostel said they had only
+really heard of the city from the movie too.
+
+{% include image.html
+    dir="mr-worldwide" file="bruges-pano-2018.jpg" width=1492
+    descr="View from atop the the Belfry of Bruges, 2018"
+    %}
+
+The city itself is actually beautiful. Once out of the busy tourist area,
+centered around the Belfry, the streets and canals wind around through quiet
+neighborhoods and small parks. Bruges is sometimes called the Venice of the
+North (though Amsterdam also calls itself this), due to its history as an
+important historical commercial port built on top of a maze of canals. There are
+many canal boat tours available, but I was too ~~cheap~~ poor to spring for one,
+so I took a free walking tour instead.
+
+"Free" walking tours are a fairly common business in European cities. The tour
+guides collect people from various hostels they have arrangements with, and walk
+them around the city, talking about whatever is worth talking about. Most that I
+took were quite good, weaving together the history of a place, its culture both
+then and now, and current events, all while giving you a good lay-of-the-land
+and two-ish hours of being out-and-about. At the end of the tour the guides ask
+for tips/donations, and most people give between $5-20.
+
+On the tour of Bruges our guide had pointed out a sea shell cemented into the
+pavement. This was part, he said, of the Camino De Santiago. In the middle ages
+the Catholic Church considered pilgrimage to be a suitable form of atonement for
+sins/crimes, and so many people throughout Europe were sent away from their
+towns to travel by land to the Santiago de Compestela Cathedral in northern
+Spain. Over time the various routes materialized into a network, denoted by sea
+shells or sea shell symbols, which stretches throughout Europe and which people
+continue to use today.
+
+Even as the guide was telling us about it I knew I wanted to do. As the trip
+wore on I talked to a few people who had done the pilgrimage, and for every one
+I became more and more convinced that I must do it.
+
+{% include image.html
+    dir="mr-worldwide" file="bruges-canal-2018.jpg" width=1920
+    descr="Canals of Bruges, 2018"
+    %}
+
+I made a few friends in my hostel, our friendship having been forged in the
+struggle of trying to find an affordable meal in Bruges. Every restaurant in
+Bruges, it seemed, did "full" meals, where you pay a fixed amount and get two,
+three, or four courses. But the fixed amount was never lower than €45, and so we
+spent a lot of time searching for alternatives. After a lot of searching we
+found a couple places which were reasonably priced for the couple nights we were
+all there, and one of the group knew of a hard-to-find pub which made and sold
+13% alcohol beer for a few euro. After all that Bruges wasn't as unaffordable
+as it first seemed, and was a lot of fun, but it took a bit of work to make it
+so.
+
+After Bruges I took a bus back to Brussels, where I hung out for a while waiting
+for my next bus which would take me across the pond.
