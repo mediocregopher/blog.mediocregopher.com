@@ -263,3 +263,60 @@ so.
 
 After Bruges I took a bus back to Brussels, where I hung out for a while waiting
 for my next bus which would take me across the pond.
+
+## London, UK
+
+Getting to London was honestly one of the most exciting parts of that trip. The
+Channel Tunnel, or "Chunnel", runs from France, underneath the English Channel,
+and pops back up in England. In the tunnel is a giant train which ferries cars
+and buses through the tunnel. Taking the Chunnel was as easy as buying a bus
+ticket from Brussels to London, and passing through three passport checks along
+the way (the UK check being the most intense passport check of my entire
+journey, for whatever reason).
+
+While the London Underground (The Tube, as the British call it, in their very
+endearing habit of giving everything an endearing nickname) was easy enough to
+use, though _very_ expensive, so I spent a lot of time walking in the bitter
+cold. London is a _huge_ metropolitan city, filled to the brim with shops and
+restaurants and plenty of other attractions to grab tourists. But despite their
+best efforts, none were more grabbing to me than the museums.
+
+{% include image.html
+    dir="mr-worldwide" file="london-steg-2018.jpg" width=1920
+    descr="Stegosaurus at the Natural History Museum. London, 2018"
+    %}
+
+All the major museums in London are free to enter. This includes the National
+Gallery, exhibiting paintings and art from the world over, the Natural History
+Museum (my favorite), with its seemingly infinite halls of fossils and stones
+and pre-historic artifacts, and the British Museum, which exhibits many of the
+archeological treasures the British have stolen from other cultures throughout
+history.
+
+There's a significant amount of controversy surrounding the British Museum, and
+whether or not it's right for it to keep artifacts like the Rosetta Stone, and
+sculptures from the Parthenon of Athens. The argument is that the British were
+not really _given_ these artifacts by the peoples/cultures which originated
+them, and so the museum is effectively parading stolen property.
+
+The British Museum argues that, in fact, it's encouraging the spread of culture
+and understanding by collecting these artifacts from around the world and
+displaying them in context to each other, and that its mission is charitable to
+the cultures from which the artifacts are taken. And additionally that: "[the]
+restitutionist premise, that whatever was made in a country must return to an
+original geographical site, would empty both the British Museum and the other
+great museums of the world".
+
+The argument that they're actually spreading culture is pretty patronizing, as
+if the people they've stolen from don't know how to do this best for themselves,
+and as if they should obviously _want_ this to be done for them. As for the
+argument that restitutionism would empty the museum, I can only imagine a
+restitutionist responding: "Yes, that's the point". It's one thing for a museum
+to be given or loaned an item for display by another people, but quite another
+to assume the right to take an item regardless of its peoples' wishes.
+
+Besides some very good fish and chips, London didn't have all that much else for
+me. The museums were insanely crowded, with everyone pushing over themselves to
+fill out their selfie-with-famous-objects-bingo-cards; my hostel was weird (all
+of my hostels in the UK were weird, in fact; more on that in Ireland); and
+everything was quite expensive. I wasn't too sad to leave.
