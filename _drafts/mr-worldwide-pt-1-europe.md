@@ -264,7 +264,7 @@ so.
 After Bruges I took a bus back to Brussels, where I hung out for a while waiting
 for my next bus which would take me across the pond.
 
-## London, UK
+## London, England
 
 Getting to London was honestly one of the most exciting parts of that trip. The
 Channel Tunnel, or "Chunnel", runs from France, underneath the English Channel,
@@ -320,3 +320,39 @@ me. The museums were insanely crowded, with everyone pushing over themselves to
 fill out their selfie-with-famous-objects-bingo-cards; my hostel was weird (all
 of my hostels in the UK were weird, in fact; more on that in Ireland); and
 everything was quite expensive. I wasn't too sad to leave.
+
+## Dublin, Ireland
+
+My bus dropped me off at a small ferry terminal in Holyhead, a town in Wales.
+From there I took the couple-hour ferry ride to Dublin.
+
+I spent only a couple of days in Dublin, but one of those days I struggled to be
+a living human while fighting off the flu. I still managed to walk down to
+Trinity College to see The Book of Kells and the college library's Long Room,
+but the memory of it is fuzzy. I'm sure I looked as dead as the people who wrote
+those books.
+
+That day I mostly hung out at the hostel. Hostels in the UK have a very
+different atmosphere than everywhere else; there's a fairly bad housing crisis
+occurring in most major cities (like the three I went to), and often it's
+cheaper to live in a hostel than to rent an apartment. So the hostels I stayed
+in were filled with people who'd been there for months, some of them working,
+others trying to find work, others just lounging. But the dichotomy between
+people who were just passing through and people who were there long term made it
+a less than stellar experience. The long-term residents all knew each other and
+formed cliques, and generally took up the common spaces, so if you weren't
+already traveling with others (like me) it was pretty easy to feel excluded.
+
+On the second day I decided to go on a day trip out of Dublin. The city was
+neat, but I wasn't finding all that much I wanted to do inside of it. I found a
+bus company which did day trips to Glendalough, a valley which holds
+the ruins of a 6th century monastary, a beautiful lake, many hiking trails, and
+some sheep. I spent the day hiking, wandering around the ruins, and escaping an
+incoming snow storm. By the end of it all my sickness from the previous day was
+completely gone, and I slept the whole bus ride back.
+
+## Edinburgh, Scotland
+
+I left Dublin just as the Beast from the East made landfall. A giant cold wave
+brought in tons of snow and unseasonably low temperatures, stretching all across
+Europe.
