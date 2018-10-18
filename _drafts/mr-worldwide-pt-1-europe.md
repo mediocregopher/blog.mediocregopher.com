@@ -355,4 +355,30 @@ completely gone, and I slept the whole bus ride back.
 
 I left Dublin just as the Beast from the East made landfall. A giant cold wave
 brought in tons of snow and unseasonably low temperatures, stretching all across
-Europe.
+Europe. My plane must have been one of the last ones to land in Edinburgh,
+because for the next 2 days the entire city was completely snowed in, and most
+stores and attractions were closed.
+
+The tourist industry heavily plays up that Edinburgh is the city where JK
+Rowling wrote most of the _Harry Potter_ books, and you can see its influence
+clearly. The towering gothic cathedrals, castles on cliffs, old graveyards,
+dense cobblestone streets and dark alleys all feel like something right out of
+the books (though really it's the other way around). There was a cafe only a few
+blocks away from my hostel where JK Rowling apparently first started writing the
+books, a piece of trivia which the cafe has not failed to cash in on.
+
+The city was quite peaceful, probably because everything was closed from the
+storm, but it felt like it might always be like that even in good weather. Most
+days I'd find a spot to hunker down and draw for a while, then in the afternoon
+go explore some sight or another; the castle, the royal mile, Calton Hill... Or
+I'd go in search of decent groceries, which were strangely difficult to find.
+The city is (said to be) built on seven hills, like Rome, and between the many
+steep stairways and narrow alleys navigating them, and packed snow and ice, it
+was quite difficult to explore too far.
+
+While I spent five whole days in Edinburgh, I don't have much to talk about for
+it. It's probably one of the most unique cities I visited, with a lot of beauty
+and history and things to see, and I absolutely would love to go back. But
+despite all that, there was definitely a feeling a depression while I was there,
+like I was totally alone. When I got onto a plane and took off, I was more
+relieved than anything else.
