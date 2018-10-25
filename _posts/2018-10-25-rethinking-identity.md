@@ -7,22 +7,23 @@ description: >-
 
 In my view, the major social media platforms (Facebook, Twitter, Instagram,
 etc...) are broken. They worked well at small scales, but billions of people are
-now exposed to them and [Murphy's Law][murphy] has come into effect. The weak
+now exposed to them, and [Murphy's Law][murphy] has come into effect. The weak
 points in the platforms have been found and exploited, to the point where
 they're barely usable for interacting with anyone you don't already know in
 person.
 
 [murphy]: https://en.wikipedia.org/wiki/Murphy%27s_law
 
-But social media is a powerful tool that humans have developed, and it's not one
-to be thrown away lightly (if it can be thrown away at all). It's worthwhile to
-try and fix it. So that's what this post is about.
+On the other hand, social media, at its core, is a powerful tool that humans
+have developed, and it's not one to be thrown away lightly (if it can be thrown
+away at all). It's worthwhile to try and fix it. So that's what this post is
+about.
 
 A lot of moaning and groaning has already been done on how social media is toxic
 for the average person. But the average person isn't doing anything more than
 receiving and reacting to their environment. If that environment is toxic, the
 person in it becomes so as well. It's certainly possible to filter the toxicity
-out, and use a platform to your own benefit, but it takes work on the user's
+out, and use a platform to your own benefit, but that takes work on the user's
 part. It would be nice to think that people will do more than follow the path of
 least resistance, but at scale that's simply not how reality is, and people
 shouldn't be expected to do that work.
@@ -32,18 +33,18 @@ what a non-toxic platform would look like.
 
 The ideal definition for social media is to give people a place to socialize
 with friends, family, and the rest of the world. Defining "socialize" is tricky,
-and probably an exercise only a socially awkward computer nerd who doesn't do
-enough socializing would undertake, but "expressing one's feelings, knowledge,
-and experiences to other people, and receiving theirs in turn" feels like a good
+and probably an exercise only a socially awkward person who doesn't do enough
+socializing would undertake. "Expressing one's feelings, knowledge, and
+experiences to other people, and receiving theirs in turn" feels like a good
 approximation. A platform where true socializing was the only activity would be
 ideal.
 
 Here are some trends on our social media which have nothing to do with
-socializing: artificially boosted follower numbers on instagram to obtain
-product sponsors, shills in reddit comments boosting a product or company,
-russian trolls on twitter spreading propaganda, trolls everywhere being dicks
+socializing: artificially boosted follower numbers on Instagram to obtain
+product sponsors, shills in Reddit comments boosting a product or company,
+russian trolls on Twitter spreading propaganda, trolls everywhere being dicks
 and switching IPs when they get banned, and [that basketball president whose
-wife used burner twitter accounts to trash talk players][president].
+wife used burner Twitter accounts to trash talk players][president].
 
 [president]: https://www.nytimes.com/2018/06/07/sports/bryan-colangelo-sixers-wife.html
 
@@ -68,7 +69,7 @@ fundamental than that.
 
 In the context of online platforms, where a user creates an account which
 identifies them in some way, identity breaks down into 3 distinct problems
-which are often conflated.
+which are often conflated:
 
 * Authentication: Is this identity owned by this person?
 * Differentiation: Is this identity unique to this person?
@@ -77,7 +78,7 @@ which are often conflated.
 For internet platform developers, authentication has been given the full focus.
 Blog posts, articles, guides, and services abound which deal with properly
 hashing and checking passwords, two factor authentication, proper account
-recovery procedure, etc... While authentication is not 100% a solved problem,
+recovery procedure, etc... While authentication is not a 100% solved problem,
 it's had the most work done on it, and the problems which this post deals with
 are not affected by it.
 
@@ -89,10 +90,10 @@ I want to make very clear, once more, that I am _not_ in favor of de-anonymizing
 the web, and doing so is not what I'm proposing.
 
 Differentiation is without a doubt the most difficult identity problem to solve.
-It's not even clear that it's solvable offline. Take this situation: You are in
-a room, and you are told that one person is going to walk in with you, leave,
-then another person will do the same. These two persons may or may not be the
-same person. You're allowed to do anything you like to each person (with their
+It's not even clear that it's solvable offline. Take this situation: you are in
+a room, and you are told that one person is going to walk in, then leave, then
+another person will do the same. These two persons may or may not be the same
+person. You're allowed to do anything you like to each person (with their
 consent) in order to determine if they are the same person or not.
 
 For the vast, vast majority of cases you can simply look with your eyeballs and
@@ -101,15 +102,15 @@ Identical twins are an obvious example of two persons looking like one, but a
 malicious actor with a disguise might be one person posing as two. Biometrics
 like fingerprints, iris scanning, and DNA testing fail for many reasons (the
 identical twin case being one). You could attempt to give the first a unique
-marking on their skin, but who's to say they don't have a solvent which can
-clean that marking waiting right outside the door?
+marking on their skin, but who's to say they don't have a solvent, which can
+clean that marking off, waiting right outside the door?
 
 The solutions and refutations can continue on pedantically for some time, but
-the point is there is not likely a 100% solution, and even the 90% solutions
-require significant investment. Differentiation is a hard problem, which most
-developers don't want to solve. Most are fine with surrogates like checking that
-an email or phone number is unique to the platform, but these aren't enough to
-stop a dedicated individual or organization.
+the point is that there is likely not a 100% solution, and even the 90%
+solutions require significant investment. Differentiation is a hard problem,
+which most developers don't want to solve. Most are fine with surrogates like
+checking that an email or phone number is unique to the platform, but these
+aren't enough to stop a dedicated individual or organization.
 
 ### Roll Your Own Differentiation
 
@@ -131,74 +132,82 @@ proper solution, it might look something like this:
 
 * A dedicated support team would be needed to handle edge-cases and mistakes.
 
-None of these is trivial to implement correctly, and not one I'd trust to an
-up-and-coming platform which is being bootstrapped out of a basement.
+None of these is trivial, nor would I trust an up-and-coming platform which is
+being bootstrapped out of a basement to implement any of them correctly.
 Additionally, going through with this process would be a _giant_ point of
 friction for a user creating a new account; they likely would go use a different
-platform which didn't have all this nonsense required instead.
+platform instead, which didn't have all this nonsense required.
 
 ### Differentiation as a Service
 
 This is the crux of this post.
 
-Instead each platform rolling their own differentiation, what if there was a
+Instead of each platform rolling their own differentiation, what if there was a
 service for it. Users would still have to go through the hassle described above,
-but only once forever. Then platforms, no matter what stage of development
-they're at, could use that service to ensure their community of users is free
-from the problems of fake accounts and trolls.
+but only once forever, and on a more trustable site. Then platforms, no matter
+what stage of development they're at, could use that service to ensure that
+their community of users is free from the problems of fake accounts and trolls.
 
 This is what the service would look like:
 
 * A user would have to, at some point, have gone through the steps above to
   create an account on the differentiation-as-a-service (DaaS) platform. This
   account would have the normal authentication mechanisms that most platforms
-  do.
+  do (password, two-factor, etc...).
 
 * When creating an account on a new platform, the user would login to their DaaS
   account (similar to the common "login with Google/Facebook/Twitter" buttons).
 
-* The DaaS then returns an opaque token, an effectively random string, to the
-  platform, which uniquely identifies that user. The platform can then check in
+* The DaaS then returns an opaque token, an effectively random string which
+  uniquely identifies that user, to the platform. The platform can then check in
   its own user database for any other users using that token, and know if the
   user already has an account. All of this happens without any identifying
   information being passed to the platform.
 
 Similar to how many sites outsource to Cloudflare to handle DDoS protection,
 which is better handled en masse by people familiar with the problem, the DaaS
-allows for outsourcing the problem of differentiation. And actually, since the
-DaaS also handles authentication, a platform could outsource almost all of
-identity management.
+allows for outsourcing the problem of differentiation. Users are more likely to
+trust an established DaaS service than a random website they're signing up for.
+And signing up for a DaaS is a one-time event, so if enough platforms are using
+the DaaS it could become worthwhile for them to do so.
+
+Finally, since the DaaS also handles authentication, a platform could outsource
+that aspect of identity management to it as well. This is optional for the
+platform, but for smaller platforms which are just starting up it might be
+worthwhile to save that development time.
 
 ### Traits of a Successful DaaS
 
 It's possible for me to imagine a world where use of DaaS' is common, but
 bridging the gap between that world and this one is not as obvious. Still, I
-think it's necessary if interaction on the net is to ever evolve passed being a
-home for trolls. There are a number of traits of a DaaS trying to make it which
-would aid it in being accepted by the internet.
+think it's necessary if the internet is to ever evolve passed being, primarily,
+a home for trolls. There are a number of traits of an up-and-coming DaaS which
+would aid it in being accepted by the internet:
 
-* **Patience**: there is a critical mass of users and platforms using DaaS's
+* **Patience**: there is a critical mass of users and platforms using DaaS'
   where it becomes more advantageous for platforms to use the DaaS than not.
   Until then, the DaaS and platforms using it need to take deliberate but small
-  steps.  Making DaaS usage optional for platform users, and giving their
-  accounts special marks to indicate they're "authentic" (like Twitter's blue
-  checkmark); giving those users' activity higher weight in algorithms; allowing
-  others to filter activity of non-"authentic" users; etc... These are all
-  preliminary steps which can be taken which encourage but don't require
+  steps. For example: making DaaS usage optional for platform users, and giving
+  their accounts special marks to indicate they're "authentic" (like Twitter's
+  blue checkmark); giving those users' activity higher weight in algorithms;
+  allowing others to filter out activity of non-"authentic" users; etc... These
+  are all preliminary steps which can be taken which encourage but don't require
   platform users to use a DaaS.
 
 * **User-friendly**: most likely the platforms using a DaaS are what are going
   to be paying the bills. A successful DaaS will need to remember that, no
-  matter where the money comes from; if the users aren't happy they'll stop
+  matter where the money comes from, if the users aren't happy they'll stop
   using the DaaS, and platforms will be forced to switch to a different one or
-  stop using them altogether. In that same vein, competition is important, and
-  so...
+  stop using them altogether. User-friendliness means more than a nice
+  interface; it means actually caring for the users' interests, taking their
+  privacy and security seriously, and in all other aspects being on their side.
+  In that same vein, competition is important, and so...
 
 * **No country/government affiliation**: If the DaaS was to be run by a
   government agency it would have no incentive to provide a good user
   experience, since the users aren't paying the bills (they might not even be in
   that country). A DaaS shouldn't be exclusive to any one government or country
-  anyway. Perhaps it starts in that way, to get off the ground, but ultimately
+  anyway. Perhaps it starts out that way, to get off the ground, but ultimately
   the internet is a global institution, and is healthiest when it's connecting
   individuals _around the world_. A successful DaaS will reach beyond borders
   and try to connect everyone.
@@ -232,9 +241,9 @@ use-case could also be implemented:
 This is a tricky situation. It adds a lot of liablity for the user, since their
 raw data will be stored with the DaaS, ripe for hacking. It also places a lot of
 trust with the DaaS to be responsible with users' data and not go giving it out
-willy-nilly to platforms, and instead to only give out the bare-minimum that
-the user allows. Since the user is not the DaaS's direct customer, this might be
-too much to ask. Nevertheless, it's a use-case which is worth thinking about.
+willy-nilly to others, and instead to only give out the bare-minimum that the
+user allows. Since the user is not the DaaS' direct customer, this might be too
+much to ask. Nevertheless, it's a use-case which is worth thinking about.
 
 ## Dapps
 
@@ -243,29 +252,30 @@ While not mainstream yet, I think they have potential, and it's necessary to
 discuss how a DaaS would operate in a world where the internet is no longer
 hosted in central datacenters.
 
-Consider an Ethereum-based dapp. If a DaaS user were to register with their
-account one ethereum address (which are really public keys), the
-following use-case could be implemented:
+Consider an Ethereum-based dapp. If a user were to register one ethereum address
+(which are really public keys) with their DaaS account, the following use-case
+could be implemented:
 
 * A charity dapp has an ethereum contract, which receives a call from an
   ethereum address asking for money. The dapp wants to ensure every person it
   sends money to hasn't received any that day.
 
 * The DaaS has a separate ethereum contract it manages, where it stores all
-  addresses which have been registered to a user.
+  addresses which have been registered to a user. There is no need to keep any
+  other user information in the contract.
 
 * The charity dapp's contract calls the DaaS' contract, asking it if the address
   is one of its addresses. If so, and if the charity contract hasn't given to
-  that address yet today, it can give that address money.
+  that address yet today, it can send money to that address.
 
 There would perhaps need to be some mechanism by which a user could change their
 address, which would be complex since that address might be in use by a dapp
-already, but it would likely be do-able.
+already, but it's likely a solvable problem.
 
 A charity dapp is a bit of a silly example; ideally with a charity dapp there'd
 also be some mechanism to ensure a person actually _needs_ the money. But
-there's other dapp ideas which would greatly benefit from some insurance that
-they are not being abused.
+there's other dapp ideas which would become feasible, due to the inability of a
+person to impersonate many people, if DaaS use becomes normal.
 
 ## Why Did I Write This?
 
@@ -273,10 +283,10 @@ Perhaps you've gotten this far and are asking: "Clearly you've thought about
 this a lot, why don't you make this yourself and make some phat stacks of cash
 with a startup?" The answer is that this project would need to be started and
 run by serious people, who can be dedicated and thorough and responsible. I'm
-not sure I'm one of those people, I get distracted easily. But I would like to
+not sure I'm one of those people; I get distracted easily. But I would like to
 see this idea tried, and so I've written this up thinking maybe someone else
 would take the reins.
 
-I'm not asking for equity or anything if you want to try, it's a free idea for
+I'm not asking for equity or anything, if you want to try; it's a free idea for
 the taking. But if it turns out to be a bazillion dollar Good Idea™, I won't say
-no to a donation.
+no to a donation...
