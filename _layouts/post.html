@@ -57,6 +57,14 @@ layout: default
     {{ content }}
   </div>
 
+  {% if page.git_repo %}
+  <p class="light">
+    <em>To check this project out locally:</em></br>
+    <pre><code>git clone {{ page.git_repo }}
+{% if page.git_commit %}git checkout {{ page.git_commit }}{% endif %}</code></pre>
+  </p>
+  {% endif %}
+
   {% if prev or next %}
     <p class="light"><em>
       This post is part of a series<br/>
