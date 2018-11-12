@@ -382,3 +382,51 @@ and history and things to see, and I absolutely would love to go back. But
 despite all that, there was definitely a feeling a depression while I was there,
 like I was totally alone. When I got onto a plane and took off, I was more
 relieved than anything else.
+
+## Amsterdam, The Netherlands
+
+One of the first things I noticed when I landed in The Netherlands (which is
+such a strange name for a country, now that I'm typing it out) is that they have
+a sun. It's a stereotype that the UK doesn't get much sun, but it was absolutely
+a true one while I was there. There was literally cloud cover the whole time.
+That probably had to do with why my mood was down the whole time, unbenownst to
+me.
+
+With my extremely pale ginger self back under the sun, it felt like I'd been
+holding my breath for weeks and I was now finally able to breathe again.
+
+Amsterdam is sometimes called the Venice of the North. Like Bruges. Unlike
+Bruges, Amsterdam is gritty and in some places delapidated. The buildings are
+sinking into the soft, slightly-under-sea-level Holland soil, and so lean
+precariously over the streets. House boats line nearly all canals, many
+appearing abandoned. Most canals have a layer of debris and trash floating on
+them.
+
+Some parts of the city are littered with bars and clubs and "coffee shops",
+giving them a grunge feel. And others had wildly colored houses and quiet
+corners on the canal. And then the museum district, with the amazing Van Gogh
+Musuem and the laborynthian Rijksmuseum (those were the two I went in, there's
+like five in that little square). And still there's the red light district, with
+sex shops and cheesy tourist shit and live shows and, obviously, prostitutes.
+They each have a little window where they try to grab your attention from. It's
+kinda weird.
+
+Despite that, Amsterdam was probably my second favorite place I visted on the
+whole trip. Like Lisbon, the city feels real. The grunge lets you know people
+actually live there. The hostel I stayed in was really cool, and I made a bunch
+of friends. One of the nights there I confirmed a long-held suspicion: that I
+would hate bar crawls. Now I know for sure. On a different night me and friends
+went out, visited a "coffee shop", and hit up the Sex Museum. This turned out to
+be a great idea; it wasn't even that raunchy, just kind of mind-boggling.
+
+Amsterdam also turned out to have the best Belgian fries I've ever had, for
+whatever reason, and they ended up being my lunch almost every day. I'd grab my
+fry-cone and wander the canals, finding small corners and tucked away cafes to
+sit and read at. I wouldn't have thought that a city known for nightlife could
+also be home to so many serene little spots; nevertheless, the city is full of
+them.
+
+My bus out of Amsterdam was an 8 hour overnight journey which deposited me in
+Copenhagen. Before getting on the bus I killed the last of my "coffee" that was
+in my pocket, contorted myself into a ball fitting into the two seats of space I
+grabbed, and got the best sleep I've ever gotton on a bus.
