@@ -42,7 +42,7 @@ layout: default
     {% endfor %}
     {% if prev or next %}
       <p class="light"><em>
-        This post is part of a series<br/>
+        This post is part of a series:<br/>
         {% if prev %}
         Previously: <a href="{{ prev.url | relative_url }}">{{ prev.title }}</a></br>
         {% endif %}
@@ -67,7 +67,7 @@ layout: default
 
   {% if prev or next %}
     <p class="light"><em>
-      This post is part of a series<br/>
+      If you liked this post, consider checking out other posts in the series:<br/>
       {% if prev %}
       Previously: <a href="{{ prev.url | relative_url }}">{{ prev.title }}</a></br>
       {% endif %}
