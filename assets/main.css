@@ -59,7 +59,8 @@ ul {
     min-width: 1px;
 }
 
-#crypto-display-qr img,canvas {
+#crypto-display-qr img,
+#crypto-display-qr canvas {
     width: 100%;
     max-width: 512px;
 }
@@ -115,6 +116,8 @@ ul {
     margin-left: 1em;
 }
 
-#post-content img {
+#post-content img,
+#post-content canvas
+{
     max-width: 100%;
 }
