@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 1.9.473 {}
+// Compiled by ClojureScript 1.10.439 {}
 goog.provide('quil.core');
 goog.require('cljs.core');
 goog.require('clojure.string');
@@ -15,9 +15,9 @@ quil.core.no_fill_prop = "no-fill-quil";
  *   (.beginDraw (current-graphics)).
  */
 quil.core.current_graphics = (function quil$core$current_graphics(){
-var or__6814__auto__ = quil.core._STAR_graphics_STAR_;
-if(cljs.core.truth_(or__6814__auto__)){
-return or__6814__auto__;
+var or__4047__auto__ = quil.core._STAR_graphics_STAR_;
+if(cljs.core.truth_(or__4047__auto__)){
+return or__4047__auto__;
 } else {
 return quil.sketch.current_applet.call(null);
 }
@@ -95,50 +95,54 @@ return quil.sketch.current_applet.call(null).print(msg);
 quil.core.get_sketch_by_id = (function quil$core$get_sketch_by_id(id){
 return Processing.getInstanceById(id);
 });
+var ret__4684__auto___1286 = (function (){
 quil.core.with_sketch = (function quil$core$with_sketch(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8278 = arguments.length;
-var i__7928__auto___8279 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1287 = arguments.length;
+var i__4642__auto___1288 = (0);
 while(true){
-if((i__7928__auto___8279 < len__7927__auto___8278)){
-args__7934__auto__.push((arguments[i__7928__auto___8279]));
+if((i__4642__auto___1288 < len__4641__auto___1287)){
+args__4647__auto__.push((arguments[i__4642__auto___1288]));
 
-var G__8280 = (i__7928__auto___8279 + (1));
-i__7928__auto___8279 = G__8280;
+var G__1289 = (i__4642__auto___1288 + (1));
+i__4642__auto___1288 = G__1289;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.with_sketch.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.with_sketch.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.with_sketch.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,applet,body){
-if(cljs.core.truth_(quil.util.clj_compilation_QMARK_.call(null))){
+if(quil.util.clj_compilation_QMARK_.call(null)){
 return null;
 } else {
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.sketch","with-sketch","quil.sketch/with-sketch",-634067708,null)),(function (){var x__7656__auto__ = applet;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),body)));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.sketch","with-sketch","quil.sketch/with-sketch",-634067708,null),null,(1),null)),(new cljs.core.List(null,applet,null,(1),null)),body)));
 }
 });
 
 quil.core.with_sketch.cljs$lang$maxFixedArity = (3);
 
-quil.core.with_sketch.cljs$lang$applyTo = (function (seq8274){
-var G__8275 = cljs.core.first.call(null,seq8274);
-var seq8274__$1 = cljs.core.next.call(null,seq8274);
-var G__8276 = cljs.core.first.call(null,seq8274__$1);
-var seq8274__$2 = cljs.core.next.call(null,seq8274__$1);
-var G__8277 = cljs.core.first.call(null,seq8274__$2);
-var seq8274__$3 = cljs.core.next.call(null,seq8274__$2);
-return quil.core.with_sketch.cljs$core$IFn$_invoke$arity$variadic(G__8275,G__8276,G__8277,seq8274__$3);
+/** @this {Function} */
+quil.core.with_sketch.cljs$lang$applyTo = (function (seq1282){
+var G__1283 = cljs.core.first.call(null,seq1282);
+var seq1282__$1 = cljs.core.next.call(null,seq1282);
+var G__1284 = cljs.core.first.call(null,seq1282__$1);
+var seq1282__$2 = cljs.core.next.call(null,seq1282__$1);
+var G__1285 = cljs.core.first.call(null,seq1282__$2);
+var seq1282__$3 = cljs.core.next.call(null,seq1282__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1283,G__1284,G__1285,seq1282__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.with_sketch.cljs$lang$macro = true;
+
 /**
  * Retrieve sketch-specific state-atom. All changes to the
  *   atom will be reflected in the state.
@@ -161,23 +165,8 @@ return quil.sketch.current_applet.call(null).quil;
  *   (state) ;=> {:foo 1}
  */
 quil.core.state = (function quil$core$state(var_args){
-var args8281 = [];
-var len__7927__auto___8284 = arguments.length;
-var i__7928__auto___8285 = (0);
-while(true){
-if((i__7928__auto___8285 < len__7927__auto___8284)){
-args8281.push((arguments[i__7928__auto___8285]));
-
-var G__8286 = (i__7928__auto___8285 + (1));
-i__7928__auto___8285 = G__8286;
-continue;
-} else {
-}
-break;
-}
-
-var G__8283 = args8281.length;
-switch (G__8283) {
+var G__1291 = arguments.length;
+switch (G__1291) {
 case 0:
 return quil.core.state.cljs$core$IFn$_invoke$arity$0();
 
@@ -187,7 +176,7 @@ return quil.core.state.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8281.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -200,7 +189,7 @@ quil.core.state.cljs$core$IFn$_invoke$arity$1 = (function (key){
 var state = quil.core.state.call(null);
 if(cljs.core.contains_QMARK_.call(null,state,key)){
 } else {
-throw Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Unable to find state with key: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(key)].join(''));
+throw Error(["Unable to find state with key: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(key)].join(''));
 }
 
 return cljs.core.get.call(null,state,key);
@@ -216,23 +205,23 @@ quil.core.state.cljs$lang$maxFixedArity = 1;
  *   (set-state! :foo 1 :bar (atom true) :baz (/ (width) 2))
  */
 quil.core.set_state_BANG_ = (function quil$core$set_state_BANG_(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8289 = arguments.length;
-var i__7928__auto___8290 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1294 = arguments.length;
+var i__4642__auto___1295 = (0);
 while(true){
-if((i__7928__auto___8290 < len__7927__auto___8289)){
-args__7934__auto__.push((arguments[i__7928__auto___8290]));
+if((i__4642__auto___1295 < len__4641__auto___1294)){
+args__4647__auto__.push((arguments[i__4642__auto___1295]));
 
-var G__8291 = (i__7928__auto___8290 + (1));
-i__7928__auto___8290 = G__8291;
+var G__1296 = (i__4642__auto___1295 + (1));
+i__4642__auto___1295 = G__1296;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((0) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((0)),(0),null)):null);
-return quil.core.set_state_BANG_.cljs$core$IFn$_invoke$arity$variadic(argseq__7935__auto__);
+var argseq__4648__auto__ = ((((0) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((0)),(0),null)):null);
+return quil.core.set_state_BANG_.cljs$core$IFn$_invoke$arity$variadic(argseq__4648__auto__);
 });
 
 quil.core.set_state_BANG_.cljs$core$IFn$_invoke$arity$variadic = (function (state_vals){
@@ -247,8 +236,10 @@ return cljs.core.reset_BANG_.call(null,state_STAR_,state_map);
 
 quil.core.set_state_BANG_.cljs$lang$maxFixedArity = (0);
 
-quil.core.set_state_BANG_.cljs$lang$applyTo = (function (seq8288){
-return quil.core.set_state_BANG_.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null,seq8288));
+/** @this {Function} */
+quil.core.set_state_BANG_.cljs$lang$applyTo = (function (seq1293){
+var self__4629__auto__ = this;
+return self__4629__auto__.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null,seq1293));
 });
 
 /**
@@ -283,23 +274,8 @@ return quil.core.current_graphics.call(null).alpha(cljs.core.unchecked_int.call(
  *   and shininess in setting the material properties of shapes.
  */
 quil.core.ambient_float = (function quil$core$ambient_float(var_args){
-var args8292 = [];
-var len__7927__auto___8295 = arguments.length;
-var i__7928__auto___8296 = (0);
-while(true){
-if((i__7928__auto___8296 < len__7927__auto___8295)){
-args8292.push((arguments[i__7928__auto___8296]));
-
-var G__8297 = (i__7928__auto___8296 + (1));
-i__7928__auto___8296 = G__8297;
-continue;
-} else {
-}
-break;
-}
-
-var G__8294 = args8292.length;
-switch (G__8294) {
+var G__1298 = arguments.length;
+switch (G__1298) {
 case 1:
 return quil.core.ambient_float.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -309,7 +285,7 @@ return quil.core.ambient_float.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(a
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8292.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -344,23 +320,8 @@ return quil.core.current_graphics.call(null).ambient((rgb | (0)));
  *   and shininess in setting the material properties of shapes.
  */
 quil.core.ambient = (function quil$core$ambient(var_args){
-var args8299 = [];
-var len__7927__auto___8302 = arguments.length;
-var i__7928__auto___8303 = (0);
-while(true){
-if((i__7928__auto___8303 < len__7927__auto___8302)){
-args8299.push((arguments[i__7928__auto___8303]));
-
-var G__8304 = (i__7928__auto___8303 + (1));
-i__7928__auto___8303 = G__8304;
-continue;
-} else {
-}
-break;
-}
-
-var G__8301 = args8299.length;
-switch (G__8301) {
+var G__1301 = arguments.length;
+switch (G__1301) {
 case 1:
 return quil.core.ambient.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -370,7 +331,7 @@ return quil.core.ambient.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(argumen
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8299.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -396,23 +357,8 @@ quil.core.ambient.cljs$lang$maxFixedArity = 3;
  *   parameters is determined by the current color mode.
  */
 quil.core.ambient_light = (function quil$core$ambient_light(var_args){
-var args8306 = [];
-var len__7927__auto___8309 = arguments.length;
-var i__7928__auto___8310 = (0);
-while(true){
-if((i__7928__auto___8310 < len__7927__auto___8309)){
-args8306.push((arguments[i__7928__auto___8310]));
-
-var G__8311 = (i__7928__auto___8310 + (1));
-i__7928__auto___8310 = G__8311;
-continue;
-} else {
-}
-break;
-}
-
-var G__8308 = args8306.length;
-switch (G__8308) {
+var G__1304 = arguments.length;
+switch (G__1304) {
 case 3:
 return quil.core.ambient_light.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
@@ -422,7 +368,7 @@ return quil.core.ambient_light.cljs$core$IFn$_invoke$arity$6((arguments[(0)]),(a
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8306.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -511,23 +457,8 @@ return cljs.core.seq.call(null,PFont.list());
  *   create-graphics. Converts args to floats.
  */
 quil.core.background_float = (function quil$core$background_float(var_args){
-var args8313 = [];
-var len__7927__auto___8316 = arguments.length;
-var i__7928__auto___8317 = (0);
-while(true){
-if((i__7928__auto___8317 < len__7927__auto___8316)){
-args8313.push((arguments[i__7928__auto___8317]));
-
-var G__8318 = (i__7928__auto___8317 + (1));
-i__7928__auto___8317 = G__8318;
-continue;
-} else {
-}
-break;
-}
-
-var G__8315 = args8313.length;
-switch (G__8315) {
+var G__1307 = arguments.length;
+switch (G__1307) {
 case 1:
 return quil.core.background_float.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -545,7 +476,7 @@ return quil.core.background_float.cljs$core$IFn$_invoke$arity$4((arguments[(0)])
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8313.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -579,23 +510,8 @@ quil.core.background_float.cljs$lang$maxFixedArity = 4;
  *   create-graphics. Converts rgb to an int and alpha to a float.
  */
 quil.core.background_int = (function quil$core$background_int(var_args){
-var args8320 = [];
-var len__7927__auto___8323 = arguments.length;
-var i__7928__auto___8324 = (0);
-while(true){
-if((i__7928__auto___8324 < len__7927__auto___8323)){
-args8320.push((arguments[i__7928__auto___8324]));
-
-var G__8325 = (i__7928__auto___8324 + (1));
-i__7928__auto___8324 = G__8325;
-continue;
-} else {
-}
-break;
-}
-
-var G__8322 = args8320.length;
-switch (G__8322) {
+var G__1310 = arguments.length;
+switch (G__1310) {
 case 1:
 return quil.core.background_int.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -605,7 +521,7 @@ return quil.core.background_int.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8320.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -631,23 +547,8 @@ quil.core.background_int.cljs$lang$maxFixedArity = 2;
  *   create-graphics. Converts args to floats.
  */
 quil.core.background = (function quil$core$background(var_args){
-var args8327 = [];
-var len__7927__auto___8330 = arguments.length;
-var i__7928__auto___8331 = (0);
-while(true){
-if((i__7928__auto___8331 < len__7927__auto___8330)){
-args8327.push((arguments[i__7928__auto___8331]));
-
-var G__8332 = (i__7928__auto___8331 + (1));
-i__7928__auto___8331 = G__8332;
-continue;
-} else {
-}
-break;
-}
-
-var G__8329 = args8327.length;
-switch (G__8329) {
+var G__1313 = arguments.length;
+switch (G__1313) {
 case 1:
 return quil.core.background.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -665,7 +566,7 @@ return quil.core.background.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argu
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8327.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -740,23 +641,8 @@ return quil.core.current_graphics.call(null).beginContour();
  *   such as ellipse or rect within begin-shape.
  */
 quil.core.begin_shape = (function quil$core$begin_shape(var_args){
-var args8334 = [];
-var len__7927__auto___8337 = arguments.length;
-var i__7928__auto___8338 = (0);
-while(true){
-if((i__7928__auto___8338 < len__7927__auto___8337)){
-args8334.push((arguments[i__7928__auto___8338]));
-
-var G__8339 = (i__7928__auto___8338 + (1));
-i__7928__auto___8338 = G__8339;
-continue;
-} else {
-}
-break;
-}
-
-var G__8336 = args8334.length;
-switch (G__8336) {
+var G__1316 = arguments.length;
+switch (G__1316) {
 case 0:
 return quil.core.begin_shape.cljs$core$IFn$_invoke$arity$0();
 
@@ -766,7 +652,7 @@ return quil.core.begin_shape.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8334.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -790,23 +676,8 @@ quil.core.begin_shape.cljs$lang$maxFixedArity = 1;
  *   points which define the shape of the curve.
  */
 quil.core.bezier = (function quil$core$bezier(var_args){
-var args8341 = [];
-var len__7927__auto___8344 = arguments.length;
-var i__7928__auto___8345 = (0);
-while(true){
-if((i__7928__auto___8345 < len__7927__auto___8344)){
-args8341.push((arguments[i__7928__auto___8345]));
-
-var G__8346 = (i__7928__auto___8345 + (1));
-i__7928__auto___8345 = G__8346;
-continue;
-} else {
-}
-break;
-}
-
-var G__8343 = args8341.length;
-switch (G__8343) {
+var G__1319 = arguments.length;
+switch (G__1319) {
 case 8:
 return quil.core.bezier.cljs$core$IFn$_invoke$arity$8((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]),(arguments[(5)]),(arguments[(6)]),(arguments[(7)]));
 
@@ -816,7 +687,7 @@ return quil.core.bezier.cljs$core$IFn$_invoke$arity$12((arguments[(0)]),(argumen
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8341.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -868,23 +739,8 @@ return quil.core.current_graphics.call(null).bezierTangent(a,b,c,d,t);
  *   begin-shape.
  */
 quil.core.bezier_vertex = (function quil$core$bezier_vertex(var_args){
-var args8348 = [];
-var len__7927__auto___8351 = arguments.length;
-var i__7928__auto___8352 = (0);
-while(true){
-if((i__7928__auto___8352 < len__7927__auto___8351)){
-args8348.push((arguments[i__7928__auto___8352]));
-
-var G__8353 = (i__7928__auto___8352 + (1));
-i__7928__auto___8352 = G__8353;
-continue;
-} else {
-}
-break;
-}
-
-var G__8350 = args8348.length;
-switch (G__8350) {
+var G__1322 = arguments.length;
+switch (G__1322) {
 case 6:
 return quil.core.bezier_vertex.cljs$core$IFn$_invoke$arity$6((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]),(arguments[(5)]));
 
@@ -894,7 +750,7 @@ return quil.core.bezier_vertex.cljs$core$IFn$_invoke$arity$9((arguments[(0)]),(a
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8348.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -915,23 +771,8 @@ quil.core.bezier_vertex.cljs$lang$maxFixedArity = 9;
  *   the number of digits used.
  */
 quil.core.binary = (function quil$core$binary(var_args){
-var args8355 = [];
-var len__7927__auto___8358 = arguments.length;
-var i__7928__auto___8359 = (0);
-while(true){
-if((i__7928__auto___8359 < len__7927__auto___8358)){
-args8355.push((arguments[i__7928__auto___8359]));
-
-var G__8360 = (i__7928__auto___8359 + (1));
-i__7928__auto___8359 = G__8360;
-continue;
-} else {
-}
-break;
-}
-
-var G__8357 = args8355.length;
-switch (G__8357) {
+var G__1325 = arguments.length;
+switch (G__1325) {
 case 1:
 return quil.core.binary.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -941,7 +782,7 @@ return quil.core.binary.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8355.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -992,23 +833,8 @@ quil.core.binary.cljs$lang$maxFixedArity = 2;
  *              Photoshop.
  */
 quil.core.blend = (function quil$core$blend(var_args){
-var args8362 = [];
-var len__7927__auto___8365 = arguments.length;
-var i__7928__auto___8366 = (0);
-while(true){
-if((i__7928__auto___8366 < len__7927__auto___8365)){
-args8362.push((arguments[i__7928__auto___8366]));
-
-var G__8367 = (i__7928__auto___8366 + (1));
-i__7928__auto___8366 = G__8367;
-continue;
-} else {
-}
-break;
-}
-
-var G__8364 = args8362.length;
-switch (G__8364) {
+var G__1328 = arguments.length;
+switch (G__1328) {
 case 9:
 return quil.core.blend.cljs$core$IFn$_invoke$arity$9((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]),(arguments[(5)]),(arguments[(6)]),(arguments[(7)]),(arguments[(8)]));
 
@@ -1022,7 +848,7 @@ return quil.core.blend.cljs$core$IFn$_invoke$arity$11((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8362.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1089,23 +915,8 @@ return quil.core.current_graphics.call(null).blue(cljs.core.unchecked_int.call(n
  * Creates an extruded rectangle.
  */
 quil.core.box = (function quil$core$box(var_args){
-var args8369 = [];
-var len__7927__auto___8372 = arguments.length;
-var i__7928__auto___8373 = (0);
-while(true){
-if((i__7928__auto___8373 < len__7927__auto___8372)){
-args8369.push((arguments[i__7928__auto___8373]));
-
-var G__8374 = (i__7928__auto___8373 + (1));
-i__7928__auto___8373 = G__8374;
-continue;
-} else {
-}
-break;
-}
-
-var G__8371 = args8369.length;
-switch (G__8371) {
+var G__1331 = arguments.length;
+switch (G__1331) {
 case 1:
 return quil.core.box.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -1115,7 +926,7 @@ return quil.core.box.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8369.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1159,23 +970,8 @@ return quil.core.current_graphics.call(null).brightness(cljs.core.unchecked_int.
  *   current camera settings.
  */
 quil.core.camera = (function quil$core$camera(var_args){
-var args8376 = [];
-var len__7927__auto___8379 = arguments.length;
-var i__7928__auto___8380 = (0);
-while(true){
-if((i__7928__auto___8380 < len__7927__auto___8379)){
-args8376.push((arguments[i__7928__auto___8380]));
-
-var G__8381 = (i__7928__auto___8380 + (1));
-i__7928__auto___8380 = G__8381;
-continue;
-} else {
-}
-break;
-}
-
-var G__8378 = args8376.length;
-switch (G__8378) {
+var G__1334 = arguments.length;
+switch (G__1334) {
 case 0:
 return quil.core.camera.cljs$core$IFn$_invoke$arity$0();
 
@@ -1185,7 +981,7 @@ return quil.core.camera.cljs$core$IFn$_invoke$arity$9((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8376.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1221,23 +1017,8 @@ return quil.sketch.current_applet.call(null).ceil(n);
  *   a - alpha value
  */
 quil.core.color = (function quil$core$color(var_args){
-var args8383 = [];
-var len__7927__auto___8386 = arguments.length;
-var i__7928__auto___8387 = (0);
-while(true){
-if((i__7928__auto___8387 < len__7927__auto___8386)){
-args8383.push((arguments[i__7928__auto___8387]));
-
-var G__8388 = (i__7928__auto___8387 + (1));
-i__7928__auto___8387 = G__8388;
-continue;
-} else {
-}
-break;
-}
-
-var G__8385 = args8383.length;
-switch (G__8385) {
+var G__1337 = arguments.length;
+switch (G__1337) {
 case 1:
 return quil.core.color.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -1255,7 +1036,7 @@ return quil.core.color.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8383.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1290,23 +1071,8 @@ quil.core.color.cljs$lang$maxFixedArity = 4;
  *   parameters range1, range2, range3, and range 4.
  */
 quil.core.color_mode = (function quil$core$color_mode(var_args){
-var args8390 = [];
-var len__7927__auto___8393 = arguments.length;
-var i__7928__auto___8394 = (0);
-while(true){
-if((i__7928__auto___8394 < len__7927__auto___8393)){
-args8390.push((arguments[i__7928__auto___8394]));
-
-var G__8395 = (i__7928__auto___8394 + (1));
-i__7928__auto___8394 = G__8395;
-continue;
-} else {
-}
-break;
-}
-
-var G__8392 = args8390.length;
-switch (G__8392) {
+var G__1340 = arguments.length;
+switch (G__1340) {
 case 1:
 return quil.core.color_mode.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -1324,7 +1090,7 @@ return quil.core.color_mode.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(argu
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8390.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1367,23 +1133,8 @@ return quil.sketch.current_applet.call(null).constrain(amt,low,high);
  *   image has an alpha channel set, it will be copied as well. 
  */
 quil.core.copy = (function quil$core$copy(var_args){
-var args8397 = [];
-var len__7927__auto___8424 = arguments.length;
-var i__7928__auto___8425 = (0);
-while(true){
-if((i__7928__auto___8425 < len__7927__auto___8424)){
-args8397.push((arguments[i__7928__auto___8425]));
-
-var G__8426 = (i__7928__auto___8425 + (1));
-i__7928__auto___8425 = G__8426;
-continue;
-} else {
-}
-break;
-}
-
-var G__8399 = args8397.length;
-switch (G__8399) {
+var G__1343 = arguments.length;
+switch (G__1343) {
 case 2:
 return quil.core.copy.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -1397,50 +1148,50 @@ return quil.core.copy.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8397.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
 
-quil.core.copy.cljs$core$IFn$_invoke$arity$2 = (function (p__8400,p__8401){
-var vec__8402 = p__8400;
-var sx = cljs.core.nth.call(null,vec__8402,(0),null);
-var sy = cljs.core.nth.call(null,vec__8402,(1),null);
-var swidth = cljs.core.nth.call(null,vec__8402,(2),null);
-var sheight = cljs.core.nth.call(null,vec__8402,(3),null);
-var vec__8405 = p__8401;
-var dx = cljs.core.nth.call(null,vec__8405,(0),null);
-var dy = cljs.core.nth.call(null,vec__8405,(1),null);
-var dwidth = cljs.core.nth.call(null,vec__8405,(2),null);
-var dheight = cljs.core.nth.call(null,vec__8405,(3),null);
+quil.core.copy.cljs$core$IFn$_invoke$arity$2 = (function (p__1344,p__1345){
+var vec__1346 = p__1344;
+var sx = cljs.core.nth.call(null,vec__1346,(0),null);
+var sy = cljs.core.nth.call(null,vec__1346,(1),null);
+var swidth = cljs.core.nth.call(null,vec__1346,(2),null);
+var sheight = cljs.core.nth.call(null,vec__1346,(3),null);
+var vec__1349 = p__1345;
+var dx = cljs.core.nth.call(null,vec__1349,(0),null);
+var dy = cljs.core.nth.call(null,vec__1349,(1),null);
+var dwidth = cljs.core.nth.call(null,vec__1349,(2),null);
+var dheight = cljs.core.nth.call(null,vec__1349,(3),null);
 return quil.core.current_graphics.call(null).copy((sx | (0)),(sy | (0)),(swidth | (0)),(sheight | (0)),(dx | (0)),(dy | (0)),(dwidth | (0)),(dheight | (0)));
 });
 
-quil.core.copy.cljs$core$IFn$_invoke$arity$3 = (function (src_img,p__8408,p__8409){
-var vec__8410 = p__8408;
-var sx = cljs.core.nth.call(null,vec__8410,(0),null);
-var sy = cljs.core.nth.call(null,vec__8410,(1),null);
-var swidth = cljs.core.nth.call(null,vec__8410,(2),null);
-var sheight = cljs.core.nth.call(null,vec__8410,(3),null);
-var vec__8413 = p__8409;
-var dx = cljs.core.nth.call(null,vec__8413,(0),null);
-var dy = cljs.core.nth.call(null,vec__8413,(1),null);
-var dwidth = cljs.core.nth.call(null,vec__8413,(2),null);
-var dheight = cljs.core.nth.call(null,vec__8413,(3),null);
+quil.core.copy.cljs$core$IFn$_invoke$arity$3 = (function (src_img,p__1352,p__1353){
+var vec__1354 = p__1352;
+var sx = cljs.core.nth.call(null,vec__1354,(0),null);
+var sy = cljs.core.nth.call(null,vec__1354,(1),null);
+var swidth = cljs.core.nth.call(null,vec__1354,(2),null);
+var sheight = cljs.core.nth.call(null,vec__1354,(3),null);
+var vec__1357 = p__1353;
+var dx = cljs.core.nth.call(null,vec__1357,(0),null);
+var dy = cljs.core.nth.call(null,vec__1357,(1),null);
+var dwidth = cljs.core.nth.call(null,vec__1357,(2),null);
+var dheight = cljs.core.nth.call(null,vec__1357,(3),null);
 return quil.core.copy.call(null,src_img,quil.core.current_graphics.call(null),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [sx,sy,swidth,sheight], null),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [dx,dy,dwidth,dheight], null));
 });
 
-quil.core.copy.cljs$core$IFn$_invoke$arity$4 = (function (src_img,dest_img,p__8416,p__8417){
-var vec__8418 = p__8416;
-var sx = cljs.core.nth.call(null,vec__8418,(0),null);
-var sy = cljs.core.nth.call(null,vec__8418,(1),null);
-var swidth = cljs.core.nth.call(null,vec__8418,(2),null);
-var sheight = cljs.core.nth.call(null,vec__8418,(3),null);
-var vec__8421 = p__8417;
-var dx = cljs.core.nth.call(null,vec__8421,(0),null);
-var dy = cljs.core.nth.call(null,vec__8421,(1),null);
-var dwidth = cljs.core.nth.call(null,vec__8421,(2),null);
-var dheight = cljs.core.nth.call(null,vec__8421,(3),null);
+quil.core.copy.cljs$core$IFn$_invoke$arity$4 = (function (src_img,dest_img,p__1360,p__1361){
+var vec__1362 = p__1360;
+var sx = cljs.core.nth.call(null,vec__1362,(0),null);
+var sy = cljs.core.nth.call(null,vec__1362,(1),null);
+var swidth = cljs.core.nth.call(null,vec__1362,(2),null);
+var sheight = cljs.core.nth.call(null,vec__1362,(3),null);
+var vec__1365 = p__1361;
+var dx = cljs.core.nth.call(null,vec__1365,(0),null);
+var dy = cljs.core.nth.call(null,vec__1365,(1),null);
+var dwidth = cljs.core.nth.call(null,vec__1365,(2),null);
+var dheight = cljs.core.nth.call(null,vec__1365,(3),null);
 return dest_img.copy(src_img,(sx | (0)),(sy | (0)),(swidth | (0)),(sheight | (0)),(dx | (0)),(dy | (0)),(dwidth | (0)),(dheight | (0)));
 });
 
@@ -1482,23 +1233,8 @@ return quil.sketch.current_applet.call(null).cos(angle);
  *   not available on the machine running the sketch.
  */
 quil.core.create_font = (function quil$core$create_font(var_args){
-var args8428 = [];
-var len__7927__auto___8431 = arguments.length;
-var i__7928__auto___8432 = (0);
-while(true){
-if((i__7928__auto___8432 < len__7927__auto___8431)){
-args8428.push((arguments[i__7928__auto___8432]));
-
-var G__8433 = (i__7928__auto___8432 + (1));
-i__7928__auto___8432 = G__8433;
-continue;
-} else {
-}
-break;
-}
-
-var G__8430 = args8428.length;
-switch (G__8430) {
+var G__1370 = arguments.length;
+switch (G__1370) {
 case 2:
 return quil.core.create_font.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -1512,21 +1248,21 @@ return quil.core.create_font.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arg
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8428.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
 
 quil.core.create_font.cljs$core$IFn$_invoke$arity$2 = (function (name,size){
-return quil.sketch.current_applet.call(null).createFont([cljs.core.str.cljs$core$IFn$_invoke$arity$1(name)].join(''),size);
+return quil.sketch.current_applet.call(null).createFont(cljs.core.str.cljs$core$IFn$_invoke$arity$1(name),size);
 });
 
 quil.core.create_font.cljs$core$IFn$_invoke$arity$3 = (function (name,size,smooth){
-return quil.sketch.current_applet.call(null).createFont([cljs.core.str.cljs$core$IFn$_invoke$arity$1(name)].join(''),size,smooth);
+return quil.sketch.current_applet.call(null).createFont(cljs.core.str.cljs$core$IFn$_invoke$arity$1(name),size,smooth);
 });
 
 quil.core.create_font.cljs$core$IFn$_invoke$arity$4 = (function (name,size,smooth,charset){
-return quil.sketch.current_applet.call(null).createFont([cljs.core.str.cljs$core$IFn$_invoke$arity$1(name)].join(''),size,smooth,charset);
+return quil.sketch.current_applet.call(null).createFont(cljs.core.str.cljs$core$IFn$_invoke$arity$1(name),size,smooth,charset);
 });
 
 quil.core.create_font.cljs$lang$maxFixedArity = 4;
@@ -1557,23 +1293,8 @@ quil.core.create_font.cljs$lang$maxFixedArity = 4;
  *   graphics object will be honored.
  */
 quil.core.create_graphics = (function quil$core$create_graphics(var_args){
-var args8435 = [];
-var len__7927__auto___8438 = arguments.length;
-var i__7928__auto___8439 = (0);
-while(true){
-if((i__7928__auto___8439 < len__7927__auto___8438)){
-args8435.push((arguments[i__7928__auto___8439]));
-
-var G__8440 = (i__7928__auto___8439 + (1));
-i__7928__auto___8439 = G__8440;
-continue;
-} else {
-}
-break;
-}
-
-var G__8437 = args8435.length;
-switch (G__8437) {
+var G__1373 = arguments.length;
+switch (G__1373) {
 case 2:
 return quil.core.create_graphics.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -1587,7 +1308,7 @@ return quil.core.create_graphics.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8435.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1644,23 +1365,8 @@ return quil.core.current_graphics.call(null).strokeColor;
  *   symbol.
  */
 quil.core.cursor = (function quil$core$cursor(var_args){
-var args8442 = [];
-var len__7927__auto___8445 = arguments.length;
-var i__7928__auto___8446 = (0);
-while(true){
-if((i__7928__auto___8446 < len__7927__auto___8445)){
-args8442.push((arguments[i__7928__auto___8446]));
-
-var G__8447 = (i__7928__auto___8446 + (1));
-i__7928__auto___8446 = G__8447;
-continue;
-} else {
-}
-break;
-}
-
-var G__8444 = args8442.length;
-switch (G__8444) {
+var G__1376 = arguments.length;
+switch (G__1376) {
 case 0:
 return quil.core.cursor.cljs$core$IFn$_invoke$arity$0();
 
@@ -1670,7 +1376,7 @@ return quil.core.cursor.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8442.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1681,7 +1387,7 @@ return quil.sketch.current_applet.call(null).cursor();
 
 quil.core.cursor.cljs$core$IFn$_invoke$arity$1 = (function (cursor_mode){
 var cursor_mode__$1 = quil.util.resolve_constant_key.call(null,cursor_mode,quil.core.cursor_modes);
-return quil.sketch.current_applet.call(null).cursor([cljs.core.str.cljs$core$IFn$_invoke$arity$1(cursor_mode__$1)].join(''));
+return quil.sketch.current_applet.call(null).cursor(cljs.core.str.cljs$core$IFn$_invoke$arity$1(cursor_mode__$1));
 });
 
 quil.core.cursor.cljs$lang$maxFixedArity = 1;
@@ -1692,23 +1398,8 @@ quil.core.cursor.cljs$lang$maxFixedArity = 1;
  *   It is recommended to make the size 16x16 or 32x32 pixels.
  */
 quil.core.cursor_image = (function quil$core$cursor_image(var_args){
-var args8449 = [];
-var len__7927__auto___8452 = arguments.length;
-var i__7928__auto___8453 = (0);
-while(true){
-if((i__7928__auto___8453 < len__7927__auto___8452)){
-args8449.push((arguments[i__7928__auto___8453]));
-
-var G__8454 = (i__7928__auto___8453 + (1));
-i__7928__auto___8453 = G__8454;
-continue;
-} else {
-}
-break;
-}
-
-var G__8451 = args8449.length;
-switch (G__8451) {
+var G__1379 = arguments.length;
+switch (G__1379) {
 case 1:
 return quil.core.cursor_image.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -1718,7 +1409,7 @@ return quil.core.cursor_image.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(ar
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8449.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1744,23 +1435,8 @@ quil.core.cursor_image.cljs$lang$maxFixedArity = 3;
  *   splines.
  */
 quil.core.curve = (function quil$core$curve(var_args){
-var args8456 = [];
-var len__7927__auto___8459 = arguments.length;
-var i__7928__auto___8460 = (0);
-while(true){
-if((i__7928__auto___8460 < len__7927__auto___8459)){
-args8456.push((arguments[i__7928__auto___8460]));
-
-var G__8461 = (i__7928__auto___8460 + (1));
-i__7928__auto___8460 = G__8461;
-continue;
-} else {
-}
-break;
-}
-
-var G__8458 = args8456.length;
-switch (G__8458) {
+var G__1382 = arguments.length;
+switch (G__1382) {
 case 8:
 return quil.core.curve.cljs$core$IFn$_invoke$arity$8((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]),(arguments[(5)]),(arguments[(6)]),(arguments[(7)]));
 
@@ -1770,7 +1446,7 @@ return quil.core.curve.cljs$core$IFn$_invoke$arity$12((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8456.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1836,23 +1512,8 @@ return quil.core.current_graphics.call(null).curveTightness(ti);
  *   Catmull-Rom splines.
  */
 quil.core.curve_vertex = (function quil$core$curve_vertex(var_args){
-var args8463 = [];
-var len__7927__auto___8466 = arguments.length;
-var i__7928__auto___8467 = (0);
-while(true){
-if((i__7928__auto___8467 < len__7927__auto___8466)){
-args8463.push((arguments[i__7928__auto___8467]));
-
-var G__8468 = (i__7928__auto___8467 + (1));
-i__7928__auto___8467 = G__8468;
-continue;
-} else {
-}
-break;
-}
-
-var G__8465 = args8463.length;
-switch (G__8465) {
+var G__1385 = arguments.length;
+switch (G__1385) {
 case 2:
 return quil.core.curve_vertex.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -1862,7 +1523,7 @@ return quil.core.curve_vertex.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(ar
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8463.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1926,23 +1587,8 @@ return quil.core.current_graphics.call(null).directionalLight(r,g,b,nx,ny,nz);
  * Calculates the distance between two points
  */
 quil.core.dist = (function quil$core$dist(var_args){
-var args8470 = [];
-var len__7927__auto___8473 = arguments.length;
-var i__7928__auto___8474 = (0);
-while(true){
-if((i__7928__auto___8474 < len__7927__auto___8473)){
-args8470.push((arguments[i__7928__auto___8474]));
-
-var G__8475 = (i__7928__auto___8474 + (1));
-i__7928__auto___8474 = G__8475;
-continue;
-} else {
-}
-break;
-}
-
-var G__8472 = args8470.length;
-switch (G__8472) {
+var G__1388 = arguments.length;
+switch (G__1388) {
 case 4:
 return quil.core.dist.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]));
 
@@ -1952,7 +1598,7 @@ return quil.core.dist.cljs$core$IFn$_invoke$arity$6((arguments[(0)]),(arguments[
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8470.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -1967,6 +1613,7 @@ return quil.sketch.current_applet.call(null).dist(x1,y1,z1,x2,y2,z2);
 
 quil.core.dist.cljs$lang$maxFixedArity = 6;
 
+var ret__4684__auto___1395 = (function (){
 /**
  * Macro for drawing on graphics which saves result in the file at the end.
  *   Similar to 'with-graphics' macro. do-record assumed to be used with :pdf
@@ -1978,51 +1625,48 @@ quil.core.dist.cljs$lang$maxFixedArity = 6;
  *   
  */
 quil.core.do_record = (function quil$core$do_record(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8482 = arguments.length;
-var i__7928__auto___8483 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1396 = arguments.length;
+var i__4642__auto___1397 = (0);
 while(true){
-if((i__7928__auto___8483 < len__7927__auto___8482)){
-args__7934__auto__.push((arguments[i__7928__auto___8483]));
+if((i__4642__auto___1397 < len__4641__auto___1396)){
+args__4647__auto__.push((arguments[i__4642__auto___1397]));
 
-var G__8484 = (i__7928__auto___8483 + (1));
-i__7928__auto___8483 = G__8484;
+var G__1398 = (i__4642__auto___1397 + (1));
+i__4642__auto___1397 = G__1398;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.do_record.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.do_record.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.do_record.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,graphics,body){
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null)),(function (){var x__7656__auto__ = cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"gr__8477__auto__","gr__8477__auto__",-1094160127,null)),(function (){var x__7656__auto__ = graphics;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})()))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","with-graphics","quil.core/with-graphics",481277883,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"gr__8477__auto__","gr__8477__auto__",-1094160127,null)),body)));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,".dispose",".dispose",-1697594101,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"gr__8477__auto__","gr__8477__auto__",-1094160127,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"gr__1390__auto__","gr__1390__auto__",907895732,null),null,(1),null)),(new cljs.core.List(null,graphics,null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","with-graphics","quil.core/with-graphics",481277883,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"gr__1390__auto__","gr__1390__auto__",907895732,null),null,(1),null)),body))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,".dispose",".dispose",-1697594101,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"gr__1390__auto__","gr__1390__auto__",907895732,null),null,(1),null))))),null,(1),null)))));
 });
 
 quil.core.do_record.cljs$lang$maxFixedArity = (3);
 
-quil.core.do_record.cljs$lang$applyTo = (function (seq8478){
-var G__8479 = cljs.core.first.call(null,seq8478);
-var seq8478__$1 = cljs.core.next.call(null,seq8478);
-var G__8480 = cljs.core.first.call(null,seq8478__$1);
-var seq8478__$2 = cljs.core.next.call(null,seq8478__$1);
-var G__8481 = cljs.core.first.call(null,seq8478__$2);
-var seq8478__$3 = cljs.core.next.call(null,seq8478__$2);
-return quil.core.do_record.cljs$core$IFn$_invoke$arity$variadic(G__8479,G__8480,G__8481,seq8478__$3);
+/** @this {Function} */
+quil.core.do_record.cljs$lang$applyTo = (function (seq1391){
+var G__1392 = cljs.core.first.call(null,seq1391);
+var seq1391__$1 = cljs.core.next.call(null,seq1391);
+var G__1393 = cljs.core.first.call(null,seq1391__$1);
+var seq1391__$2 = cljs.core.next.call(null,seq1391__$1);
+var G__1394 = cljs.core.first.call(null,seq1391__$2);
+var seq1391__$3 = cljs.core.next.call(null,seq1391__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1392,G__1393,G__1394,seq1391__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.do_record.cljs$lang$macro = true;
+
 /**
  * Draws an ellipse (oval) in the display window. An ellipse with an
  *   equal width and height is a circle.  The origin may be changed with
@@ -2055,23 +1699,8 @@ return quil.core.current_graphics.call(null).ellipseMode((mode__$1 | (0)));
  *  args to floats
  */
 quil.core.emissive_float = (function quil$core$emissive_float(var_args){
-var args8485 = [];
-var len__7927__auto___8488 = arguments.length;
-var i__7928__auto___8489 = (0);
-while(true){
-if((i__7928__auto___8489 < len__7927__auto___8488)){
-args8485.push((arguments[i__7928__auto___8489]));
-
-var G__8490 = (i__7928__auto___8489 + (1));
-i__7928__auto___8489 = G__8490;
-continue;
-} else {
-}
-break;
-}
-
-var G__8487 = args8485.length;
-switch (G__8487) {
+var G__1400 = arguments.length;
+switch (G__1400) {
 case 1:
 return quil.core.emissive_float.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -2081,7 +1710,7 @@ return quil.core.emissive_float.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8485.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2114,23 +1743,8 @@ return quil.core.current_graphics.call(null).emissive((int_val | (0)));
  *   multiple args are converted to floats.
  */
 quil.core.emissive = (function quil$core$emissive(var_args){
-var args8492 = [];
-var len__7927__auto___8495 = arguments.length;
-var i__7928__auto___8496 = (0);
-while(true){
-if((i__7928__auto___8496 < len__7927__auto___8495)){
-args8492.push((arguments[i__7928__auto___8496]));
-
-var G__8497 = (i__7928__auto___8496 + (1));
-i__7928__auto___8496 = G__8497;
-continue;
-} else {
-}
-break;
-}
-
-var G__8494 = args8492.length;
-switch (G__8494) {
+var G__1403 = arguments.length;
+switch (G__1403) {
 case 1:
 return quil.core.emissive.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -2140,7 +1754,7 @@ return quil.core.emissive.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(argume
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8492.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2184,23 +1798,8 @@ return quil.core.current_graphics.call(null).endRaw();
  *   close the shape (to connect the beginning and the end).
  */
 quil.core.end_shape = (function quil$core$end_shape(var_args){
-var args8499 = [];
-var len__7927__auto___8502 = arguments.length;
-var i__7928__auto___8503 = (0);
-while(true){
-if((i__7928__auto___8503 < len__7927__auto___8502)){
-args8499.push((arguments[i__7928__auto___8503]));
-
-var G__8504 = (i__7928__auto___8503 + (1));
-i__7928__auto___8503 = G__8504;
-continue;
-} else {
-}
-break;
-}
-
-var G__8501 = args8499.length;
-switch (G__8501) {
+var G__1406 = arguments.length;
+switch (G__1406) {
 case 0:
 return quil.core.end_shape.cljs$core$IFn$_invoke$arity$0();
 
@@ -2210,7 +1809,7 @@ return quil.core.end_shape.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8499.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2257,23 +1856,8 @@ return (graphics[quil.core.no_fill_prop] = false);
  *   will specify that all subsequent shapes will be filled with orange.
  */
 quil.core.fill_float = (function quil$core$fill_float(var_args){
-var args8506 = [];
-var len__7927__auto___8509 = arguments.length;
-var i__7928__auto___8510 = (0);
-while(true){
-if((i__7928__auto___8510 < len__7927__auto___8509)){
-args8506.push((arguments[i__7928__auto___8510]));
-
-var G__8511 = (i__7928__auto___8510 + (1));
-i__7928__auto___8510 = G__8511;
-continue;
-} else {
-}
-break;
-}
-
-var G__8508 = args8506.length;
-switch (G__8508) {
+var G__1409 = arguments.length;
+switch (G__1409) {
 case 1:
 return quil.core.fill_float.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -2291,7 +1875,7 @@ return quil.core.fill_float.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argu
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8506.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2326,23 +1910,8 @@ quil.core.fill_float.cljs$lang$maxFixedArity = 4;
  * Sets the color used to fill shapes.
  */
 quil.core.fill_int = (function quil$core$fill_int(var_args){
-var args8513 = [];
-var len__7927__auto___8516 = arguments.length;
-var i__7928__auto___8517 = (0);
-while(true){
-if((i__7928__auto___8517 < len__7927__auto___8516)){
-args8513.push((arguments[i__7928__auto___8517]));
-
-var G__8518 = (i__7928__auto___8517 + (1));
-i__7928__auto___8517 = G__8518;
-continue;
-} else {
-}
-break;
-}
-
-var G__8515 = args8513.length;
-switch (G__8515) {
+var G__1412 = arguments.length;
+switch (G__1412) {
 case 1:
 return quil.core.fill_int.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -2352,7 +1921,7 @@ return quil.core.fill_int.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(argume
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8513.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2375,23 +1944,8 @@ quil.core.fill_int.cljs$lang$maxFixedArity = 2;
  * Sets the color used to fill shapes.
  */
 quil.core.fill = (function quil$core$fill(var_args){
-var args8520 = [];
-var len__7927__auto___8523 = arguments.length;
-var i__7928__auto___8524 = (0);
-while(true){
-if((i__7928__auto___8524 < len__7927__auto___8523)){
-args8520.push((arguments[i__7928__auto___8524]));
-
-var G__8525 = (i__7928__auto___8524 + (1));
-i__7928__auto___8524 = G__8525;
-continue;
-} else {
-}
-break;
-}
-
-var G__8522 = args8520.length;
-switch (G__8522) {
+var G__1415 = arguments.length;
+switch (G__1415) {
 case 1:
 return quil.core.fill.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -2409,7 +1963,7 @@ return quil.core.fill.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8520.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2461,23 +2015,8 @@ quil.core.fill.cljs$lang$maxFixedArity = 4;
  *   :dilate    - increases the light areas.  Doesn't work with level.
  */
 quil.core.display_filter = (function quil$core$display_filter(var_args){
-var args8527 = [];
-var len__7927__auto___8530 = arguments.length;
-var i__7928__auto___8531 = (0);
-while(true){
-if((i__7928__auto___8531 < len__7927__auto___8530)){
-args8527.push((arguments[i__7928__auto___8531]));
-
-var G__8532 = (i__7928__auto___8531 + (1));
-i__7928__auto___8531 = G__8532;
-continue;
-} else {
-}
-break;
-}
-
-var G__8529 = args8527.length;
-switch (G__8529) {
+var G__1418 = arguments.length;
+switch (G__1418) {
 case 1:
 return quil.core.display_filter.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -2487,7 +2026,7 @@ return quil.core.display_filter.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8527.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2568,23 +2107,8 @@ return quil.core.current_graphics.call(null).frustum(left,right,bottom,top,near,
  *   If no img specified - current-graphics is used.
  */
 quil.core.get_pixel = (function quil$core$get_pixel(var_args){
-var args8534 = [];
-var len__7927__auto___8537 = arguments.length;
-var i__7928__auto___8538 = (0);
-while(true){
-if((i__7928__auto___8538 < len__7927__auto___8537)){
-args8534.push((arguments[i__7928__auto___8538]));
-
-var G__8539 = (i__7928__auto___8538 + (1));
-i__7928__auto___8538 = G__8539;
-continue;
-} else {
-}
-break;
-}
-
-var G__8536 = args8534.length;
-switch (G__8536) {
+var G__1421 = arguments.length;
+switch (G__1421) {
 case 0:
 return quil.core.get_pixel.cljs$core$IFn$_invoke$arity$0();
 
@@ -2610,7 +2134,7 @@ return quil.core.get_pixel.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(argum
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8534.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2656,23 +2180,8 @@ return quil.core.current_graphics.call(null).green(cljs.core.unchecked_int.call(
  *   geeky debugging sessions much happier. 
  */
 quil.core.hex = (function quil$core$hex(var_args){
-var args8541 = [];
-var len__7927__auto___8544 = arguments.length;
-var i__7928__auto___8545 = (0);
-while(true){
-if((i__7928__auto___8545 < len__7927__auto___8544)){
-args8541.push((arguments[i__7928__auto___8545]));
-
-var G__8546 = (i__7928__auto___8545 + (1));
-i__7928__auto___8545 = G__8546;
-continue;
-} else {
-}
-break;
-}
-
-var G__8543 = args8541.length;
-switch (G__8543) {
+var G__1424 = arguments.length;
+switch (G__1424) {
 case 1:
 return quil.core.hex.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -2682,7 +2191,7 @@ return quil.core.hex.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8541.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2794,23 +2303,8 @@ return quil.core.current_graphics.call(null).hue(cljs.core.unchecked_int.call(nu
  *   images.
  */
 quil.core.image = (function quil$core$image(var_args){
-var args8548 = [];
-var len__7927__auto___8551 = arguments.length;
-var i__7928__auto___8552 = (0);
-while(true){
-if((i__7928__auto___8552 < len__7927__auto___8551)){
-args8548.push((arguments[i__7928__auto___8552]));
-
-var G__8553 = (i__7928__auto___8552 + (1));
-i__7928__auto___8552 = G__8553;
-continue;
-} else {
-}
-break;
-}
-
-var G__8550 = args8548.length;
-switch (G__8550) {
+var G__1427 = arguments.length;
+switch (G__1427) {
 case 3:
 return quil.core.image.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
@@ -2820,7 +2314,7 @@ return quil.core.image.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(arguments
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8548.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -2864,23 +2358,8 @@ quil.core.image.cljs$lang$maxFixedArity = 5;
  *   :dilate    - increases the light areas.  Doesn't work with level.
  */
 quil.core.image_filter = (function quil$core$image_filter(var_args){
-var args8555 = [];
-var len__7927__auto___8558 = arguments.length;
-var i__7928__auto___8559 = (0);
-while(true){
-if((i__7928__auto___8559 < len__7927__auto___8558)){
-args8555.push((arguments[i__7928__auto___8559]));
-
-var G__8560 = (i__7928__auto___8559 + (1));
-i__7928__auto___8559 = G__8560;
-continue;
-} else {
-}
-break;
-}
-
-var G__8557 = args8555.length;
-switch (G__8557) {
+var G__1430 = arguments.length;
+switch (G__1430) {
 case 2:
 return quil.core.image_filter.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -2890,7 +2369,7 @@ return quil.core.image_filter.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(ar
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8555.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3032,23 +2511,8 @@ return quil.core.current_graphics.call(null).lightSpecular(r,g,b);
  *   allows the line to be placed anywhere within XYZ space. 
  */
 quil.core.line = (function quil$core$line(var_args){
-var args8562 = [];
-var len__7927__auto___8565 = arguments.length;
-var i__7928__auto___8566 = (0);
-while(true){
-if((i__7928__auto___8566 < len__7927__auto___8565)){
-args8562.push((arguments[i__7928__auto___8566]));
-
-var G__8567 = (i__7928__auto___8566 + (1));
-i__7928__auto___8566 = G__8567;
-continue;
-} else {
-}
-break;
-}
-
-var G__8564 = args8562.length;
-switch (G__8564) {
+var G__1433 = arguments.length;
+switch (G__1433) {
 case 2:
 return quil.core.line.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -3062,7 +2526,7 @@ return quil.core.line.cljs$core$IFn$_invoke$arity$6((arguments[(0)]),(arguments[
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8562.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3103,7 +2567,7 @@ quil.core.line.cljs$lang$maxFixedArity = 6;
  *   JAVA2D, such as the PDF library.
  */
 quil.core.load_font = (function quil$core$load_font(filename){
-return quil.sketch.current_applet.call(null).loadFont([cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename)].join(''));
+return quil.sketch.current_applet.call(null).loadFont(cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename));
 });
 /**
  * Loads an image into a variable of type PImage. Four types of
@@ -3129,30 +2593,15 @@ return quil.sketch.current_applet.call(null).loadFont([cljs.core.str.cljs$core$I
  *   will attempt to interpret the HTML as image data.
  */
 quil.core.load_image = (function quil$core$load_image(filename){
-return quil.sketch.current_applet.call(null).loadImage([cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename)].join(''));
+return quil.sketch.current_applet.call(null).loadImage(cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename));
 });
 /**
  * Loads a shader into the PShader object. Shaders are compatible with the
  *   P2D and P3D renderers, but not with the default renderer.
  */
 quil.core.load_shader = (function quil$core$load_shader(var_args){
-var args8569 = [];
-var len__7927__auto___8572 = arguments.length;
-var i__7928__auto___8573 = (0);
-while(true){
-if((i__7928__auto___8573 < len__7927__auto___8572)){
-args8569.push((arguments[i__7928__auto___8573]));
-
-var G__8574 = (i__7928__auto___8573 + (1));
-i__7928__auto___8573 = G__8574;
-continue;
-} else {
-}
-break;
-}
-
-var G__8571 = args8569.length;
-switch (G__8571) {
+var G__1436 = arguments.length;
+switch (G__1436) {
 case 1:
 return quil.core.load_shader.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -3162,7 +2611,7 @@ return quil.core.load_shader.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arg
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8569.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3198,23 +2647,8 @@ return quil.sketch.current_applet.call(null).log(val);
  *   value. Therefore, mag is a shortcut for writing (dist 0 0 x y).
  */
 quil.core.mag = (function quil$core$mag(var_args){
-var args8576 = [];
-var len__7927__auto___8579 = arguments.length;
-var i__7928__auto___8580 = (0);
-while(true){
-if((i__7928__auto___8580 < len__7927__auto___8579)){
-args8576.push((arguments[i__7928__auto___8580]));
-
-var G__8581 = (i__7928__auto___8580 + (1));
-i__7928__auto___8580 = G__8581;
-continue;
-} else {
-}
-break;
-}
-
-var G__8578 = args8576.length;
-switch (G__8578) {
+var G__1439 = arguments.length;
+switch (G__1439) {
 case 2:
 return quil.core.mag.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -3224,7 +2658,7 @@ return quil.core.mag.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8576.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3304,15 +2738,15 @@ return quil.sketch.current_applet.call(null).month();
  */
 quil.core.mouse_button = (function quil$core$mouse_button(){
 var button_code = quil.sketch.current_applet.call(null).mouseButton;
-var pred__8586 = cljs.core._EQ_;
-var expr__8587 = button_code;
-if(cljs.core.truth_(pred__8586.call(null,(37),expr__8587))){
+var pred__1441 = cljs.core._EQ_;
+var expr__1442 = button_code;
+if(cljs.core.truth_(pred__1441.call(null,(37),expr__1442))){
 return new cljs.core.Keyword(null,"left","left",-399115937);
 } else {
-if(cljs.core.truth_(pred__8586.call(null,(39),expr__8587))){
+if(cljs.core.truth_(pred__1441.call(null,(39),expr__1442))){
 return new cljs.core.Keyword(null,"right","right",-452581833);
 } else {
-if(cljs.core.truth_(pred__8586.call(null,(3),expr__8587))){
+if(cljs.core.truth_(pred__1441.call(null,(3),expr__1442))){
 return new cljs.core.Keyword(null,"center","center",-748944368);
 } else {
 return null;
@@ -3406,23 +2840,8 @@ return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMP
  *   applications, but this will differ depending on use.
  */
 quil.core.noise = (function quil$core$noise(var_args){
-var args8589 = [];
-var len__7927__auto___8592 = arguments.length;
-var i__7928__auto___8593 = (0);
-while(true){
-if((i__7928__auto___8593 < len__7927__auto___8592)){
-args8589.push((arguments[i__7928__auto___8593]));
-
-var G__8594 = (i__7928__auto___8593 + (1));
-i__7928__auto___8593 = G__8594;
-continue;
-} else {
-}
-break;
-}
-
-var G__8591 = args8589.length;
-switch (G__8591) {
+var G__1445 = arguments.length;
+switch (G__1445) {
 case 1:
 return quil.core.noise.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -3436,7 +2855,7 @@ return quil.core.noise.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8589.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3475,23 +2894,8 @@ quil.core.noise.cljs$lang$maxFixedArity = 3;
  *   characteristics.
  */
 quil.core.noise_detail = (function quil$core$noise_detail(var_args){
-var args8596 = [];
-var len__7927__auto___8599 = arguments.length;
-var i__7928__auto___8600 = (0);
-while(true){
-if((i__7928__auto___8600 < len__7927__auto___8599)){
-args8596.push((arguments[i__7928__auto___8600]));
-
-var G__8601 = (i__7928__auto___8600 + (1));
-i__7928__auto___8600 = G__8601;
-continue;
-} else {
-}
-break;
-}
-
-var G__8598 = args8596.length;
-switch (G__8598) {
+var G__1448 = arguments.length;
+switch (G__1448) {
 case 1:
 return quil.core.noise_detail.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -3501,7 +2905,7 @@ return quil.core.noise_detail.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(ar
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8596.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3604,23 +3008,8 @@ return quil.core.current_graphics.call(null).noTint();
  *   used: (ortho 0 width 0 height -10 10)
  */
 quil.core.ortho = (function quil$core$ortho(var_args){
-var args8603 = [];
-var len__7927__auto___8606 = arguments.length;
-var i__7928__auto___8607 = (0);
-while(true){
-if((i__7928__auto___8607 < len__7927__auto___8606)){
-args8603.push((arguments[i__7928__auto___8607]));
-
-var G__8608 = (i__7928__auto___8607 + (1));
-i__7928__auto___8607 = G__8608;
-continue;
-} else {
-}
-break;
-}
-
-var G__8605 = args8603.length;
-switch (G__8605) {
+var G__1451 = arguments.length;
+switch (G__1451) {
 case 0:
 return quil.core.ortho.cljs$core$IFn$_invoke$arity$0();
 
@@ -3634,7 +3023,7 @@ return quil.core.ortho.cljs$core$IFn$_invoke$arity$6((arguments[(0)]),(arguments
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8603.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3667,23 +3056,8 @@ quil.core.ortho.cljs$lang$maxFixedArity = 6;
  *   cameraZ is ((height/2.0) / tan(PI*60.0/360.0));
  */
 quil.core.perspective = (function quil$core$perspective(var_args){
-var args8610 = [];
-var len__7927__auto___8613 = arguments.length;
-var i__7928__auto___8614 = (0);
-while(true){
-if((i__7928__auto___8614 < len__7927__auto___8613)){
-args8610.push((arguments[i__7928__auto___8614]));
-
-var G__8615 = (i__7928__auto___8614 + (1));
-i__7928__auto___8614 = G__8615;
-continue;
-} else {
-}
-break;
-}
-
-var G__8612 = args8610.length;
-switch (G__8612) {
+var G__1454 = arguments.length;
+switch (G__1454) {
 case 0:
 return quil.core.perspective.cljs$core$IFn$_invoke$arity$0();
 
@@ -3693,7 +3067,7 @@ return quil.core.perspective.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arg
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8610.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3715,23 +3089,8 @@ quil.core.perspective.cljs$lang$maxFixedArity = 4;
  *   the changes. Calls .loadPixels before obtaining the pixel array.
  */
 quil.core.pixels = (function quil$core$pixels(var_args){
-var args8617 = [];
-var len__7927__auto___8620 = arguments.length;
-var i__7928__auto___8621 = (0);
-while(true){
-if((i__7928__auto___8621 < len__7927__auto___8620)){
-args8617.push((arguments[i__7928__auto___8621]));
-
-var G__8622 = (i__7928__auto___8621 + (1));
-i__7928__auto___8621 = G__8622;
-continue;
-} else {
-}
-break;
-}
-
-var G__8619 = args8617.length;
-switch (G__8619) {
+var G__1457 = arguments.length;
+switch (G__1457) {
 case 0:
 return quil.core.pixels.cljs$core$IFn$_invoke$arity$0();
 
@@ -3741,7 +3100,7 @@ return quil.core.pixels.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8617.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3782,23 +3141,8 @@ return quil.sketch.current_applet.call(null).pmouseY;
  *   used.
  */
 quil.core.point = (function quil$core$point(var_args){
-var args8624 = [];
-var len__7927__auto___8627 = arguments.length;
-var i__7928__auto___8628 = (0);
-while(true){
-if((i__7928__auto___8628 < len__7927__auto___8627)){
-args8624.push((arguments[i__7928__auto___8628]));
-
-var G__8629 = (i__7928__auto___8628 + (1));
-i__7928__auto___8628 = G__8629;
-continue;
-} else {
-}
-break;
-}
-
-var G__8626 = args8624.length;
-switch (G__8626) {
+var G__1460 = arguments.length;
+switch (G__1460) {
 case 2:
 return quil.core.point.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -3808,7 +3152,7 @@ return quil.core.point.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8624.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -3938,23 +3282,8 @@ return quil.core.current_graphics.call(null).quad(x1,y1,x2,y2,x3,y3,x4,y4);
  *   version requires rendering with :p3d.
  */
 quil.core.quadratic_vertex = (function quil$core$quadratic_vertex(var_args){
-var args8631 = [];
-var len__7927__auto___8634 = arguments.length;
-var i__7928__auto___8635 = (0);
-while(true){
-if((i__7928__auto___8635 < len__7927__auto___8634)){
-args8631.push((arguments[i__7928__auto___8635]));
-
-var G__8636 = (i__7928__auto___8635 + (1));
-i__7928__auto___8635 = G__8636;
-continue;
-} else {
-}
-break;
-}
-
-var G__8633 = args8631.length;
-switch (G__8633) {
+var G__1463 = arguments.length;
+switch (G__1463) {
 case 4:
 return quil.core.quadratic_vertex.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]));
 
@@ -3964,7 +3293,7 @@ return quil.core.quadratic_vertex.cljs$core$IFn$_invoke$arity$6((arguments[(0)])
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8631.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4002,23 +3331,8 @@ return quil.sketch.current_applet.call(null).radians(degrees);
  *   including) 10.2.
  */
 quil.core.random = (function quil$core$random(var_args){
-var args8638 = [];
-var len__7927__auto___8641 = arguments.length;
-var i__7928__auto___8642 = (0);
-while(true){
-if((i__7928__auto___8642 < len__7927__auto___8641)){
-args8638.push((arguments[i__7928__auto___8642]));
-
-var G__8643 = (i__7928__auto___8642 + (1));
-i__7928__auto___8642 = G__8643;
-continue;
-} else {
-}
-break;
-}
-
-var G__8640 = args8638.length;
-switch (G__8640) {
+var G__1466 = arguments.length;
+switch (G__1466) {
 case 1:
 return quil.core.random.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -4028,7 +3342,7 @@ return quil.core.random.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8638.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4092,23 +3406,8 @@ return quil.sketch.current_applet.call(null).key;
  *   for each corner, include eight parameters.
  */
 quil.core.rect = (function quil$core$rect(var_args){
-var args8645 = [];
-var len__7927__auto___8648 = arguments.length;
-var i__7928__auto___8649 = (0);
-while(true){
-if((i__7928__auto___8649 < len__7927__auto___8648)){
-args8645.push((arguments[i__7928__auto___8649]));
-
-var G__8650 = (i__7928__auto___8649 + (1));
-i__7928__auto___8649 = G__8650;
-continue;
-} else {
-}
-break;
-}
-
-var G__8647 = args8645.length;
-switch (G__8647) {
+var G__1469 = arguments.length;
+switch (G__1469) {
 case 4:
 return quil.core.rect.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]));
 
@@ -4122,7 +3421,7 @@ return quil.core.rect.cljs$core$IFn$_invoke$arity$8((arguments[(0)]),(arguments[
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8645.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4200,7 +3499,7 @@ return quil.sketch.current_applet.call(null).redraw();
  *   performance.
  */
 quil.core.request_image = (function quil$core$request_image(filename){
-return quil.sketch.current_applet.call(null).requestImage([cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename)].join(''));
+return quil.sketch.current_applet.call(null).requestImage(cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename));
 });
 /**
  * Replaces the current matrix with the identity matrix. The
@@ -4243,23 +3542,8 @@ return img.resize(w,h);
  *   push-matrix and pop-matrix.
  */
 quil.core.rotate = (function quil$core$rotate(var_args){
-var args8652 = [];
-var len__7927__auto___8655 = arguments.length;
-var i__7928__auto___8656 = (0);
-while(true){
-if((i__7928__auto___8656 < len__7927__auto___8655)){
-args8652.push((arguments[i__7928__auto___8656]));
-
-var G__8657 = (i__7928__auto___8656 + (1));
-i__7928__auto___8656 = G__8657;
-continue;
-} else {
-}
-break;
-}
-
-var G__8654 = args8652.length;
-switch (G__8654) {
+var G__1472 = arguments.length;
+switch (G__1472) {
 case 1:
 return quil.core.rotate.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -4269,7 +3553,7 @@ return quil.core.rotate.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8652.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4356,7 +3640,7 @@ return quil.core.current_graphics.call(null).saturation(cljs.core.unchecked_int.
  *   create-graphics.
  */
 quil.core.save = (function quil$core$save(filename){
-return quil.core.current_graphics.call(null).save([cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename)].join(''));
+return quil.core.current_graphics.call(null).save(cljs.core.str.cljs$core$IFn$_invoke$arity$1(filename));
 });
 /**
  * Saves an image identical to the current display window as a
@@ -4371,23 +3655,8 @@ return quil.core.current_graphics.call(null).save([cljs.core.str.cljs$core$IFn$_
  *   (save-frame "pretty-pic-####.jpg")
  */
 quil.core.save_frame = (function quil$core$save_frame(var_args){
-var args8659 = [];
-var len__7927__auto___8662 = arguments.length;
-var i__7928__auto___8663 = (0);
-while(true){
-if((i__7928__auto___8663 < len__7927__auto___8662)){
-args8659.push((arguments[i__7928__auto___8663]));
-
-var G__8664 = (i__7928__auto___8663 + (1));
-i__7928__auto___8663 = G__8664;
-continue;
-} else {
-}
-break;
-}
-
-var G__8661 = args8659.length;
-switch (G__8661) {
+var G__1475 = arguments.length;
+switch (G__1475) {
 case 0:
 return quil.core.save_frame.cljs$core$IFn$_invoke$arity$0();
 
@@ -4397,7 +3666,7 @@ return quil.core.save_frame.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8659.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4407,7 +3676,7 @@ return quil.sketch.current_applet.call(null).saveFrame();
 });
 
 quil.core.save_frame.cljs$core$IFn$_invoke$arity$1 = (function (name){
-return quil.sketch.current_applet.call(null).saveFrame([cljs.core.str.cljs$core$IFn$_invoke$arity$1(name)].join(''));
+return quil.sketch.current_applet.call(null).saveFrame(cljs.core.str.cljs$core$IFn$_invoke$arity$1(name));
 });
 
 quil.core.save_frame.cljs$lang$maxFixedArity = 1;
@@ -4427,23 +3696,8 @@ quil.core.save_frame.cljs$lang$maxFixedArity = 1;
  *   push-matrix and pop-matrix.
  */
 quil.core.scale = (function quil$core$scale(var_args){
-var args8666 = [];
-var len__7927__auto___8669 = arguments.length;
-var i__7928__auto___8670 = (0);
-while(true){
-if((i__7928__auto___8670 < len__7927__auto___8669)){
-args8666.push((arguments[i__7928__auto___8670]));
-
-var G__8671 = (i__7928__auto___8670 + (1));
-i__7928__auto___8670 = G__8671;
-continue;
-} else {
-}
-break;
-}
-
-var G__8668 = args8666.length;
-switch (G__8668) {
+var G__1478 = arguments.length;
+switch (G__1478) {
 case 1:
 return quil.core.scale.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -4457,7 +3711,7 @@ return quil.core.scale.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8666.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4482,23 +3736,8 @@ quil.core.scale.cljs$lang$maxFixedArity = 3;
  *   affected by translate, scale or any other transformations
  */
 quil.core.screen_x = (function quil$core$screen_x(var_args){
-var args8673 = [];
-var len__7927__auto___8676 = arguments.length;
-var i__7928__auto___8677 = (0);
-while(true){
-if((i__7928__auto___8677 < len__7927__auto___8676)){
-args8673.push((arguments[i__7928__auto___8677]));
-
-var G__8678 = (i__7928__auto___8677 + (1));
-i__7928__auto___8677 = G__8678;
-continue;
-} else {
-}
-break;
-}
-
-var G__8675 = args8673.length;
-switch (G__8675) {
+var G__1481 = arguments.length;
+switch (G__1481) {
 case 2:
 return quil.core.screen_x.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -4508,7 +3747,7 @@ return quil.core.screen_x.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(argume
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8673.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4529,23 +3768,8 @@ quil.core.screen_x.cljs$lang$maxFixedArity = 3;
  *   affected by translate, scale or any other transformations
  */
 quil.core.screen_y = (function quil$core$screen_y(var_args){
-var args8680 = [];
-var len__7927__auto___8683 = arguments.length;
-var i__7928__auto___8684 = (0);
-while(true){
-if((i__7928__auto___8684 < len__7927__auto___8683)){
-args8680.push((arguments[i__7928__auto___8684]));
-
-var G__8685 = (i__7928__auto___8684 + (1));
-i__7928__auto___8684 = G__8685;
-continue;
-} else {
-}
-break;
-}
-
-var G__8682 = args8680.length;
-switch (G__8682) {
+var G__1484 = arguments.length;
+switch (G__1484) {
 case 2:
 return quil.core.screen_y.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -4555,7 +3779,7 @@ return quil.core.screen_y.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(argume
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8680.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4605,23 +3829,8 @@ return quil.sketch.current_applet.call(null).second();
  *   help. (Bug 1094)
  */
 quil.core.set_pixel = (function quil$core$set_pixel(var_args){
-var args8687 = [];
-var len__7927__auto___8690 = arguments.length;
-var i__7928__auto___8691 = (0);
-while(true){
-if((i__7928__auto___8691 < len__7927__auto___8690)){
-args8687.push((arguments[i__7928__auto___8691]));
-
-var G__8692 = (i__7928__auto___8691 + (1));
-i__7928__auto___8691 = G__8692;
-continue;
-} else {
-}
-break;
-}
-
-var G__8689 = args8687.length;
-switch (G__8689) {
+var G__1487 = arguments.length;
+switch (G__1487) {
 case 3:
 return quil.core.set_pixel.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
@@ -4631,7 +3840,7 @@ return quil.core.set_pixel.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argum
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8687.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4671,23 +3880,8 @@ return quil.core.current_graphics.call(null).set((x | (0)),(y | (0)),src);
  *   or complicated breaks.
  */
 quil.core.shape = (function quil$core$shape(var_args){
-var args8694 = [];
-var len__7927__auto___8697 = arguments.length;
-var i__7928__auto___8698 = (0);
-while(true){
-if((i__7928__auto___8698 < len__7927__auto___8697)){
-args8694.push((arguments[i__7928__auto___8698]));
-
-var G__8699 = (i__7928__auto___8698 + (1));
-i__7928__auto___8698 = G__8699;
-continue;
-} else {
-}
-break;
-}
-
-var G__8696 = args8694.length;
-switch (G__8696) {
+var G__1490 = arguments.length;
+switch (G__1490) {
 case 1:
 return quil.core.shape.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -4701,7 +3895,7 @@ return quil.core.shape.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(arguments
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8694.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4816,23 +4010,8 @@ return quil.sketch.current_applet.call(null).sin(angle);
  *   Note that smooth will also improve image quality of resized images.
  */
 quil.core.smooth = (function quil$core$smooth(var_args){
-var args8701 = [];
-var len__7927__auto___8704 = arguments.length;
-var i__7928__auto___8705 = (0);
-while(true){
-if((i__7928__auto___8705 < len__7927__auto___8704)){
-args8701.push((arguments[i__7928__auto___8705]));
-
-var G__8706 = (i__7928__auto___8705 + (1));
-i__7928__auto___8705 = G__8706;
-continue;
-} else {
-}
-break;
-}
-
-var G__8703 = args8701.length;
-switch (G__8703) {
+var G__1493 = arguments.length;
+switch (G__1493) {
 case 0:
 return quil.core.smooth.cljs$core$IFn$_invoke$arity$0();
 
@@ -4842,7 +4021,7 @@ return quil.core.smooth.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8701.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4866,23 +4045,8 @@ quil.core.smooth.cljs$lang$maxFixedArity = 1;
  *   the material properties of shapes.
  */
 quil.core.specular = (function quil$core$specular(var_args){
-var args8708 = [];
-var len__7927__auto___8711 = arguments.length;
-var i__7928__auto___8712 = (0);
-while(true){
-if((i__7928__auto___8712 < len__7927__auto___8711)){
-args8708.push((arguments[i__7928__auto___8712]));
-
-var G__8713 = (i__7928__auto___8712 + (1));
-i__7928__auto___8712 = G__8713;
-continue;
-} else {
-}
-break;
-}
-
-var G__8710 = args8708.length;
-switch (G__8710) {
+var G__1496 = arguments.length;
+switch (G__1496) {
 case 1:
 return quil.core.specular.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -4892,7 +4056,7 @@ return quil.core.specular.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(argume
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8708.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4928,23 +4092,8 @@ return quil.core.current_graphics.call(null).sphere(radius);
  *   the functions with two parameters.
  */
 quil.core.sphere_detail = (function quil$core$sphere_detail(var_args){
-var args8715 = [];
-var len__7927__auto___8718 = arguments.length;
-var i__7928__auto___8719 = (0);
-while(true){
-if((i__7928__auto___8719 < len__7927__auto___8718)){
-args8715.push((arguments[i__7928__auto___8719]));
-
-var G__8720 = (i__7928__auto___8719 + (1));
-i__7928__auto___8719 = G__8720;
-continue;
-} else {
-}
-break;
-}
-
-var G__8717 = args8715.length;
-switch (G__8717) {
+var G__1499 = arguments.length;
+switch (G__1499) {
 case 1:
 return quil.core.sphere_detail.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -4954,7 +4103,7 @@ return quil.core.sphere_detail.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(a
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8715.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -4980,23 +4129,8 @@ quil.core.sphere_detail.cljs$lang$maxFixedArity = 2;
  *   spotlight cone.
  */
 quil.core.spot_light = (function quil$core$spot_light(var_args){
-var args8722 = [];
-var len__7927__auto___8737 = arguments.length;
-var i__7928__auto___8738 = (0);
-while(true){
-if((i__7928__auto___8738 < len__7927__auto___8737)){
-args8722.push((arguments[i__7928__auto___8738]));
-
-var G__8739 = (i__7928__auto___8738 + (1));
-i__7928__auto___8738 = G__8739;
-continue;
-} else {
-}
-break;
-}
-
-var G__8724 = args8722.length;
-switch (G__8724) {
+var G__1502 = arguments.length;
+switch (G__1502) {
 case 11:
 return quil.core.spot_light.cljs$core$IFn$_invoke$arity$11((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),(arguments[(3)]),(arguments[(4)]),(arguments[(5)]),(arguments[(6)]),(arguments[(7)]),(arguments[(8)]),(arguments[(9)]),(arguments[(10)]));
 
@@ -5006,7 +4140,7 @@ return quil.core.spot_light.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(argu
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8722.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5015,19 +4149,19 @@ quil.core.spot_light.cljs$core$IFn$_invoke$arity$11 = (function (r,g,b,x,y,z,nx,
 return quil.core.current_graphics.call(null).spotLight(r,g,b,x,y,z,nx,ny,nz,angle,concentration);
 });
 
-quil.core.spot_light.cljs$core$IFn$_invoke$arity$5 = (function (p__8725,p__8726,p__8727,angle,concentration){
-var vec__8728 = p__8725;
-var r = cljs.core.nth.call(null,vec__8728,(0),null);
-var g = cljs.core.nth.call(null,vec__8728,(1),null);
-var b = cljs.core.nth.call(null,vec__8728,(2),null);
-var vec__8731 = p__8726;
-var x = cljs.core.nth.call(null,vec__8731,(0),null);
-var y = cljs.core.nth.call(null,vec__8731,(1),null);
-var z = cljs.core.nth.call(null,vec__8731,(2),null);
-var vec__8734 = p__8727;
-var nx = cljs.core.nth.call(null,vec__8734,(0),null);
-var ny = cljs.core.nth.call(null,vec__8734,(1),null);
-var nz = cljs.core.nth.call(null,vec__8734,(2),null);
+quil.core.spot_light.cljs$core$IFn$_invoke$arity$5 = (function (p__1503,p__1504,p__1505,angle,concentration){
+var vec__1506 = p__1503;
+var r = cljs.core.nth.call(null,vec__1506,(0),null);
+var g = cljs.core.nth.call(null,vec__1506,(1),null);
+var b = cljs.core.nth.call(null,vec__1506,(2),null);
+var vec__1509 = p__1504;
+var x = cljs.core.nth.call(null,vec__1509,(0),null);
+var y = cljs.core.nth.call(null,vec__1509,(1),null);
+var z = cljs.core.nth.call(null,vec__1509,(2),null);
+var vec__1512 = p__1505;
+var nx = cljs.core.nth.call(null,vec__1512,(0),null);
+var ny = cljs.core.nth.call(null,vec__1512,(1),null);
+var nz = cljs.core.nth.call(null,vec__1512,(2),null);
 return quil.core.current_graphics.call(null).spotLight(r,g,b,x,y,z,nx,ny,nz,angle,concentration);
 });
 
@@ -5062,23 +4196,8 @@ return quil.sketch.current_applet.call(null).loop();
  *   shapes. Converts all args to floats
  */
 quil.core.stroke_float = (function quil$core$stroke_float(var_args){
-var args8741 = [];
-var len__7927__auto___8744 = arguments.length;
-var i__7928__auto___8745 = (0);
-while(true){
-if((i__7928__auto___8745 < len__7927__auto___8744)){
-args8741.push((arguments[i__7928__auto___8745]));
-
-var G__8746 = (i__7928__auto___8745 + (1));
-i__7928__auto___8745 = G__8746;
-continue;
-} else {
-}
-break;
-}
-
-var G__8743 = args8741.length;
-switch (G__8743) {
+var G__1517 = arguments.length;
+switch (G__1517) {
 case 1:
 return quil.core.stroke_float.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5096,7 +4215,7 @@ return quil.core.stroke_float.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(ar
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8741.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5124,23 +4243,8 @@ quil.core.stroke_float.cljs$lang$maxFixedArity = 4;
  *   shapes. Converts rgb to int and alpha to a float.
  */
 quil.core.stroke_int = (function quil$core$stroke_int(var_args){
-var args8748 = [];
-var len__7927__auto___8751 = arguments.length;
-var i__7928__auto___8752 = (0);
-while(true){
-if((i__7928__auto___8752 < len__7927__auto___8751)){
-args8748.push((arguments[i__7928__auto___8752]));
-
-var G__8753 = (i__7928__auto___8752 + (1));
-i__7928__auto___8752 = G__8753;
-continue;
-} else {
-}
-break;
-}
-
-var G__8750 = args8748.length;
-switch (G__8750) {
+var G__1520 = arguments.length;
+switch (G__1520) {
 case 1:
 return quil.core.stroke_int.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5150,7 +4254,7 @@ return quil.core.stroke_int.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(argu
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8748.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5172,23 +4276,8 @@ quil.core.stroke_int.cljs$lang$maxFixedArity = 2;
  *   each value in the range from 0 to 255).
  */
 quil.core.stroke = (function quil$core$stroke(var_args){
-var args8755 = [];
-var len__7927__auto___8758 = arguments.length;
-var i__7928__auto___8759 = (0);
-while(true){
-if((i__7928__auto___8759 < len__7927__auto___8758)){
-args8755.push((arguments[i__7928__auto___8759]));
-
-var G__8760 = (i__7928__auto___8759 + (1));
-i__7928__auto___8759 = G__8760;
-continue;
-} else {
-}
-break;
-}
-
-var G__8757 = args8755.length;
-switch (G__8757) {
+var G__1523 = arguments.length;
+switch (G__1523) {
 case 1:
 return quil.core.stroke.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5206,7 +4295,7 @@ return quil.core.stroke.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8755.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5236,7 +4325,7 @@ quil.core.stroke.cljs$lang$maxFixedArity = 4;
  */
 quil.core.stroke_cap = (function quil$core$stroke_cap(cap_mode){
 var cap_mode__$1 = quil.util.resolve_constant_key.call(null,cap_mode,quil.core.stroke_cap_modes);
-return quil.core.current_graphics.call(null).strokeCap([cljs.core.str.cljs$core$IFn$_invoke$arity$1(cap_mode__$1)].join(''));
+return quil.core.current_graphics.call(null).strokeCap(cljs.core.str.cljs$core$IFn$_invoke$arity$1(cap_mode__$1));
 });
 /**
  * Sets the style of the joints which connect line
@@ -5249,7 +4338,7 @@ return quil.core.current_graphics.call(null).strokeCap([cljs.core.str.cljs$core$
  */
 quil.core.stroke_join = (function quil$core$stroke_join(join_mode){
 var join_mode__$1 = quil.util.resolve_constant_key.call(null,join_mode,quil.core.stroke_join_modes);
-return quil.core.current_graphics.call(null).strokeJoin([cljs.core.str.cljs$core$IFn$_invoke$arity$1(join_mode__$1)].join(''));
+return quil.core.current_graphics.call(null).strokeJoin(cljs.core.str.cljs$core$IFn$_invoke$arity$1(join_mode__$1));
 });
 /**
  * Sets the width of the stroke used for lines, points, and the border
@@ -5284,23 +4373,8 @@ return (graphics[quil.core.no_fill_prop]) === true;
  *   for more details.
  */
 quil.core.text_char = (function quil$core$text_char(var_args){
-var args8762 = [];
-var len__7927__auto___8765 = arguments.length;
-var i__7928__auto___8766 = (0);
-while(true){
-if((i__7928__auto___8766 < len__7927__auto___8765)){
-args8762.push((arguments[i__7928__auto___8766]));
-
-var G__8767 = (i__7928__auto___8766 + (1));
-i__7928__auto___8766 = G__8767;
-continue;
-} else {
-}
-break;
-}
-
-var G__8764 = args8762.length;
-switch (G__8764) {
+var G__1526 = arguments.length;
+switch (G__1526) {
 case 3:
 return quil.core.text_char.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
@@ -5310,13 +4384,13 @@ return quil.core.text_char.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argum
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8762.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
 
 quil.core.text_char.cljs$core$IFn$_invoke$arity$3 = (function (c,x,y){
-if(cljs.core.truth_(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null)))){
+if(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null))){
 return null;
 } else {
 return quil.core.current_graphics.call(null).text(cljs.core.char$.call(null,c),x,y);
@@ -5324,7 +4398,7 @@ return quil.core.current_graphics.call(null).text(cljs.core.char$.call(null,c),x
 });
 
 quil.core.text_char.cljs$core$IFn$_invoke$arity$4 = (function (c,x,y,z){
-if(cljs.core.truth_(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null)))){
+if(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null))){
 return null;
 } else {
 return quil.core.current_graphics.call(null).text(cljs.core.char$.call(null,c),x,y,z);
@@ -5338,23 +4412,8 @@ quil.core.text_char.cljs$lang$maxFixedArity = 4;
  *   for more details.
  */
 quil.core.text_num = (function quil$core$text_num(var_args){
-var args8769 = [];
-var len__7927__auto___8772 = arguments.length;
-var i__7928__auto___8773 = (0);
-while(true){
-if((i__7928__auto___8773 < len__7927__auto___8772)){
-args8769.push((arguments[i__7928__auto___8773]));
-
-var G__8774 = (i__7928__auto___8773 + (1));
-i__7928__auto___8773 = G__8774;
-continue;
-} else {
-}
-break;
-}
-
-var G__8771 = args8769.length;
-switch (G__8771) {
+var G__1529 = arguments.length;
+switch (G__1529) {
 case 3:
 return quil.core.text_num.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
@@ -5364,13 +4423,13 @@ return quil.core.text_num.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argume
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8769.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
 
 quil.core.text_num.cljs$core$IFn$_invoke$arity$3 = (function (num,x,y){
-if(cljs.core.truth_(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null)))){
+if(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null))){
 return null;
 } else {
 return quil.core.current_graphics.call(null).text(num,x,y);
@@ -5378,7 +4437,7 @@ return quil.core.current_graphics.call(null).text(num,x,y);
 });
 
 quil.core.text_num.cljs$core$IFn$_invoke$arity$4 = (function (num,x,y,z){
-if(cljs.core.truth_(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null)))){
+if(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null))){
 return null;
 } else {
 return quil.core.current_graphics.call(null).text(num,x,y,z);
@@ -5401,23 +4460,8 @@ quil.core.text_num.cljs$lang$maxFixedArity = 4;
  *   interpreted based on the current rect-mode setting.
  */
 quil.core.text = (function quil$core$text(var_args){
-var args8776 = [];
-var len__7927__auto___8779 = arguments.length;
-var i__7928__auto___8780 = (0);
-while(true){
-if((i__7928__auto___8780 < len__7927__auto___8779)){
-args8776.push((arguments[i__7928__auto___8780]));
-
-var G__8781 = (i__7928__auto___8780 + (1));
-i__7928__auto___8780 = G__8781;
-continue;
-} else {
-}
-break;
-}
-
-var G__8778 = args8776.length;
-switch (G__8778) {
+var G__1532 = arguments.length;
+switch (G__1532) {
 case 3:
 return quil.core.text.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(arguments[(1)]),(arguments[(2)]));
 
@@ -5431,13 +4475,13 @@ return quil.core.text.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(arguments[
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8776.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
 
 quil.core.text.cljs$core$IFn$_invoke$arity$3 = (function (s,x,y){
-if(cljs.core.truth_(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null)))){
+if(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null))){
 return null;
 } else {
 return quil.core.current_graphics.call(null).text(s,x,y);
@@ -5445,7 +4489,7 @@ return quil.core.current_graphics.call(null).text(s,x,y);
 });
 
 quil.core.text.cljs$core$IFn$_invoke$arity$4 = (function (s,x,y,z){
-if(cljs.core.truth_(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null)))){
+if(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null))){
 return null;
 } else {
 return quil.core.current_graphics.call(null).text(s,x,y,z);
@@ -5453,7 +4497,7 @@ return quil.core.current_graphics.call(null).text(s,x,y,z);
 });
 
 quil.core.text.cljs$core$IFn$_invoke$arity$5 = (function (s,x1,y1,x2,y2){
-if(cljs.core.truth_(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null)))){
+if(quil.core.no_fill_QMARK_.call(null,quil.core.current_graphics.call(null))){
 return null;
 } else {
 return quil.core.current_graphics.call(null).text(s,x1,y1,x2,y2);
@@ -5487,23 +4531,8 @@ quil.core.text.cljs$lang$maxFixedArity = 5;
  *   change the size of the font.
  */
 quil.core.text_align = (function quil$core$text_align(var_args){
-var args8783 = [];
-var len__7927__auto___8786 = arguments.length;
-var i__7928__auto___8787 = (0);
-while(true){
-if((i__7928__auto___8787 < len__7927__auto___8786)){
-args8783.push((arguments[i__7928__auto___8787]));
-
-var G__8788 = (i__7928__auto___8787 + (1));
-i__7928__auto___8787 = G__8788;
-continue;
-} else {
-}
-break;
-}
-
-var G__8785 = args8783.length;
-switch (G__8785) {
+var G__1535 = arguments.length;
+switch (G__1535) {
 case 1:
 return quil.core.text_align.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5513,7 +4542,7 @@ return quil.core.text_align.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(argu
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8783.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5568,23 +4597,8 @@ return quil.core.current_graphics.call(null).textDescent();
  *   create-font fn
  */
 quil.core.text_font = (function quil$core$text_font(var_args){
-var args8790 = [];
-var len__7927__auto___8793 = arguments.length;
-var i__7928__auto___8794 = (0);
-while(true){
-if((i__7928__auto___8794 < len__7927__auto___8793)){
-args8790.push((arguments[i__7928__auto___8794]));
-
-var G__8795 = (i__7928__auto___8794 + (1));
-i__7928__auto___8794 = G__8795;
-continue;
-} else {
-}
-break;
-}
-
-var G__8792 = args8790.length;
-switch (G__8792) {
+var G__1538 = arguments.length;
+switch (G__1538) {
 case 1:
 return quil.core.text_font.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5594,7 +4608,7 @@ return quil.core.text_font.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(argum
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8790.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5697,23 +4711,8 @@ return quil.core.current_graphics.call(null).textWidth(data);
  *   Also used to control the coloring of textures in 3D.
  */
 quil.core.tint_float = (function quil$core$tint_float(var_args){
-var args8797 = [];
-var len__7927__auto___8800 = arguments.length;
-var i__7928__auto___8801 = (0);
-while(true){
-if((i__7928__auto___8801 < len__7927__auto___8800)){
-args8797.push((arguments[i__7928__auto___8801]));
-
-var G__8802 = (i__7928__auto___8801 + (1));
-i__7928__auto___8801 = G__8802;
-continue;
-} else {
-}
-break;
-}
-
-var G__8799 = args8797.length;
-switch (G__8799) {
+var G__1541 = arguments.length;
+switch (G__1541) {
 case 1:
 return quil.core.tint_float.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5731,7 +4730,7 @@ return quil.core.tint_float.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(argu
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8797.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5770,23 +4769,8 @@ quil.core.tint_float.cljs$lang$maxFixedArity = 4;
  *   Also used to control the coloring of textures in 3D.
  */
 quil.core.tint_int = (function quil$core$tint_int(var_args){
-var args8804 = [];
-var len__7927__auto___8807 = arguments.length;
-var i__7928__auto___8808 = (0);
-while(true){
-if((i__7928__auto___8808 < len__7927__auto___8807)){
-args8804.push((arguments[i__7928__auto___8808]));
-
-var G__8809 = (i__7928__auto___8808 + (1));
-i__7928__auto___8808 = G__8809;
-continue;
-} else {
-}
-break;
-}
-
-var G__8806 = args8804.length;
-switch (G__8806) {
+var G__1544 = arguments.length;
+switch (G__1544) {
 case 1:
 return quil.core.tint_int.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5796,7 +4780,7 @@ return quil.core.tint_int.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(argume
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8804.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5827,23 +4811,8 @@ quil.core.tint_int.cljs$lang$maxFixedArity = 2;
  *   Also used to control the coloring of textures in 3D.
  */
 quil.core.tint = (function quil$core$tint(var_args){
-var args8811 = [];
-var len__7927__auto___8814 = arguments.length;
-var i__7928__auto___8815 = (0);
-while(true){
-if((i__7928__auto___8815 < len__7927__auto___8814)){
-args8811.push((arguments[i__7928__auto___8815]));
-
-var G__8816 = (i__7928__auto___8815 + (1));
-i__7928__auto___8815 = G__8816;
-continue;
-} else {
-}
-break;
-}
-
-var G__8813 = args8811.length;
-switch (G__8813) {
+var G__1547 = arguments.length;
+switch (G__1547) {
 case 1:
 return quil.core.tint.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5861,7 +4830,7 @@ return quil.core.tint.cljs$core$IFn$_invoke$arity$4((arguments[(0)]),(arguments[
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8811.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5897,23 +4866,8 @@ quil.core.tint.cljs$lang$maxFixedArity = 4;
  *   the push-matrix and pop-matrix.
  */
 quil.core.translate = (function quil$core$translate(var_args){
-var args8818 = [];
-var len__7927__auto___8821 = arguments.length;
-var i__7928__auto___8822 = (0);
-while(true){
-if((i__7928__auto___8822 < len__7927__auto___8821)){
-args8818.push((arguments[i__7928__auto___8822]));
-
-var G__8823 = (i__7928__auto___8822 + (1));
-i__7928__auto___8822 = G__8823;
-continue;
-} else {
-}
-break;
-}
-
-var G__8820 = args8818.length;
-switch (G__8820) {
+var G__1550 = arguments.length;
+switch (G__1550) {
 case 1:
 return quil.core.translate.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -5927,7 +4881,7 @@ return quil.core.translate.cljs$core$IFn$_invoke$arity$3((arguments[(0)]),(argum
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8818.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -5960,14 +4914,14 @@ return quil.core.current_graphics.call(null).triangle(x1,y1,x2,y2,x3,y3);
  *   integers to strings.
  */
 quil.core.unbinary = (function quil$core$unbinary(str_val){
-return quil.sketch.current_applet.call(null).unbinary([cljs.core.str.cljs$core$IFn$_invoke$arity$1(str_val)].join(''));
+return quil.sketch.current_applet.call(null).unbinary(cljs.core.str.cljs$core$IFn$_invoke$arity$1(str_val));
 });
 /**
  * Converts a String representation of a hexadecimal number to its
  *   equivalent integer value.
  */
 quil.core.unhex = (function quil$core$unhex(hex_str){
-return quil.sketch.current_applet.call(null).unhex([cljs.core.str.cljs$core$IFn$_invoke$arity$1(hex_str)].join(''));
+return quil.sketch.current_applet.call(null).unhex(cljs.core.str.cljs$core$IFn$_invoke$arity$1(hex_str));
 });
 /**
  * Updates the display window or image with the data in the pixels array.
@@ -5983,23 +4937,8 @@ return quil.sketch.current_applet.call(null).unhex([cljs.core.str.cljs$core$IFn$
  *   release, this will always be subject to change.
  */
 quil.core.update_pixels = (function quil$core$update_pixels(var_args){
-var args8825 = [];
-var len__7927__auto___8828 = arguments.length;
-var i__7928__auto___8829 = (0);
-while(true){
-if((i__7928__auto___8829 < len__7927__auto___8828)){
-args8825.push((arguments[i__7928__auto___8829]));
-
-var G__8830 = (i__7928__auto___8829 + (1));
-i__7928__auto___8829 = G__8830;
-continue;
-} else {
-}
-break;
-}
-
-var G__8827 = args8825.length;
-switch (G__8827) {
+var G__1553 = arguments.length;
+switch (G__1553) {
 case 0:
 return quil.core.update_pixels.cljs$core$IFn$_invoke$arity$0();
 
@@ -6009,7 +4948,7 @@ return quil.core.update_pixels.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8825.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -6019,10 +4958,10 @@ return quil.core.update_pixels.call(null,quil.core.current_graphics.call(null));
 });
 
 quil.core.update_pixels.cljs$core$IFn$_invoke$arity$1 = (function (img){
-var temp__4657__auto___8832 = img.stored_pix_array;
-if(cljs.core.truth_(temp__4657__auto___8832)){
-var pix_array_8833 = temp__4657__auto___8832;
-img.pixels.set(pix_array_8833);
+var temp__4657__auto___1555 = img.stored_pix_array;
+if(cljs.core.truth_(temp__4657__auto___1555)){
+var pix_array_1556 = temp__4657__auto___1555;
+img.pixels.set(pix_array_1556);
 
 img.stored_pix_array = null;
 } else {
@@ -6050,23 +4989,8 @@ quil.core.update_pixels.cljs$lang$maxFixedArity = 1;
  *   changed with texture-mode.
  */
 quil.core.vertex = (function quil$core$vertex(var_args){
-var args8834 = [];
-var len__7927__auto___8837 = arguments.length;
-var i__7928__auto___8838 = (0);
-while(true){
-if((i__7928__auto___8838 < len__7927__auto___8837)){
-args8834.push((arguments[i__7928__auto___8838]));
-
-var G__8839 = (i__7928__auto___8838 + (1));
-i__7928__auto___8838 = G__8839;
-continue;
-} else {
-}
-break;
-}
-
-var G__8836 = args8834.length;
-switch (G__8836) {
+var G__1558 = arguments.length;
+switch (G__1558) {
 case 2:
 return quil.core.vertex.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -6084,7 +5008,7 @@ return quil.core.vertex.cljs$core$IFn$_invoke$arity$5((arguments[(0)]),(argument
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args8834.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -6120,6 +5044,7 @@ return quil.sketch.current_applet.call(null).year();
 quil.core.width = (function quil$core$width(){
 return quil.sketch.current_applet.call(null).width;
 });
+var ret__4684__auto___1565 = (function (){
 /**
  * Temporarily set the fill color for the body of this macro.
  * The code outside of with-fill form will have the previous fill color set.
@@ -6129,53 +5054,49 @@ return quil.sketch.current_applet.call(null).width;
  *          (with-fill [10 80 98] ...)
  */
 quil.core.with_fill = (function quil$core$with_fill(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8846 = arguments.length;
-var i__7928__auto___8847 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1566 = arguments.length;
+var i__4642__auto___1567 = (0);
 while(true){
-if((i__7928__auto___8847 < len__7927__auto___8846)){
-args__7934__auto__.push((arguments[i__7928__auto___8847]));
+if((i__4642__auto___1567 < len__4641__auto___1566)){
+args__4647__auto__.push((arguments[i__4642__auto___1567]));
 
-var G__8848 = (i__7928__auto___8847 + (1));
-i__7928__auto___8847 = G__8848;
+var G__1568 = (i__4642__auto___1567 + (1));
+i__4642__auto___1567 = G__1568;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.with_fill.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.with_fill.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.with_fill.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,fill_args,body){
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null)),(function (){var x__7656__auto__ = cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"old-fill__8841__auto__","old-fill__8841__auto__",-542184144,null)),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","current-fill","quil.core/current-fill",269663137,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})()))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","apply","cljs.core/apply",1757277831,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","fill","quil.core/fill",814613078,null)),(function (){var x__7656__auto__ = fill_args;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),body,(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","fill","quil.core/fill",814613078,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"old-fill__8841__auto__","old-fill__8841__auto__",-542184144,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"old-fill__1560__auto__","old-fill__1560__auto__",-175135463,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","current-fill","quil.core/current-fill",269663137,null),null,(1),null))))),null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","apply","cljs.core/apply",1757277831,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol("quil.core","fill","quil.core/fill",814613078,null),null,(1),null)),(new cljs.core.List(null,fill_args,null,(1),null))))),null,(1),null)),body,(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","fill","quil.core/fill",814613078,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"old-fill__1560__auto__","old-fill__1560__auto__",-175135463,null),null,(1),null))))),null,(1),null)))));
 });
 
 quil.core.with_fill.cljs$lang$maxFixedArity = (3);
 
-quil.core.with_fill.cljs$lang$applyTo = (function (seq8842){
-var G__8843 = cljs.core.first.call(null,seq8842);
-var seq8842__$1 = cljs.core.next.call(null,seq8842);
-var G__8844 = cljs.core.first.call(null,seq8842__$1);
-var seq8842__$2 = cljs.core.next.call(null,seq8842__$1);
-var G__8845 = cljs.core.first.call(null,seq8842__$2);
-var seq8842__$3 = cljs.core.next.call(null,seq8842__$2);
-return quil.core.with_fill.cljs$core$IFn$_invoke$arity$variadic(G__8843,G__8844,G__8845,seq8842__$3);
+/** @this {Function} */
+quil.core.with_fill.cljs$lang$applyTo = (function (seq1561){
+var G__1562 = cljs.core.first.call(null,seq1561);
+var seq1561__$1 = cljs.core.next.call(null,seq1561);
+var G__1563 = cljs.core.first.call(null,seq1561__$1);
+var seq1561__$2 = cljs.core.next.call(null,seq1561__$1);
+var G__1564 = cljs.core.first.call(null,seq1561__$2);
+var seq1561__$3 = cljs.core.next.call(null,seq1561__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1562,G__1563,G__1564,seq1561__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.with_fill.cljs$lang$macro = true;
+
+var ret__4684__auto___1574 = (function (){
 /**
  * Temporarily set the stroke color for the body of this macro.
  * The code outside of with-stroke form will have the previous stroke color set.
@@ -6185,109 +5106,97 @@ quil.core.with_fill.cljs$lang$macro = true;
  *          (with-stroke [10 80 98] ...)
  */
 quil.core.with_stroke = (function quil$core$with_stroke(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8854 = arguments.length;
-var i__7928__auto___8855 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1575 = arguments.length;
+var i__4642__auto___1576 = (0);
 while(true){
-if((i__7928__auto___8855 < len__7927__auto___8854)){
-args__7934__auto__.push((arguments[i__7928__auto___8855]));
+if((i__4642__auto___1576 < len__4641__auto___1575)){
+args__4647__auto__.push((arguments[i__4642__auto___1576]));
 
-var G__8856 = (i__7928__auto___8855 + (1));
-i__7928__auto___8855 = G__8856;
+var G__1577 = (i__4642__auto___1576 + (1));
+i__4642__auto___1576 = G__1577;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.with_stroke.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.with_stroke.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.with_stroke.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,stroke_args,body){
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null)),(function (){var x__7656__auto__ = cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"old-stroke__8849__auto__","old-stroke__8849__auto__",2023550134,null)),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","current-stroke","quil.core/current-stroke",-1148124489,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})()))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","apply","cljs.core/apply",1757277831,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","stroke","quil.core/stroke",577473004,null)),(function (){var x__7656__auto__ = stroke_args;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),body,(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","stroke","quil.core/stroke",577473004,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"old-stroke__8849__auto__","old-stroke__8849__auto__",2023550134,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"old-stroke__1569__auto__","old-stroke__1569__auto__",-1825235711,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","current-stroke","quil.core/current-stroke",-1148124489,null),null,(1),null))))),null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","apply","cljs.core/apply",1757277831,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol("quil.core","stroke","quil.core/stroke",577473004,null),null,(1),null)),(new cljs.core.List(null,stroke_args,null,(1),null))))),null,(1),null)),body,(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","stroke","quil.core/stroke",577473004,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"old-stroke__1569__auto__","old-stroke__1569__auto__",-1825235711,null),null,(1),null))))),null,(1),null)))));
 });
 
 quil.core.with_stroke.cljs$lang$maxFixedArity = (3);
 
-quil.core.with_stroke.cljs$lang$applyTo = (function (seq8850){
-var G__8851 = cljs.core.first.call(null,seq8850);
-var seq8850__$1 = cljs.core.next.call(null,seq8850);
-var G__8852 = cljs.core.first.call(null,seq8850__$1);
-var seq8850__$2 = cljs.core.next.call(null,seq8850__$1);
-var G__8853 = cljs.core.first.call(null,seq8850__$2);
-var seq8850__$3 = cljs.core.next.call(null,seq8850__$2);
-return quil.core.with_stroke.cljs$core$IFn$_invoke$arity$variadic(G__8851,G__8852,G__8853,seq8850__$3);
+/** @this {Function} */
+quil.core.with_stroke.cljs$lang$applyTo = (function (seq1570){
+var G__1571 = cljs.core.first.call(null,seq1570);
+var seq1570__$1 = cljs.core.next.call(null,seq1570);
+var G__1572 = cljs.core.first.call(null,seq1570__$1);
+var seq1570__$2 = cljs.core.next.call(null,seq1570__$1);
+var G__1573 = cljs.core.first.call(null,seq1570__$2);
+var seq1570__$3 = cljs.core.next.call(null,seq1570__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1571,G__1572,G__1573,seq1570__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.with_stroke.cljs$lang$macro = true;
+
+var ret__4684__auto___1583 = (function (){
 /**
  * Performs body with translation, restores current transformation on
  *   exit.
  */
 quil.core.with_translation = (function quil$core$with_translation(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8862 = arguments.length;
-var i__7928__auto___8863 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1584 = arguments.length;
+var i__4642__auto___1585 = (0);
 while(true){
-if((i__7928__auto___8863 < len__7927__auto___8862)){
-args__7934__auto__.push((arguments[i__7928__auto___8863]));
+if((i__4642__auto___1585 < len__4641__auto___1584)){
+args__4647__auto__.push((arguments[i__4642__auto___1585]));
 
-var G__8864 = (i__7928__auto___8863 + (1));
-i__7928__auto___8863 = G__8864;
+var G__1586 = (i__4642__auto___1585 + (1));
+i__4642__auto___1585 = G__1586;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.with_translation.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.with_translation.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.with_translation.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,translation_vector,body){
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null)),(function (){var x__7656__auto__ = cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"tr__8857__auto__","tr__8857__auto__",1580976152,null)),(function (){var x__7656__auto__ = translation_vector;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})()))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","push-matrix","quil.core/push-matrix",1356326676,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"try","try",-1273693247,null)),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","translate","quil.core/translate",150889028,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"tr__8857__auto__","tr__8857__auto__",1580976152,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),body,(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"finally","finally",-1065347064,null)),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","pop-matrix","quil.core/pop-matrix",310892617,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"tr__1578__auto__","tr__1578__auto__",-613961657,null),null,(1),null)),(new cljs.core.List(null,translation_vector,null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","push-matrix","quil.core/push-matrix",1356326676,null),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"try","try",-1273693247,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","translate","quil.core/translate",150889028,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"tr__1578__auto__","tr__1578__auto__",-613961657,null),null,(1),null))))),null,(1),null)),body,(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"finally","finally",-1065347064,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","pop-matrix","quil.core/pop-matrix",310892617,null),null,(1),null))))),null,(1),null))))),null,(1),null))))),null,(1),null)))));
 });
 
 quil.core.with_translation.cljs$lang$maxFixedArity = (3);
 
-quil.core.with_translation.cljs$lang$applyTo = (function (seq8858){
-var G__8859 = cljs.core.first.call(null,seq8858);
-var seq8858__$1 = cljs.core.next.call(null,seq8858);
-var G__8860 = cljs.core.first.call(null,seq8858__$1);
-var seq8858__$2 = cljs.core.next.call(null,seq8858__$1);
-var G__8861 = cljs.core.first.call(null,seq8858__$2);
-var seq8858__$3 = cljs.core.next.call(null,seq8858__$2);
-return quil.core.with_translation.cljs$core$IFn$_invoke$arity$variadic(G__8859,G__8860,G__8861,seq8858__$3);
+/** @this {Function} */
+quil.core.with_translation.cljs$lang$applyTo = (function (seq1579){
+var G__1580 = cljs.core.first.call(null,seq1579);
+var seq1579__$1 = cljs.core.next.call(null,seq1579);
+var G__1581 = cljs.core.first.call(null,seq1579__$1);
+var seq1579__$2 = cljs.core.next.call(null,seq1579__$1);
+var G__1582 = cljs.core.first.call(null,seq1579__$2);
+var seq1579__$3 = cljs.core.next.call(null,seq1579__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1580,G__1581,G__1582,seq1579__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.with_translation.cljs$lang$macro = true;
+
+var ret__4684__auto___1592 = (function (){
 /**
  * Performs body with rotation, restores current transformation on exit.
  *   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
@@ -6297,135 +5206,120 @@ quil.core.with_translation.cljs$lang$macro = true;
  *    (vertex 1 2))
  */
 quil.core.with_rotation = (function quil$core$with_rotation(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8870 = arguments.length;
-var i__7928__auto___8871 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1593 = arguments.length;
+var i__4642__auto___1594 = (0);
 while(true){
-if((i__7928__auto___8871 < len__7927__auto___8870)){
-args__7934__auto__.push((arguments[i__7928__auto___8871]));
+if((i__4642__auto___1594 < len__4641__auto___1593)){
+args__4647__auto__.push((arguments[i__4642__auto___1594]));
 
-var G__8872 = (i__7928__auto___8871 + (1));
-i__7928__auto___8871 = G__8872;
+var G__1595 = (i__4642__auto___1594 + (1));
+i__4642__auto___1594 = G__1595;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.with_rotation.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.with_rotation.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.with_rotation.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,rotation,body){
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null)),(function (){var x__7656__auto__ = cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"tr__8865__auto__","tr__8865__auto__",50521325,null)),(function (){var x__7656__auto__ = rotation;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})()))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","push-matrix","quil.core/push-matrix",1356326676,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"try","try",-1273693247,null)),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","apply","cljs.core/apply",1757277831,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","rotate","quil.core/rotate",-1944995048,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"tr__8865__auto__","tr__8865__auto__",50521325,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),body,(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"finally","finally",-1065347064,null)),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","pop-matrix","quil.core/pop-matrix",310892617,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"tr__1587__auto__","tr__1587__auto__",-1418251344,null),null,(1),null)),(new cljs.core.List(null,rotation,null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","push-matrix","quil.core/push-matrix",1356326676,null),null,(1),null))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"try","try",-1273693247,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","apply","cljs.core/apply",1757277831,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol("quil.core","rotate","quil.core/rotate",-1944995048,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"tr__1587__auto__","tr__1587__auto__",-1418251344,null),null,(1),null))))),null,(1),null)),body,(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"finally","finally",-1065347064,null),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","pop-matrix","quil.core/pop-matrix",310892617,null),null,(1),null))))),null,(1),null))))),null,(1),null))))),null,(1),null)))));
 });
 
 quil.core.with_rotation.cljs$lang$maxFixedArity = (3);
 
-quil.core.with_rotation.cljs$lang$applyTo = (function (seq8866){
-var G__8867 = cljs.core.first.call(null,seq8866);
-var seq8866__$1 = cljs.core.next.call(null,seq8866);
-var G__8868 = cljs.core.first.call(null,seq8866__$1);
-var seq8866__$2 = cljs.core.next.call(null,seq8866__$1);
-var G__8869 = cljs.core.first.call(null,seq8866__$2);
-var seq8866__$3 = cljs.core.next.call(null,seq8866__$2);
-return quil.core.with_rotation.cljs$core$IFn$_invoke$arity$variadic(G__8867,G__8868,G__8869,seq8866__$3);
+/** @this {Function} */
+quil.core.with_rotation.cljs$lang$applyTo = (function (seq1588){
+var G__1589 = cljs.core.first.call(null,seq1588);
+var seq1588__$1 = cljs.core.next.call(null,seq1588);
+var G__1590 = cljs.core.first.call(null,seq1588__$1);
+var seq1588__$2 = cljs.core.next.call(null,seq1588__$1);
+var G__1591 = cljs.core.first.call(null,seq1588__$2);
+var seq1588__$3 = cljs.core.next.call(null,seq1588__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1589,G__1590,G__1591,seq1588__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.with_rotation.cljs$lang$macro = true;
+
+var ret__4684__auto___1601 = (function (){
 /**
  * All subsequent calls of any drawing function will draw on given
  *   graphics. 'with-graphics' cannot be nested (you can draw simultaneously
  *   only on 1 graphics)
  */
 quil.core.with_graphics = (function quil$core$with_graphics(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8878 = arguments.length;
-var i__7928__auto___8879 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1602 = arguments.length;
+var i__4642__auto___1603 = (0);
 while(true){
-if((i__7928__auto___8879 < len__7927__auto___8878)){
-args__7934__auto__.push((arguments[i__7928__auto___8879]));
+if((i__4642__auto___1603 < len__4641__auto___1602)){
+args__4647__auto__.push((arguments[i__4642__auto___1603]));
 
-var G__8880 = (i__7928__auto___8879 + (1));
-i__7928__auto___8879 = G__8880;
+var G__1604 = (i__4642__auto___1603 + (1));
+i__4642__auto___1603 = G__1604;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.with_graphics.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.with_graphics.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.with_graphics.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,graphics,body){
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null)),(function (){var x__7656__auto__ = cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"gr__8873__auto__","gr__8873__auto__",-2050142911,null)),(function (){var x__7656__auto__ = graphics;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})()))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("cljs.core","binding","cljs.core/binding",2050379843,null)),(function (){var x__7656__auto__ = cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.core","*graphics*","quil.core/*graphics*",-1088142302,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"gr__8873__auto__","gr__8873__auto__",-2050142911,null))))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,".beginDraw",".beginDraw",1110767550,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"gr__8873__auto__","gr__8873__auto__",-2050142911,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),body,(function (){var x__7656__auto__ = cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,".endDraw",".endDraw",795589408,null)),cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol(null,"gr__8873__auto__","gr__8873__auto__",-2050142911,null)))));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})())));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","let","cljs.core/let",-308701135,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,"gr__1596__auto__","gr__1596__auto__",-1397057021,null),null,(1),null)),(new cljs.core.List(null,graphics,null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("cljs.core","binding","cljs.core/binding",2050379843,null),null,(1),null)),(new cljs.core.List(null,cljs.core.vec.call(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.core","*graphics*","quil.core/*graphics*",-1088142302,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"gr__1596__auto__","gr__1596__auto__",-1397057021,null),null,(1),null)))))),null,(1),null)),(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,".beginDraw",".beginDraw",1110767550,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"gr__1596__auto__","gr__1596__auto__",-1397057021,null),null,(1),null))))),null,(1),null)),body,(new cljs.core.List(null,cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol(null,".endDraw",".endDraw",795589408,null),null,(1),null)),(new cljs.core.List(null,new cljs.core.Symbol(null,"gr__1596__auto__","gr__1596__auto__",-1397057021,null),null,(1),null))))),null,(1),null))))),null,(1),null)))));
 });
 
 quil.core.with_graphics.cljs$lang$maxFixedArity = (3);
 
-quil.core.with_graphics.cljs$lang$applyTo = (function (seq8874){
-var G__8875 = cljs.core.first.call(null,seq8874);
-var seq8874__$1 = cljs.core.next.call(null,seq8874);
-var G__8876 = cljs.core.first.call(null,seq8874__$1);
-var seq8874__$2 = cljs.core.next.call(null,seq8874__$1);
-var G__8877 = cljs.core.first.call(null,seq8874__$2);
-var seq8874__$3 = cljs.core.next.call(null,seq8874__$2);
-return quil.core.with_graphics.cljs$core$IFn$_invoke$arity$variadic(G__8875,G__8876,G__8877,seq8874__$3);
+/** @this {Function} */
+quil.core.with_graphics.cljs$lang$applyTo = (function (seq1597){
+var G__1598 = cljs.core.first.call(null,seq1597);
+var seq1597__$1 = cljs.core.next.call(null,seq1597);
+var G__1599 = cljs.core.first.call(null,seq1597__$1);
+var seq1597__$2 = cljs.core.next.call(null,seq1597__$1);
+var G__1600 = cljs.core.first.call(null,seq1597__$2);
+var seq1597__$3 = cljs.core.next.call(null,seq1597__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1598,G__1599,G__1600,seq1597__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.with_graphics.cljs$lang$macro = true;
+
 /**
  * Create and start a new visualisation applet. Can be used to create
  *   new sketches programmatically. See documentation for 'defsketch' for
  *   list of available options.
  */
 quil.core.sketch = (function quil$core$sketch(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8882 = arguments.length;
-var i__7928__auto___8883 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1606 = arguments.length;
+var i__4642__auto___1607 = (0);
 while(true){
-if((i__7928__auto___8883 < len__7927__auto___8882)){
-args__7934__auto__.push((arguments[i__7928__auto___8883]));
+if((i__4642__auto___1607 < len__4641__auto___1606)){
+args__4647__auto__.push((arguments[i__4642__auto___1607]));
 
-var G__8884 = (i__7928__auto___8883 + (1));
-i__7928__auto___8883 = G__8884;
+var G__1608 = (i__4642__auto___1607 + (1));
+i__4642__auto___1607 = G__1608;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((0) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((0)),(0),null)):null);
-return quil.core.sketch.cljs$core$IFn$_invoke$arity$variadic(argseq__7935__auto__);
+var argseq__4648__auto__ = ((((0) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((0)),(0),null)):null);
+return quil.core.sketch.cljs$core$IFn$_invoke$arity$variadic(argseq__4648__auto__);
 });
 
 quil.core.sketch.cljs$core$IFn$_invoke$arity$variadic = (function (opts){
@@ -6434,10 +5328,13 @@ return cljs.core.apply.call(null,quil.sketch.sketch,opts);
 
 quil.core.sketch.cljs$lang$maxFixedArity = (0);
 
-quil.core.sketch.cljs$lang$applyTo = (function (seq8881){
-return quil.core.sketch.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null,seq8881));
+/** @this {Function} */
+quil.core.sketch.cljs$lang$applyTo = (function (seq1605){
+var self__4629__auto__ = this;
+return self__4629__auto__.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null,seq1605));
 });
 
+var ret__4684__auto___1613 = (function (){
 /**
  * Define and start a sketch and bind it to a var with the symbol
  *   app-name. If any of the options to the various callbacks are
@@ -6578,45 +5475,48 @@ return quil.core.sketch.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(
  *                   cannot be used neither in :setup nor in :draw.
  */
 quil.core.defsketch = (function quil$core$defsketch(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___8889 = arguments.length;
-var i__7928__auto___8890 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___1614 = arguments.length;
+var i__4642__auto___1615 = (0);
 while(true){
-if((i__7928__auto___8890 < len__7927__auto___8889)){
-args__7934__auto__.push((arguments[i__7928__auto___8890]));
+if((i__4642__auto___1615 < len__4641__auto___1614)){
+args__4647__auto__.push((arguments[i__4642__auto___1615]));
 
-var G__8891 = (i__7928__auto___8890 + (1));
-i__7928__auto___8890 = G__8891;
+var G__1616 = (i__4642__auto___1615 + (1));
+i__4642__auto___1615 = G__1616;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((3) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((3)),(0),null)):null);
-return quil.core.defsketch.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((3) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((3)),(0),null)):null);
+return quil.core.defsketch.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),(arguments[(1)]),(arguments[(2)]),argseq__4648__auto__);
 });
 
 quil.core.defsketch.cljs$core$IFn$_invoke$arity$variadic = (function (_AMPERSAND_form,_AMPERSAND_env,app_name,options){
-return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,cljs.core._conj.call(null,cljs.core.List.EMPTY,new cljs.core.Symbol("quil.sketch$macros","defsketch","quil.sketch$macros/defsketch",2065609719,null)),(function (){var x__7656__auto__ = app_name;
-return cljs.core._conj.call(null,cljs.core.List.EMPTY,x__7656__auto__);
-})(),options)));
+return cljs.core.sequence.call(null,cljs.core.seq.call(null,cljs.core.concat.call(null,(new cljs.core.List(null,new cljs.core.Symbol("quil.sketch$macros","defsketch","quil.sketch$macros/defsketch",2065609719,null),null,(1),null)),(new cljs.core.List(null,app_name,null,(1),null)),options)));
 });
 
 quil.core.defsketch.cljs$lang$maxFixedArity = (3);
 
-quil.core.defsketch.cljs$lang$applyTo = (function (seq8885){
-var G__8886 = cljs.core.first.call(null,seq8885);
-var seq8885__$1 = cljs.core.next.call(null,seq8885);
-var G__8887 = cljs.core.first.call(null,seq8885__$1);
-var seq8885__$2 = cljs.core.next.call(null,seq8885__$1);
-var G__8888 = cljs.core.first.call(null,seq8885__$2);
-var seq8885__$3 = cljs.core.next.call(null,seq8885__$2);
-return quil.core.defsketch.cljs$core$IFn$_invoke$arity$variadic(G__8886,G__8887,G__8888,seq8885__$3);
+/** @this {Function} */
+quil.core.defsketch.cljs$lang$applyTo = (function (seq1609){
+var G__1610 = cljs.core.first.call(null,seq1609);
+var seq1609__$1 = cljs.core.next.call(null,seq1609);
+var G__1611 = cljs.core.first.call(null,seq1609__$1);
+var seq1609__$2 = cljs.core.next.call(null,seq1609__$1);
+var G__1612 = cljs.core.first.call(null,seq1609__$2);
+var seq1609__$3 = cljs.core.next.call(null,seq1609__$2);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__1610,G__1611,G__1612,seq1609__$3);
 });
 
-
+return null;
+})()
+;
 quil.core.defsketch.cljs$lang$macro = true;
+
 /**
  * Returns true if char c is a 'coded' char i.e. it is necessary to
  *   fetch the key-code as an integer and use that to determine the
@@ -6633,7 +5533,7 @@ return cljs.core._EQ_.call(null,(65535),String(c).charCodeAt());
 quil.core.key_as_keyword = (function quil$core$key_as_keyword(){
 var key_char = quil.core.raw_key.call(null);
 var code = quil.core.key_code.call(null);
-if(cljs.core.truth_(quil.core.key_coded_QMARK_.call(null,key_char))){
+if(quil.core.key_coded_QMARK_.call(null,key_char)){
 return cljs.core.get.call(null,quil.core.KEY_CODES,code,new cljs.core.Keyword(null,"unknown-key","unknown-key",255305911));
 } else {
 return cljs.core.keyword.call(null,String(key_char));

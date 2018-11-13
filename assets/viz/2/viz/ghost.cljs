@@ -1,5 +1,7 @@
 (ns viz.ghost
-  (:require [viz.forest :as forest]
+  (:require [quil.core :as q]
+            [quil.middleware :as m]
+            [viz.forest :as forest]
             [viz.grid   :as grid]
             clojure.set))
 
@@ -37,15 +39,11 @@
 
 (defn incr [ghost forest poss-fn]
   (let [[forest new-ids] (spawn-children-multi forest poss-fn (:active-node-ids ghost))]
-    [(assoc ghost :active-node-ids new-ids) forest]))
-
-(defn active-nodes [ghost forest]
-  (map #(forest/get-node forest %) (:active-node-ids ghost)))
-
-(defn filter-active-nodes [ghost pred]
-  (assoc ghost :active-node-ids
-         (reduce #(if (pred %2) (conj %1 (:id %2)) %1) #{}
-                 (active-nodes ghost))))
+    [(assoc ghost :active-node-ids new-ids)
+     (reduce (fn [forest id]
+               (forest/update-node-meta forest id
+                  (fn [m] (assoc m :color (:color ghost)))))
+             forest new-ids)]))
 
 (defn- eg-poss-fn [pos adj-poss]
   (take 2 (random-sample 0.6 adj-poss)))

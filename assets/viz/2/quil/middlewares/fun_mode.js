@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 1.9.473 {}
+// Compiled by ClojureScript 1.10.439 {}
 goog.provide('quil.middlewares.fun_mode');
 goog.require('cljs.core');
 goog.require('quil.core');
@@ -34,23 +34,8 @@ quil.middlewares.fun_mode.key_event = (function quil$middlewares$fun_mode$key_ev
 return new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"key","key",-1516042587),quil.core.key_as_keyword.call(null),new cljs.core.Keyword(null,"key-code","key-code",-1732114304),quil.core.key_code.call(null),new cljs.core.Keyword(null,"raw-key","raw-key",-162482279),quil.core.raw_key.call(null)], null);
 });
 quil.middlewares.fun_mode.wrap_handler = (function quil$middlewares$fun_mode$wrap_handler(var_args){
-var args9436 = [];
-var len__7927__auto___9439 = arguments.length;
-var i__7928__auto___9440 = (0);
-while(true){
-if((i__7928__auto___9440 < len__7927__auto___9439)){
-args9436.push((arguments[i__7928__auto___9440]));
-
-var G__9441 = (i__7928__auto___9440 + (1));
-i__7928__auto___9440 = G__9441;
-continue;
-} else {
-}
-break;
-}
-
-var G__9438 = args9436.length;
-switch (G__9438) {
+var G__2134 = arguments.length;
+switch (G__2134) {
 case 2:
 return quil.middlewares.fun_mode.wrap_handler.cljs$core$IFn$_invoke$arity$2((arguments[(0)]),(arguments[(1)]));
 
@@ -60,7 +45,7 @@ return quil.middlewares.fun_mode.wrap_handler.cljs$core$IFn$_invoke$arity$3((arg
 
 break;
 default:
-throw (new Error([cljs.core.str.cljs$core$IFn$_invoke$arity$1("Invalid arity: "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(args9436.length)].join('')));
+throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(arguments.length)].join('')));
 
 }
 });
@@ -90,23 +75,23 @@ return options;
 quil.middlewares.fun_mode.wrap_handler.cljs$lang$maxFixedArity = 3;
 
 quil.middlewares.fun_mode.wrap_handlers = (function quil$middlewares$fun_mode$wrap_handlers(var_args){
-var args__7934__auto__ = [];
-var len__7927__auto___9445 = arguments.length;
-var i__7928__auto___9446 = (0);
+var args__4647__auto__ = [];
+var len__4641__auto___2138 = arguments.length;
+var i__4642__auto___2139 = (0);
 while(true){
-if((i__7928__auto___9446 < len__7927__auto___9445)){
-args__7934__auto__.push((arguments[i__7928__auto___9446]));
+if((i__4642__auto___2139 < len__4641__auto___2138)){
+args__4647__auto__.push((arguments[i__4642__auto___2139]));
 
-var G__9447 = (i__7928__auto___9446 + (1));
-i__7928__auto___9446 = G__9447;
+var G__2140 = (i__4642__auto___2139 + (1));
+i__4642__auto___2139 = G__2140;
 continue;
 } else {
 }
 break;
 }
 
-var argseq__7935__auto__ = ((((1) < args__7934__auto__.length))?(new cljs.core.IndexedSeq(args__7934__auto__.slice((1)),(0),null)):null);
-return quil.middlewares.fun_mode.wrap_handlers.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),argseq__7935__auto__);
+var argseq__4648__auto__ = ((((1) < args__4647__auto__.length))?(new cljs.core.IndexedSeq(args__4647__auto__.slice((1)),(0),null)):null);
+return quil.middlewares.fun_mode.wrap_handlers.cljs$core$IFn$_invoke$arity$variadic((arguments[(0)]),argseq__4648__auto__);
 });
 
 quil.middlewares.fun_mode.wrap_handlers.cljs$core$IFn$_invoke$arity$variadic = (function (options,handlers){
@@ -121,10 +106,12 @@ return cljs.core.apply.call(null,quil.middlewares.fun_mode.wrap_handler,options_
 
 quil.middlewares.fun_mode.wrap_handlers.cljs$lang$maxFixedArity = (1);
 
-quil.middlewares.fun_mode.wrap_handlers.cljs$lang$applyTo = (function (seq9443){
-var G__9444 = cljs.core.first.call(null,seq9443);
-var seq9443__$1 = cljs.core.next.call(null,seq9443);
-return quil.middlewares.fun_mode.wrap_handlers.cljs$core$IFn$_invoke$arity$variadic(G__9444,seq9443__$1);
+/** @this {Function} */
+quil.middlewares.fun_mode.wrap_handlers.cljs$lang$applyTo = (function (seq2136){
+var G__2137 = cljs.core.first.call(null,seq2136);
+var seq2136__$1 = cljs.core.next.call(null,seq2136);
+var self__4628__auto__ = this;
+return self__4628__auto__.cljs$core$IFn$_invoke$arity$variadic(G__2137,seq2136__$1);
 });
 
 quil.middlewares.fun_mode.wrap_mouse_wheel = (function quil$middlewares$fun_mode$wrap_mouse_wheel(options){

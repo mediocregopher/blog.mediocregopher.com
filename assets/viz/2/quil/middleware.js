@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 1.9.473 {}
+// Compiled by ClojureScript 1.10.439 {}
 goog.provide('quil.middleware');
 goog.require('cljs.core');
 goog.require('quil.middlewares.fun_mode');

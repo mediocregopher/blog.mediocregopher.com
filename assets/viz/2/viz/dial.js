@@ -1,4 +1,4 @@
-// Compiled by ClojureScript 1.9.473 {}
+// Compiled by ClojureScript 1.10.439 {}
 goog.provide('viz.dial');
 goog.require('cljs.core');
 goog.require('quil.core');
@@ -28,10 +28,10 @@ return new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"fr
 viz.dial.by_plot = (function viz$dial$by_plot(dial,plot,curr_frame){
 var dial_t = (cljs.core.mod.call(null,(curr_frame / new cljs.core.Keyword(null,"frame-rate","frame-rate",-994918942).cljs$core$IFn$_invoke$arity$1(plot)),new cljs.core.Keyword(null,"period","period",-352129191).cljs$core$IFn$_invoke$arity$1(plot)) / new cljs.core.Keyword(null,"period","period",-352129191).cljs$core$IFn$_invoke$arity$1(plot));
 return cljs.core.assoc.call(null,dial,new cljs.core.Keyword(null,"val","val",128701612),cljs.core.reduce.call(null,((function (dial_t){
-return (function (curr_v,p__8119){
-var vec__8120 = p__8119;
-var t = cljs.core.nth.call(null,vec__8120,(0),null);
-var v = cljs.core.nth.call(null,vec__8120,(1),null);
+return (function (curr_v,p__10882){
+var vec__10883 = p__10882;
+var t = cljs.core.nth.call(null,vec__10883,(0),null);
+var v = cljs.core.nth.call(null,vec__10883,(1),null);
 if((t <= dial_t)){
 return v;
 } else {

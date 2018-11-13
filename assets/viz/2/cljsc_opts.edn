@@ -1,0 +1,1 @@
+{:output-wrapper false, :externs ["closure-js/externs"], :libs ["closure-js/libs"], :output-to "js/main.js", :output-dir "out", :main "viz.core", :preamble ["processing.min.js"], :optimizations :none, :pretty-print false}

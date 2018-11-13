@@ -1,8 +1,8 @@
-// Compiled by ClojureScript 1.9.473 {}
+// Compiled by ClojureScript 1.10.439 {}
 goog.provide('quil.middlewares.navigation_2d');
 goog.require('cljs.core');
 goog.require('quil.core');
-quil.middlewares.navigation_2d.missing_navigation_key_error = [cljs.core.str.cljs$core$IFn$_invoke$arity$1("state map is missing :navigation-2d key. "),cljs.core.str.cljs$core$IFn$_invoke$arity$1("Did you accidentally removed it from the state in "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(":update or any other handler?")].join('');
+quil.middlewares.navigation_2d.missing_navigation_key_error = ["state map is missing :navigation-2d key. ","Did you accidentally removed it from the state in ",":update or any other handler?"].join('');
 /**
  * Asserts that state map contains :navigation-2d object.
  */
@@ -27,8 +27,8 @@ return new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"po
 quil.middlewares.navigation_2d.setup_2d_nav = (function quil$middlewares$navigation_2d$setup_2d_nav(user_setup,user_settings){
 var initial_state = cljs.core.merge.call(null,quil.middlewares.navigation_2d.default_position.call(null),cljs.core.select_keys.call(null,user_settings,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"position","position",-2011731912),new cljs.core.Keyword(null,"zoom","zoom",-1827487038)], null)));
 return cljs.core.update_in.call(null,user_setup.call(null),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"navigation-2d","navigation-2d",-1924168611)], null),((function (initial_state){
-return (function (p1__9429_SHARP_){
-return cljs.core.merge.call(null,initial_state,p1__9429_SHARP_);
+return (function (p1__2126_SHARP_){
+return cljs.core.merge.call(null,initial_state,p1__2126_SHARP_);
 });})(initial_state))
 );
 });
@@ -61,15 +61,15 @@ quil.middlewares.navigation_2d.assert_state_has_navigation.call(null,state);
 
 quil.core.push_matrix.call(null);
 
-var nav_2d_9430 = new cljs.core.Keyword(null,"navigation-2d","navigation-2d",-1924168611).cljs$core$IFn$_invoke$arity$1(state);
-var zoom_9431 = new cljs.core.Keyword(null,"zoom","zoom",-1827487038).cljs$core$IFn$_invoke$arity$1(nav_2d_9430);
-var pos_9432 = new cljs.core.Keyword(null,"position","position",-2011731912).cljs$core$IFn$_invoke$arity$1(nav_2d_9430);
-quil.core.scale.call(null,zoom_9431);
+var nav_2d_2127 = new cljs.core.Keyword(null,"navigation-2d","navigation-2d",-1924168611).cljs$core$IFn$_invoke$arity$1(state);
+var zoom_2128 = new cljs.core.Keyword(null,"zoom","zoom",-1827487038).cljs$core$IFn$_invoke$arity$1(nav_2d_2127);
+var pos_2129 = new cljs.core.Keyword(null,"position","position",-2011731912).cljs$core$IFn$_invoke$arity$1(nav_2d_2127);
+quil.core.scale.call(null,zoom_2128);
 
-var tr__9352__auto___9433 = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [(((quil.core.width.call(null) / (2)) / zoom_9431) - cljs.core.first.call(null,pos_9432)),(((quil.core.height.call(null) / (2)) / zoom_9431) - cljs.core.second.call(null,pos_9432))], null);
+var tr__2049__auto___2130 = new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [(((quil.core.width.call(null) / (2)) / zoom_2128) - cljs.core.first.call(null,pos_2129)),(((quil.core.height.call(null) / (2)) / zoom_2128) - cljs.core.second.call(null,pos_2129))], null);
 quil.core.push_matrix.call(null);
 
-try{quil.core.translate.call(null,tr__9352__auto___9433);
+try{quil.core.translate.call(null,tr__2049__auto___2130);
 
 user_draw.call(null,state);
 }finally {quil.core.pop_matrix.call(null);
