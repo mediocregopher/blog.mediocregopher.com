@@ -6,6 +6,9 @@ description: >-
     complex structures, and a pattern which helps in solving those problems.
 ---
 
+TODO:
+* Double check if I'm using "I" or "We" everywhere (probably should use "I")
+
 ## Part 0: Introduction
 
 This post is focused on a concept I call "program structure", which I will try
@@ -113,9 +116,9 @@ looks something like:
 
 ```go
 // A mapping of connection names to redis connections.
-var globalConns = map[string]redisConnection
+var globalConns = map[string]*RedisConn{}
 
-func Get(name string) redisConnection {
+func Get(name string) *RedisConn {
     if globalConns[name] == nil {
         globalConns[name] = makeConnection(name)
     }
@@ -155,7 +158,7 @@ breaking compartmentalization. The person/team responsible for the central
 library often finds themselves as the maintainers of the shared resource as
 well, rather than the team actually using it.
 
-### Program Structure
+### Component Structure
 
 So what does proper program structure look like? In my mind the structure of a
 program is a hierarchy of components, or, in other words, a tree. The leaf nodes
@@ -179,19 +182,19 @@ TODO diagram:
             http
 ```
 
-This structure contains the addition of the `debug` component. Clearly the
-`http` and `redis` components are reusable in different contexts, but for this
-example the `debug` endpoint is as well. It creates a separate http server which
-can be queried to perform runtime debugging of the program, and can be tacked
-onto virtually any program. The `rest-api` component is specific to this program
-and therefore not reusable. Let's dive into it a bit to see how it might be
-implemented:
+This component structure contains the addition of the `debug` component. Clearly
+the `http` and `redis` components are reusable in different contexts, but for
+this example the `debug` endpoint is as well. It creates a separate http server
+which can be queried to perform runtime debugging of the program, and can be
+tacked onto virtually any program. The `rest-api` component is specific to this
+program and therefore not reusable. Let's dive into it a bit to see how it might
+be implemented:
 
 ```go
 // RestAPI is very much not thread-safe, hopefully it doesn't have to handle
 // more than one request at once.
 type RestAPI struct {
-    redisConn *redis.Conn
+    redisConn *redis.RedisConn
     httpSrv   *http.Server
 
     // Statistics exported for other components to see
@@ -265,4 +268,140 @@ discussed in the next section.
 
 ## Part 2: Context, Configuration, and Runtime
 
+The key to the configuration problem is to recognize that, even if there are two
+of the same component in a program, they can't occupy the same place in the
+program's structure. In the above example there are two `http` components, one
+under `rest-api` and the other under `debug`. Since the structure is represented
+as a tree of components, the "path" of any node in the tree uniquely represents
+it in the structure. For example, the two `http` components in the previous
+example have these paths:
 
+```
+root -> rest-api -> http
+root -> debug -> http
+```
+
+If each component were to know its place in the component tree, then it would
+easily be able to ensure that its configuration and initialization didn't
+conflict with other components of the same type. If the `http` component sets up
+a command-line parameter to know what address to listen on, the two `http`
+components in that program would set up:
+
+```
+--rest-api-listen-addr
+--debug-listen-addr
+```
+
+So how can we enable each component to know its path in the component structure?
+To answer this we'll have to take a detour through go's `Context` type.
+
+### Context and Configuration
+
+As I mentioned in the Introduction, my example language in this post is Go, but
+there's nothing about the concepts I'm presenting which are specific to Go. To
+put it simply, Go's builtin `context` package implements a type called
+`context.Context` which is, for all intents and purposes, an immutable key/value
+store. This means that when you set a key to a value on a Context (using the
+`context.WithValue` function) a new Context is returned. The new Context
+contains all of the original's key/values, plus the one just set. The original
+remains untouched.
+
+(Go's Context also has some behavior built into it surrounding deadlines and
+process cancellation, but those aren't relevant for this discussion.)
+
+Context makes sense to use for carrying information about the program's
+structure to it's different components; it is informing each of what _context_
+it exists in within the larger structure. To use Context effectively, however,
+it is necessary to implement some helper functions. Here are their function
+signatures:
+
+```go
+// NewChild creates and returns a new Context based off of the parent one. The
+// child will have a path which is the parent's path appended with the given
+// name.
+func NewChild(parent context.Context, name string) context.Context
+
+// Path returns the sequence of names which were used to produce this Context
+// via calls to the NewChild function.
+func Path(ctx context.Context) []string
+```
+
+`NewChild` is used to create a new Context, corresponding to a new child node in
+the component structure, and `Path` is used retrieve the path of any Context
+within that structure. For the sake of keeping the examples simple let's pretend
+these functions have been implemented in a package called `mctx`. Here's an
+example of how `mctx` might be used in the `redis` component's code:
+
+```go
+func NewRedis(ctx context.Context, defaultAddr string) *RedisConn {
+    ctx = mctx.NewChild(ctx, "redis")
+    ctxPath := mctx.Path(ctx)
+    paramPrefix := strings.Join(ctxPath, "-")
+
+    addrParam := flag.String(paramPrefix+"-addr", defaultAddr, "Address of redis instance to connect to")
+    // finish setup
+
+    return redisConn
+}
+```
+
+In our above example, the two `redis` components' parameters would be:
+
+```
+// This first parameter is for stats redis, whose parent is the root and
+// therefore doesn't have a prefix. Perhaps stats should be broken into its own
+// component in order to fix this.
+--redis-addr
+--rest-api-redis-addr
+```
+
+The prefix joining stuff will probably get annoying after a while though, so
+let's invent a new package, `mcfg`, which acts like `flag` but is aware of
+`mctx`. Then `NewRedis` is reduced to:
+
+```go
+func NewRedis(ctx context.Context, defaultAddr string) *RedisConn {
+    ctx = mctx.NewChild(ctx, "redis")
+    addrParam := flag.String(ctx, "-addr", defaultAddr, "Address of redis instance to connect to")
+    // finish setup
+
+    return redisConn
+}
+```
+
+Sharp-eyed gophers will notice that there's a key piece missing: When is
+`mcfg.Parse` called? When does `addrParam` actually get populated? Because you
+can't create the redis connection until that happens, but that can't happen
+inside `NewRedis` because there might be other things after `NewRedis` which
+want to set up parameters. To illustrate the problem, let's look at a simple
+program which wants to set up two `redis` components:
+
+```go
+func main() {
+    // Create the root context, and empty Context.
+    ctx := context.Background()
+
+    // Create the Contexts for two sub-components, foo and bar.
+    ctxFoo := mctx.NewChild(ctx, "foo")
+    ctxBar := mctx.NewChild(ctx, "bar")
+
+    // Now we want to try to create a redis instances for each component. But...
+
+    // This will set up the parameter "--foo-redis-addr", but bar hasn't had a
+    // chance to set up its corresponding parameter, so the command-line can't
+    // be parsed yet.
+    fooRedis := redis.NewRedis(ctxFoo, "127.0.0.1:6379")
+
+    // This will set up the parameter "--bar-redis-addr", but, as mentioned
+    // before, NewRedis can't parse command-line.
+    barRedis := redis.NewRedis(ctxBar, "127.0.0.1:6379")
+
+    // If the command-line is parsed here, then how can fooRedis and barRedis
+    // have been created yet? Creating the redis connection depends on the addr
+    // parameters having already been parsed and filled.
+}
+```
+
+We will solve this problem in the next section.
+
+## Init vs. Start
