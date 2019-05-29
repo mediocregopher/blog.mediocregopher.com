@@ -120,7 +120,7 @@ var globalConns = map[string]*RedisConn{}
 
 func Get(name string) *RedisConn {
     if globalConns[name] == nil {
-        globalConns[name] = makeConnection(name)
+        globalConns[name] = makeRedisConnection(name)
     }
     return globalConns[name]
 }
@@ -316,6 +316,8 @@ it is necessary to implement some helper functions. Here are their function
 signatures:
 
 ```go
+// Package mctx
+
 // NewChild creates and returns a new Context based off of the parent one. The
 // child will have a path which is the parent's path appended with the given
 // name.
@@ -333,7 +335,9 @@ these functions have been implemented in a package called `mctx`. Here's an
 example of how `mctx` might be used in the `redis` component's code:
 
 ```go
-func NewRedis(ctx context.Context, defaultAddr string) *RedisConn {
+// Package redis
+
+func NewConn(ctx context.Context, defaultAddr string) *RedisConn {
     ctx = mctx.NewChild(ctx, "redis")
     ctxPath := mctx.Path(ctx)
     paramPrefix := strings.Join(ctxPath, "-")
@@ -357,10 +361,12 @@ In our above example, the two `redis` components' parameters would be:
 
 The prefix joining stuff will probably get annoying after a while though, so
 let's invent a new package, `mcfg`, which acts like `flag` but is aware of
-`mctx`. Then `NewRedis` is reduced to:
+`mctx`. Then `redis.NewConn` is reduced to:
 
 ```go
-func NewRedis(ctx context.Context, defaultAddr string) *RedisConn {
+// Package redis
+
+func NewConn(ctx context.Context, defaultAddr string) *RedisConn {
     ctx = mctx.NewChild(ctx, "redis")
     addrParam := flag.String(ctx, "-addr", defaultAddr, "Address of redis instance to connect to")
     // finish setup
@@ -372,29 +378,29 @@ func NewRedis(ctx context.Context, defaultAddr string) *RedisConn {
 Sharp-eyed gophers will notice that there's a key piece missing: When is
 `mcfg.Parse` called? When does `addrParam` actually get populated? Because you
 can't create the redis connection until that happens, but that can't happen
-inside `NewRedis` because there might be other things after `NewRedis` which
-want to set up parameters. To illustrate the problem, let's look at a simple
-program which wants to set up two `redis` components:
+inside `redis.NewConn` because there might be other things after `redis.NewConn`
+which want to set up parameters. To illustrate the problem, let's look at a
+simple program which wants to set up two `redis` components:
 
 ```go
 func main() {
-    // Create the root context, and empty Context.
+    // Create the root context, an empty Context.
     ctx := context.Background()
 
     // Create the Contexts for two sub-components, foo and bar.
     ctxFoo := mctx.NewChild(ctx, "foo")
     ctxBar := mctx.NewChild(ctx, "bar")
 
-    // Now we want to try to create a redis instances for each component. But...
+    // Now we want to try to create a redis sub-component for each component.
 
     // This will set up the parameter "--foo-redis-addr", but bar hasn't had a
     // chance to set up its corresponding parameter, so the command-line can't
     // be parsed yet.
-    fooRedis := redis.NewRedis(ctxFoo, "127.0.0.1:6379")
+    fooRedis := redis.NewConn(ctxFoo, "127.0.0.1:6379")
 
     // This will set up the parameter "--bar-redis-addr", but, as mentioned
-    // before, NewRedis can't parse command-line.
-    barRedis := redis.NewRedis(ctxBar, "127.0.0.1:6379")
+    // before, redis.NewConn can't parse command-line.
+    barRedis := redis.NewConn(ctxBar, "127.0.0.1:6379")
 
     // If the command-line is parsed here, then how can fooRedis and barRedis
     // have been created yet? Creating the redis connection depends on the addr
@@ -404,4 +410,137 @@ func main() {
 
 We will solve this problem in the next section.
 
-## Init vs. Start
+### Instantiation vs Initialization
+
+Let's break down `redis.NewConn` into two phases: instantiation and initialization.
+Instantiation refers to creating the component on the component structure and
+having it declare what it needs in order to initialize. After instantiation
+nothing external to the program has been done; no IO, no reading of the
+command-line, no logging, etc... All that's happened is that the empty shell of
+a `redis` component has been created.
+
+Initialization is the phase when that shell is filled. Configuration parameters
+are read, startup actions like the creation of database connections are
+performed, and logging is output for informational and debugging purposes.
+
+The key to making effective use of this dichotemy is to allow _all_ components
+to instantiate themselves before they initialize themselves. By doing this we
+can ensure that, for example, all components have had the chance to declare
+their configuration parameters before configuration parsing is done.
+
+So let's modify `redis.NewConn` so that it follows this dichotemy. It makes
+sense to leave instantiation related code where it is, but we need a mechanism
+by which we can declare initialization code before actually calling it. For
+this, I will introduce the idea of a "hook".
+
+A hook is, simply a function which will run later. We will declare a new
+package, calling it `mrun`, and say that it has two new functions:
+
+```go
+// Package mrun
+
+// WithInitHook returns a new Context based off the passed in one, with the //
+given hook registered to it.
+func WithInitHook(ctx context.Context, hook func()) context.Context
+
+// Init runs all hooks registered using WithInitHook. Hooks are run in the order
+// they were registered.
+func Init(ctx context.Context)
+```
+
+With these two functions we are able to defer the initialization phase of
+startup by using the same Contexts we were passing around for the purpose of
+denoting component structure. One thing to note is that, since hooks are being
+registered onto Contexts within the component instantiation code, the parent
+Context will not know about these hooks. Therefore it is necessary to add the
+child component's Context back into the parent. To do this we add two final
+functions to the `mctx` package:
+
+```go
+// Package mctx
+
+// WithChild returns a copy of the parent with the child added to it. Children
+// of a Context can be retrieved using the Children function.
+func WithChild(parent, child context.Context) context.Context
+
+// Children returns all child Contexts which have been added to the given one
+// using WithChild, in the order they were added.
+func Children(ctx context.Context) []context.Context
+```
+
+Now, with these few extra pieces of functionality in place, let's reconsider the
+most recent example, and make a program which creates two redis components which
+exist independently of each other:
+
+```go
+// Package redis
+
+// NOTE that NewConn has been renamed to WithConn, to reflect that the given
+// Context is being returned _with_ a redis component added to it.
+
+func WithConn(parent context.Context, defaultAddr string) (context.Context, *RedisConn) {
+    ctx = mctx.NewChild(parent, "redis")
+
+    // we instantiate an empty RedisConn instance and parameters for it. Neither
+    // has been initialized yet. They will remain empty until initialization has
+    // occurred.
+    redisConn := new(RedisConn)
+    addrParam := flag.String(ctx, "-addr", defaultAddr, "Address of redis instance to connect to")
+
+    ctx = mrun.WithInitHook(ctx, func() {
+        // This hook will run after parameter initialization has happened, and
+        // so addrParam will be usable. redisConn will be usable after this hook
+        // has run as well.
+        *redisConn = makeRedisConnection(*addrParam)
+    })
+
+    // Now that ctx has had configuration parameters and intialization hooks
+    // instantiated into it, return both it and the empty redisConn instance
+    // back to the parent.
+    return mctx.WithChild(parent, ctx), redisConn
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Package main
+
+func main() {
+    // Create the root context, an empty Context.
+    ctx := context.Background()
+
+    // Create the Contexts for two sub-components, foo and bar.
+    ctxFoo := mctx.NewChild(ctx, "foo")
+    ctxBar := mctx.NewChild(ctx, "bar")
+
+    // Add redis components to each of the foo and bar sub-components. The
+    // returned Contexts will be used to initialize the redis components.
+    ctxFoo, redisFoo := redis.WithConn(ctxFoo, "127.0.0.1:6379")
+    ctxBar, redisBar := redis.WithConn(ctxBar, "127.0.0.1:6379")
+
+    // Add the sub-component contexts back to the root, so they can all be
+    // initialized at once.
+    ctx = mctx.WithChild(ctx, ctxFoo)
+    ctx = mctx.WithChild(ctx, ctxBar)
+
+    // Parse will descend into the Context and all of its children, discovering
+    // all registered configuration parameters and filling them from the
+    // command-line.
+    mcfg.Parse(ctx)
+
+    // Now that configuration has been initialized, run the Init hooks for each
+    // of the sub-components.
+    mrun.Init(ctx)
+
+    // At this point the redis components have been fully initialized and may be
+    // used. For this example we'll copy all keys from one to the other.
+    keys := redisFoo.Command("KEYS", "*")
+    for i := range keys {
+        val := redisFoo.Command("GET", keys[i])
+        redisBar.Command("SET", keys[i], val)
+    }
+}
+```
+
+### Full example
+
+## Part 3: Annotations, Logging, and Errors
