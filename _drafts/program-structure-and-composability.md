@@ -8,6 +8,9 @@ description: >-
 
 TODO:
 * Double check if I'm using "I" or "We" everywhere (probably should use "I")
+* Part 2: Full Example
+* Standardize on "programs", not "apps" or "services"
+* Prefix all relevant code examples with a package name
 
 ## Part 0: Introduction
 
@@ -544,3 +547,101 @@ func main() {
 ### Full example
 
 ## Part 3: Annotations, Logging, and Errors
+
+Let's shift gears away from the component structure for a bit, and talk about a
+separate, but related, set of issues: those related to logging and errors.
+
+Both logging and error creation share the same problem, that of collecting as
+much contextual information around an event as possible. This is often done
+through string formatting, like so:
+
+```go
+// ServeHTTP implements the http.Handler method and is used to serve App's HTTP
+// endpoints.
+func (app *App) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+    log.Printf("incoming request from remoteAddr:%s for url:%s", r.RemoteAddr, r.URL.String())
+
+    // begin actual request handling
+}
+```
+
+In this example the code is logging an event, an incoming HTTP request, and
+including contextual information in that log about the remote address of the
+requester and the URL being requested.
+
+Similarly, an error might be created like this:
+
+```go
+func (app *App) GetUsername(userID int) (string, error) {
+    userName, err := app.Redis.Command("GET", userID)
+    if err != nil {
+        return "", fmt.Errorf("could not get username for userID:%d: %s", userID, err)
+    }
+    return userName, nil
+}
+```
+
+In that example, when redis returns an error the error is extended to include
+contextual information about what was attempting to be done (`could not get
+username`) and the userID involved. In newer versions of Go, and indeed in many
+other programming languages, the error will also include information about where
+in the source code it occurred, such as file name and line number.
+
+It is my experience that both logging and error creation often take up an
+inordinate amount of space in many programs. This is due to a desire to
+contextualize as much as possible, since in a large program it can be difficult
+to tell exactly where something is happening, even if you're looking at the log
+entry or error. For example, if a program has a set of HTTP endpoints, each one
+performing a redis call, what good is it to see the log entry `redis command had
+an error: took too long` without also knowing which command is involved, and
+which endpoint is calling it? Very little.
+
+So many programs of this nature end up looking like this:
+
+```go
+func (app *App) httpEndpointA(rw http.ResponseWriter, r *http.Request) {
+    err := app.Redis.Command("SET", "foo", "bar")
+    if err != nil {
+        log.Printf("redis error occurred in EndpointA, calling SET: %s", err)
+    }
+}
+
+func (app *App) httpEndpointB(rw http.ResponseWriter, r *http.Request) {
+    err := app.Redis.Command("INCR", "baz")
+    if err != nil {
+        log.Printf("redis error occurred in EndpointA, calling INCR: %s", err)
+    }
+}
+
+// etc...
+```
+
+Obviously logging is taking up the majority of the code-space in those examples,
+and that doesn't even include potentially pertinent information such as IP
+address.
+
+Another aspect of the logging/error dichotemy is that they are often dealing in
+essentially the same data. This makes sense, as both are really dealing with the
+same thing: capturing context for the purpose of later debugging. So rather than
+formatting strings by hand for each use-case, let's instead use our friend,
+`context.Context`, to carry the data for us.
+
+### Annotations
+
+I will here introduce the idea of "annotations", which are essentially key/value
+pairs which can be attached to a Context and retrieved later. To implement
+annotations I will introduce two new functions to the `mctx` package:
+
+```go
+// Package mctx
+
+// Annotate returns a new Context with the given key/value pairs embedded into
+// it, which can be later retrieved using the Annotations method. If any keys
+// conflict with previous annotations, their values will overwrite the
+// previously annotated values for those keys.
+func Annotate(ctx context.Context, keyvals ...interface{}) context.Context
+
+// Annotations returns all annotations which have been set on the Context using
+// Annotate.
+func Annotations(ctx context.Context) map[interface{}]interface{}
+```
