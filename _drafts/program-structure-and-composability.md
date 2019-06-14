@@ -110,7 +110,7 @@ in the directory structure. **What the directory structure reflects are the
 different _kinds_ of components available to use, but it does not reflect how a
 program will use those components.**
 
-### Global State vs. Compartmentalization
+### Global State vs Compartmentalization
 
 The directory-centric approach to structure often leads to the use of global
 singletons to manage access to external resources like RPC servers and
@@ -546,6 +546,8 @@ func main() {
 
 ### Full example
 
+TODO
+
 ## Part 3: Annotations, Logging, and Errors
 
 Let's shift gears away from the component structure for a bit, and talk about a
@@ -581,7 +583,7 @@ func (app *App) GetUsername(userID int) (string, error) {
 }
 ```
 
-In that example, when redis returns an error the error is extended to include
+In that example, when redis returns an error, the error is extended to include
 contextual information about what was attempting to be done (`could not get
 username`) and the userID involved. In newer versions of Go, and indeed in many
 other programming languages, the error will also include information about where
@@ -596,7 +598,7 @@ performing a redis call, what good is it to see the log entry `redis command had
 an error: took too long` without also knowing which command is involved, and
 which endpoint is calling it? Very little.
 
-So many programs of this nature end up looking like this:
+Many programs end up looking like this:
 
 ```go
 func (app *App) httpEndpointA(rw http.ResponseWriter, r *http.Request) {
@@ -618,13 +620,14 @@ func (app *App) httpEndpointB(rw http.ResponseWriter, r *http.Request) {
 
 Obviously logging is taking up the majority of the code-space in those examples,
 and that doesn't even include potentially pertinent information such as IP
-address.
+address, or log entries for non-error events.
 
 Another aspect of the logging/error dichotemy is that they are often dealing in
 essentially the same data. This makes sense, as both are really dealing with the
 same thing: capturing context for the purpose of later debugging. So rather than
 formatting strings by hand for each use-case, let's instead use our friend,
 `context.Context`, to carry the data for us.
+
 
 ### Annotations
 
@@ -645,3 +648,13 @@ func Annotate(ctx context.Context, keyvals ...interface{}) context.Context
 // Annotate.
 func Annotations(ctx context.Context) map[interface{}]interface{}
 ```
+
+### Aside: Structural vs Runtime Contexts
+
+It may seem strange that we're about to use Contexts for a use-case that's
+completely different than the one discussed in Part 1, and I've been asked
+before if perhaps that doesn't indicate the two should be separated into
+separate entities: a structural context type which behaves as shown in Part 1,
+and a runtime context type whose behavior we've just looked at.
+
+I think this is a compelling idea...
