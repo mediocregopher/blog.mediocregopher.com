@@ -3,20 +3,20 @@ title: >-
     Program Structure and Composability
 description: >-
     Discussing the nature of program structure, the problems presented by
-    complex structures, and a pattern which helps in solving those problems.
+    complex structures, and a pattern that helps in solving those problems.
 hide: true
 ---
 
 ## Part 0: Introduction
 
-This post is focused on a concept I call "program structure", which I will try
-to shed some light on before discussing complex program structures, then
-discussing why complex structures can be problematic to deal with, and finally
-discussing a pattern for dealing with those problems.
+This post is focused on a concept I call “program structure,” which I will try
+to shed some light on before discussing complex program structures. I will then
+discuss why complex structures can be problematic to deal with, and will finally
+discuss a pattern for dealing with those problems.
 
 My background is as a backend engineer working on large projects that have had
-many moving parts; most had multiple programs interacting with each other, using
-many different databases in various contexts, and facing large amounts of load
+many moving parts; most had multiple programs interacting with each other, used
+many different databases in various contexts, and faced large amounts of load
 from millions of users. Most of this post will be framed from my perspective,
 and will present problems in the way I have experienced them. I believe,
 however, that the concepts and problems I discuss here are applicable to many
@@ -24,11 +24,11 @@ other domains, and I hope those with a foot in both backend systems and a second
 domain can help to translate the ideas between the two.
 
 Also note that I will be using Go as my example language, but none of the
-concepts discussed here are specific to Go. To that end, I've decided to favor
-readable code over "correct" code, and so have elided things that most gophers
+concepts discussed here are specific to Go. To that end, I’ve decided to favor
+readable code over “correct” code, and so have elided things that most gophers
 hold near-and-dear, such as error checking and proper documentation, in order to
 make the code as accessible as possible to non-gophers as well. As with before,
-I trust someone with a foot in Go and another language can translate help me
+I trust that someone with a foot in Go and another language can help me
 translate between the two.
 
 ## Part 1: Program Structure
@@ -40,8 +40,8 @@ think about program structure.
 
 ### Directory Structure
 
-For a long time I thought about program structure in terms of the hierarchy
-present in the filesystem. In my mind, a program's structure looked like this:
+For a long time, I thought about program structure in terms of the hierarchy
+present in the filesystem. In my mind, a program’s structure looked like this:
 
 ```
 // The directory structure of a project called gobdns.
@@ -56,11 +56,11 @@ src/
     main.go
 ```
 
-What I grew to learn was that this conflation of "program structure" with
-"directory structure" is ultimately unhelpful. While can't be denied that every
-program has a directory structure (and if not, it ought to), this does not mean
-that the way the program looks in a filesystem in any way corresponds to how it
-looks in our mind's eye.
+What I grew to learn was that this conflation of “program structure” with
+“directory structure” is ultimately unhelpful. While it can’t be denied that
+every program has a directory structure (and if not, it ought to), this does not
+mean that the way the program looks in a filesystem in any way corresponds to
+how it looks in our mind’s eye.
 
 The most notable way to show this is to consider a library package. Here is the
 structure of a simple web-app which uses redis (my favorite database) as a
@@ -73,13 +73,13 @@ src/
     main.go
 ```
 
-If I were to ask you, based on that directory strucure, what the program does,
-in the most abstract terms, you might say something like: "The program
-establishes an http server which listens for requests. It also establishes a
+If I were to ask you, based on that directory structure, what the program does
+in the most abstract terms, you might say something like: “The program
+establishes an http server that listens for requests. It also establishes a
 connection to the redis server. The program then interacts with redis in
-different ways, based on the http requests which are received on the server."
+different ways based on the http requests that are received on the server.”
 
-And that would be a good guess. Here's a diagram which depicts the program
+And that would be a good guess. Here’s a diagram that depicts the program
 structure, wherein the root node, `main.go`, takes in requests from `http` and
 processes them using `redis`.
 
@@ -88,15 +88,15 @@ processes them using `redis`.
     descr="Example 1"
     %}
 
-This is certainly a viable guess for how a program with that directory structure
-operates, but consider another answer: "A component of the program called
-`server` establishes an http server which listens for requests. `server` also
-establishes a connection to a redis server. `server` then interacts with that
-redis connection in different ways, based on the http requests which are
+This is certainly a viable guess for how a program with that directory
+structure operates, but consider another answer: “A component of the program
+called `server` establishes an http server that listens for requests. `server`
+also establishes a connection to a redis server. `server` then interacts with
+that redis connection in different ways based on the http requests that are
 received on the http server. Additionally, `server` tracks statistics about
 these interactions and makes them available to other components. The root
 component of the program establishes a connection to a second redis server, and
-stores those statistics in that redis server." Here's another diagram to depict
+stores those statistics in that redis server.” Here’s another diagram to depict
 _that_ program.
 
 {% include image.html
@@ -105,19 +105,20 @@ _that_ program.
     %}
 
 The directory structure could apply to either description; `redis` is just a
-library which allows for interacting with a redis server, but it doesn't specify
-_which_ server, or _how many_. And those are extremely important factors which
-are definitely reflected in our concept of the program's structure, and yet not
-in the directory structure. **What the directory structure reflects are the
-different _kinds_ of components available to use, but it does not reflect how a
-program will use those components.**
+library which allows for interaction with a redis server, but it doesn’t
+specify _which_ or _how many_ servers. However, those are extremely important
+factors that are definitely reflected in our concept of the program’s
+structure, and not in the directory structure. **What the directory structure
+reflects are the different _kinds_ of components available to use, but it does
+not reflect how a program will use those components.**
+
 
 ### Global State vs Compartmentalization
 
 The directory-centric view of structure often leads to the use of global
 singletons to manage access to external resources like RPC servers and
 databases. In examples 1 and 2 the `redis` library might contain code which
-looks something like:
+looks something like this:
 
 ```go
 // A mapping of connection names to redis connections.
@@ -132,45 +133,45 @@ func Get(name string) *RedisConn {
 ```
 
 Even though this pattern would work, it breaks with our conception of the
-program structure in more complexes cases like example 2. Rather than the
-`redis` component being owned by the `server` component, which actually uses it,
-it would be practically owned by _all_ components, since all are able to use it.
+program structure in more complex cases like example 2. Rather than the `redis`
+component being owned by the `server` component, which actually uses it, it
+would be practically owned by _all_ components, since all are able to use it.
 Compartmentalization has been broken, and can only be held together through
 sheer human discipline.
 
-**This is the problem with all global state. It's shareable amongst all components
-of a program, and so is accountable to none of them.** One must look at an
-entire codebase to understand how a globally held component is used, which might
-not even be possible for a large codebase. And so the maintainers of these
-shared components rely entirely on the discipline of their fellow coders when
-making changes, usually discovering where that discipline broke down once the
-changes have been pushed live.
+**This is the problem with all global state. It is shareable among all
+components of a program, and so is accountable to none of them.** One must look
+at an entire codebase to understand how a globally held component is used,
+which might not even be possible for a large codebase. Therefore, the
+maintainers of these shared components rely entirely on the discipline of their
+fellow coders when making changes, usually discovering where that discipline
+broke down once the changes have been pushed live.
 
 Global state also makes it easier for disparate programs/components to share
 datastores for completely unrelated tasks. In example 2, rather than creating a
-new redis instance for the root component's statistics storage, the coder might
-have instead said "well, there's already a redis instance available, I'll just
-use that." And so compartmentalization would have been broken further. Perhaps
-the two instances _could_ be coalesced into the same one, for the sake of
+new redis instance for the root component’s statistics storage, the coder might
+have instead said, “well, there’s already a redis instance available, I’ll just
+use that.” And so, compartmentalization would have been broken further. Perhaps
+the two instances _could_ be coalesced into the same instance for the sake of
 resource efficiency, but that decision would be better made at runtime via the
 configuration of the program, rather than being hardcoded into the code.
 
 From the perspective of team management, global state-based patterns do nothing
 except slow teams down. The person/team responsible for maintaining the central
-library in which shared components live (`redis`, in the above examples) becomes
-the bottleneck for creating new instances for new components, which will further
-lead to re-using existing instances rather than creating new ones, further
-breaking compartmentalization. The person/team responsible for the central
-library often finds themselves as the maintainers of the shared resource as
-well, rather than the team actually using it.
+library in which shared components live (`redis`, in the above examples)
+becomes the bottleneck for creating new instances for new components, which
+will further lead to re-using existing instances rather than creating new ones,
+further breaking compartmentalization. Additionally the person/team responsible
+for the central library, rather than the team using it, often finds themselves
+as the maintainers of the shared resource.
 
 ### Component Structure
 
 So what does proper program structure look like? In my mind the structure of a
-program is a hierarchy of components, or, in other words, a tree. The leaf nodes
-of the tree are almost _always_ IO related components, e.g. database
-connections, RPC server frameworks or clients, message queue consumers, etc...
-The non-leaf nodes will _generally_ be components which bring together the
+program is a hierarchy of components, or, in other words, a tree. The leaf
+nodes of the tree are almost _always_ IO related components, e.g., database
+connections, RPC server frameworks or clients, message queue consumers, etc.
+The non-leaf nodes will _generally_ be components that bring together the
 functionalities of their children in some useful way, though they may also have
 some IO functionality of their own.
 
@@ -182,13 +183,13 @@ Let's look at an even more complex structure, still only using the `redis` and
     descr="Example 3"
     %}
 
-This component structure contains the addition of the `debug` component. Clearly
-the `http` and `redis` components are reusable in different contexts, but for
-this example the `debug` endpoint is as well. It creates a separate http server
-which can be queried to perform runtime debugging of the program, and can be
-tacked onto virtually any program. The `rest-api` component is specific to this
-program and therefore not reusable. Let's dive into it a bit to see how it might
-be implemented:
+This component structure contains the addition of the `debug` component.
+Clearly the `http` and `redis` components are reusable in different contexts,
+but for this example the `debug` endpoint is as well. It creates a separate
+http server that can be queried to perform runtime debugging of the program,
+and can be tacked onto virtually any program. The `rest-api` component is
+specific to this program and is therefore not reusable. Let’s dive into it a
+bit to see how it might be implemented:
 
 ```go
 // RestAPI is very much not thread-safe, hopefully it doesn't have to handle
@@ -232,8 +233,9 @@ func (r *RestAPI) barHandler(rw http.ResponseWriter, r *http.Request) {
 }
 ```
 
-As can be seen, `rest-api` coalesces `http` and `redis` into a simple REST-like
-api, using pre-made library components. `main.go`, the root component, does much
+
+In that snippet `rest-api` coalesced `http` and `redis` into a simple REST-like
+api using pre-made library components. `main.go`, the root component, does much
 the same:
 
 ```go
@@ -255,26 +257,26 @@ func main() {
 }
 ```
 
-One thing which is clearly missing in this program is proper configuration,
-whether from command-line, environment variables, etc.... As it stands, all
-configuration parameters, such as the redis addresses and http listen addresses,
-are hardcoded. Proper configuration actually ends up being somewhat difficult,
-as the ideal case would be for each component to set up its own configuration
-variables, without its parent needing to be aware. For example, `redis` could
-set up `addr` and `pool-size` parameters. The problem is that there are two
-`redis` components in the program, and their parameters would therefore conflict
-with each other. An elegant solution to this problem is discussed in the next
-section.
+One thing that is clearly missing in this program is proper configuration,
+whether from command-line or environment variables, etc. As it stands, all
+configuration parameters, such as the redis addresses and http listen
+addresses, are hardcoded. Proper configuration actually ends up being somewhat
+difficult, as the ideal case would be for each component to set up its own
+configuration variables without its parent needing to be aware. For example,
+`redis` could set up `addr` and `pool-size` parameters. The problem is that there
+are two `redis` components in the program, and their parameters would therefore
+conflict with each other. An elegant solution to this problem is discussed in
+the next section.
 
 ## Part 2: Components, Configuration, and Runtime
 
-The key to the configuration problem is to recognize that, even if there are two
-of the same component in a program, they can't occupy the same place in the
-program's structure. In the above example there are two `http` components, one
-under `rest-api` and the other under `debug`. Since the structure is represented
-as a tree of components, the "path" of any node in the tree uniquely represents
-it in the structure. For example, the two `http` components in the previous
-example have these paths:
+The key to the configuration problem is to recognize that, even if there are
+two of the same component in a program, they can’t occupy the same place in the
+program’s structure. In the above example, there are two `http` components: one
+under `rest-api` and the other under `debug`. Because the structure is
+represented as a tree of components, the “path” of any node in the tree
+uniquely represents it in the structure. For example, the two `http` components
+in the previous example have these paths:
 
 ```
 root -> rest-api -> http
@@ -282,9 +284,9 @@ root -> debug -> http
 ```
 
 If each component were to know its place in the component tree, then it would
-easily be able to ensure that its configuration and initialization didn't
-conflict with other components of the same type. If the `http` component sets up
-a command-line parameter to know what address to listen on, the two `http`
+easily be able to ensure that its configuration and initialization didn’t
+conflict with other components of the same type. If the `http` component sets
+up a command-line parameter to know what address to listen on, the two `http`
 components in that program would set up:
 
 ```
@@ -293,13 +295,13 @@ components in that program would set up:
 ```
 
 So how can we enable each component to know its path in the component structure?
-To answer this we'll have to take a detour through a type, called `Component`.
+To answer this, we’ll have to take a detour through a type, called `Component`.
 
 ### Component and Configuration
 
-The `Component` type is a made up type (though you'll be able to find an
+The `Component` type is a made-up type (though you’ll be able to find an
 implementation of it at the end of this post). It has a single primary purpose,
-and that is to convey the program's structure to new components.
+and that is to convey the program’s structure to new components.
 
 To see how this is done, let's look at a couple of `Component`'s methods:
 
@@ -318,12 +320,11 @@ func (*Component) Child(name string) *Component
 func (*Component) Path() []string
 ```
 
-
 `Child` is used to create a new `Component`, corresponding to a new child node
 in the component structure, and `Path` is used retrieve the path of any
-`Component` within that structure. For the sake of keeping the examples simple
-let's pretend these functions have been implemented in a package called `mcmp`.
-Here's an example of how `Component` might be used in the `redis` component's
+`Component` within that structure. For the sake of keeping the examples simple,
+let’s pretend these functions have been implemented in a package called `mcmp`.
+Here’s an example of how `Component` might be used in the `redis` component’s
 code:
 
 ```go
@@ -354,9 +355,9 @@ In our above example, the two `redis` components' parameters would be:
 in our program, since it allows them to know their place in the component
 structure.
 
-Having to construct the prefix for the parameters ourselves is pretty annoying
-though, so let's introduce a new package, `mcfg`, which acts like `flag` but is
-aware of `Component`. Then `redis.NewConn` is reduced to:
+Having to construct the prefix for the parameters ourselves is pretty annoying,
+so let’s introduce a new package, `mcfg`, which acts like `flag` but is aware
+of `Component`. Then `redis.NewConn` is reduced to:
 
 ```go
 // Package redis
@@ -370,16 +371,16 @@ func NewConn(cmp *mcmp.Component, defaultAddr string) *RedisConn {
 }
 ```
 
-Easy-peazy.
+Easy-peasy.
 
 #### But What About Parse?
 
-Sharp-eyed gophers will notice that there's a key piece missing: When is
+Sharp-eyed gophers will notice that there is a key piece missing: When is
 `flag.Parse`, or its `mcfg` counterpart, called? When does `addrParam` actually
-get populated? You can't use the redis connection until that happens, but that
-can't happen inside `redis.NewConn` because there might be other components
-after `redis.NewConn` which want to set up parameters. To illustrate the
-problem, let's look at a simple program which wants to set up two `redis`
+get populated? You can’t use the redis connection until that happens, but that
+can’t happen inside `redis.NewConn` because there might be other components
+after `redis.NewConn` that want to set up parameters. To illustrate the
+problem, let’s look at a simple program that wants to set up two `redis`
 components:
 
 ```go
@@ -413,31 +414,33 @@ We will solve this problem in the next section.
 
 ### Instantiation vs Initialization
 
-Let's break down `redis.NewConn` into two phases: instantiation and initialization.
-Instantiation refers to creating the component on the component structure and
-having it declare what it needs in order to initialize (e.g. configuration
-parameters). During instantiation nothing external to the program is performed;
-no IO, no reading of the command-line, no logging, etc... All that's happened is
-that the empty template of a `redis` component has been created.
+Let’s break down `redis.NewConn` into two phases: instantiation and
+initialization. Instantiation refers to creating the component on the component
+structure and having it declare what it needs in order to initialize (e.g.,
+configuration parameters). During instantiation, nothing external to the
+program is performed; no IO, no reading of the command-line, no logging, etc.
+All that’s happened is that the empty template of a `redis` component has been
+created.
 
-Initialization is the phase when that template is filled in. Configuration
-parameters are read, startup actions like the creation of database connections
-are performed, and logging is output for informational and debugging purposes.
+Initialization is the phase during which the template is filled in.
+Configuration parameters are read, startup actions like the creation of database
+connections are performed, and logging is output for informational and debugging
+purposes.
 
-The key to making effective use of this dichotemy is to allow _all_ components
+The key to making effective use of this dichotomy is to allow _all_ components
 to instantiate themselves before they initialize themselves. By doing this we
-can ensure that, for example, all components have had the chance to declare
+can ensure, for example, that all components have had the chance to declare
 their configuration parameters before configuration parsing is done.
 
-So let's modify `redis.NewConn` so that it follows this dichotemy. It makes
-sense to leave instantiation related code where it is, but we need a mechanism
+So let’s modify `redis.NewConn` so that it follows this dichotomy. It makes
+sense to leave instantiation-related code where it is, but we need a mechanism
 by which we can declare initialization code before actually calling it. For
-this, I will introduce the idea of a "hook".
+this, I will introduce the idea of a “hook.”
 
 #### But First: Augment Component
 
 In order to support hooks, however, `Component` will need to be augmented with
-a few new methods. Right now it can only carry with it information about the
+a few new methods. Right now, it can only carry with it information about the
 component structure, but here we will add the ability to carry arbitrary
 key/value information as well:
 
@@ -457,13 +460,13 @@ func (*Component) Children() []*Component
 ```
 
 The final method allows us to, starting at the root `Component`, traverse the
-component structure, interacting with each `Component`'s key/value store. This
+component structure and interact with each `Component`’s key/value store. This
 will be useful for implementing hooks.
 
 #### Hooks
 
-A hook is, simply a function which will run later. We will declare a new
-package, calling it `mrun`, and say that it has two new functions:
+A hook is simply a function that will run later. We will declare a new package,
+calling it `mrun`, and say that it has two new functions:
 
 ```go
 // Package mrun
@@ -476,12 +479,12 @@ func InitHook(cmp *mcmp.Component, hook func())
 func Init(cmp *mcmp.Component)
 ```
 
-With these two functions we are able to defer the initialization phase of
-startup by using the same `Component`s we were passing around for the purpose of
-denoting component structure.
+With these two functions, we are able to defer the initialization phase of
+startup by using the same `Components` we were passing around for the purpose
+of denoting component structure.
 
-Now, with these few extra pieces of functionality in place, let's reconsider the
-most recent example, and make a program which creates two redis components which
+Now, with these few extra pieces of functionality in place, let’s reconsider the
+most recent example, and make a program that creates two redis components which
 exist independently of each other:
 
 ```go
@@ -549,19 +552,19 @@ func main() {
 ## Conclusion
 
 While the examples given here are fairly simplistic, the pattern itself is quite
-powerful. Codebases naturally accumulate small, domain specific behaviors and
+powerful. Codebases naturally accumulate small, domain-specific behaviors and
 optimizations over time, especially around the IO components of the program.
 Databases are used with specific options that an organization finds useful,
 logging is performed in particular places, metrics are counted around certain
-pieces of code, etc...
+pieces of code, etc.
 
-By programming with component structure in mind we are able to keep these
+By programming with component structure in mind, we are able to keep these
 optimizations while also keeping the clarity and compartmentalization of the
-code in-tact. We are able to keep our code flexible and configurable, while also
-re-usable and testable. And the simplicity of the tools involved means it can be
-extended and retrofitted for nearly any situation or use-case.
+code intact. We can keep our code flexible and configurable, while also
+re-usable and testable. Also, the simplicity of the tools involved means they
+can be extended and retrofitted for nearly any situation or use-case.
 
-Overall, it's a powerful pattern that I've found myself unable to do without
+Overall, this is a powerful pattern that I’ve found myself unable to do without
 once I began using it.
 
 ### Implementation
@@ -573,10 +576,10 @@ described in this post here:
 * [mcfg](https://godoc.org/github.com/mediocregopher/mediocre-go-lib/mcfg)
 * [mrun](https://godoc.org/github.com/mediocregopher/mediocre-go-lib/mrun)
 
-The packages are not stable and are likely to change frequently. You'll also
+The packages are not stable and are likely to change frequently. You’ll also
 find that they have been extended quite a bit from the simple descriptions found
-here, based on what I've found useful as I've implemented programs using
+here, based on what I’ve found useful as I’ve implemented programs using
 component structures. With these two points in mind, I would encourage you to
-look in and take whatever functionality you find useful for yourself, and not
-use the packages directly. The core pieces are not different from what has been
+look and take whatever functionality you find useful for yourself, and not use
+the packages directly. The core pieces are not different from what has been
 described in this post.
