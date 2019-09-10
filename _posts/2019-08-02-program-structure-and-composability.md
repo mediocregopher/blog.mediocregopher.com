@@ -376,11 +376,10 @@ Easy-peasy.
 
 Sharp-eyed gophers will notice that there is a key piece missing: When is
 `flag.Parse`, or its `mcfg` counterpart, called? When does `addrParam` actually
-get populated? You can’t use the redis connection until that happens, but that
-can’t happen inside `redis.NewConn` because there might be other components
-after `redis.NewConn` that want to set up parameters. To illustrate the
-problem, let’s look at a simple program that wants to set up two `redis`
-components:
+get populated? It can’t happen inside `redis.NewConn` because there might be
+other components after `redis.NewConn` that want to set up parameters. To
+illustrate the problem, let’s look at a simple program that wants to set up two
+`redis` components:
 
 ```go
 func main() {
@@ -402,14 +401,18 @@ func main() {
     // before, redis.NewConn can't parse command-line.
     barRedis := redis.NewConn(cmpBar, "127.0.0.1:6379")
 
-    // If the command-line is parsed here, then how can fooRedis and barRedis
-    // have been created yet? It's only _after_ this point that `fooRedis` and
-    // `barRedis` could possibly be usable.
+    // It is only after all components have been instantiated that the
+    // command-line arguments can be parsed
     mcfg.Parse()
 }
 ```
 
-We will solve this problem in the next section.
+While this solves our argument parsing problem, fooRedis and barRedis are not
+usable yet because the actual connections have not been made. This is a classic
+chicken and the egg problem. The func `redis.NewConn` needs to make a connection
+which it cannot do until _after_ `mcfg.Parse` is called, but `mcfg.Parse` cannot
+be called until after `redis.NewConn` has returned. We will solve this problem
+in the next section.
 
 ### Instantiation vs Initialization
 
