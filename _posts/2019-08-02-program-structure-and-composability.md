@@ -363,7 +363,7 @@ of `Component`. Then `redis.NewConn` is reduced to:
 
 func NewConn(cmp *mcmp.Component, defaultAddr string) *RedisConn {
     cmp = cmp.Child("redis")
-    addrParam := flag.String(cmp, "-addr", defaultAddr, "Address of redis instance to connect to")
+    addrParam := mcfg.String(cmp, "addr", defaultAddr, "Address of redis instance to connect to")
     // finish setup
 
     return redisConn
