@@ -499,7 +499,7 @@ func InstConn(cmp *mcmp.Component, defaultAddr string) *RedisConn {
     // has been initialized yet. They will remain empty until initialization has
     // occurred.
     redisConn := new(RedisConn)
-    addrParam := mcfg.String(cmp, "-addr", defaultAddr, "Address of redis instance to connect to")
+    addrParam := mcfg.String(cmp, "addr", defaultAddr, "Address of redis instance to connect to")
 
     mrun.InitHook(cmp, func() {
         // This hook will run after parameter initialization has happened, and
