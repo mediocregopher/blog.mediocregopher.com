@@ -8,64 +8,49 @@ description: >-
 [A previous post in this
 blog](2019-08-02-program-structure-and-composability.html) focused on a
 framework developed to make designing component-based programs easier. In
-retrospect pattern/framework proposed was over-engineered; this post attempts to
-present the same ideas but in a more distilled form, as a simple programming
-pattern and without the unnecessary framework.
-
-Nothing in this post will be revelatory; it's surely all been said before. But
-hopefully the form it takes here will be useful to someone, as it would have
-been useful to myself when I first learned to program.
-
-## Axioms
-
-For the sake of brevity let's assume the following: within the context of
-single-process (_not_ the same as single-threaded), non-graphical programs the
-following may be said:
-
-1. A program may be thought of as a black-box with certain input and output
-   methods. It is the programmer's task to construct a program such that
-   specific inputs yield specific desired outputs.
-
-2. A program is not complete without sufficient testing to prove it's complete.
-
-3. Global state and global impure functions makes testing more difficult. This
-   can include singletons and system calls.
-
-Any of these may be argued, but that will be left for other posts. Any of these
-may be said of other types of programs as well, but that can also be left for
-other posts.
+retrospect, the pattern/framework proposed was over-engineered. This post
+attempts to present the same ideas in a more distilled form, as a simple
+programming pattern and without the unnecessary framework.
 
 ## Components
 
-Properties of components include:
+Many languages, libraries, and patterns make use of a concept called
+"component", but in each case the meaning of "component" might be slightly
+different. Therefore to begin talking about components we must first describe
+specifically what is meant by "component" in this post.
 
-1. *Creatable*: An instance of a component, given some defined set of
-   parameters, can be created independently of any other instance of that or any
-   other component.
+For the purposes of this post, properties of components include:
 
-2. *Composable*: A component may be used as a parameter of another component's
-   instantiation. This would make it a child component of the one being
-   instantiated (i.e. the parent).
+&nbsp;1... **Abstract**: A component is an interface consisting of one or more
+methods. Being an interface, a component may have one or more implementations,
+but generally will have a primary implementation, which is used during a
+program's runtime, and secondary "mock" implementations, which are only used
+when testing other components.
 
-3. *Abstract*: A component is an interface consisting of one or more methods.
-   Being an interface, a component may have one or more implementations, but
-   generally will have a primary implementation, which is used during a
-   program's runtime, and secondary "mock" implementations, which are only used
-   when testing other components.
+&nbsp;&nbsp;&nbsp;1a... A function might be considered a single-method
+component if the language supports first-class functions.
 
-4. *Isolated*: A component may not use mutable global variables (i.e.
-   singletons) or impure global functions (e.g. system calls). It may only use
-   constants and variables/components given to it during instantiation.
+&nbsp;2... **Creatable**: An instance of a component, given some defined set of
+parameters, can be created independently of any other instance of that or any
+other component.
 
-5. *Ephemeral*: A component may have a specific method used to clean up all
-   resources that it's holding (e.g. network connections, file handles,
-   language-specific lightweight threads, etc).
+&nbsp;3... **Composable**: A component may be used as a parameter of another
+component's instantiation. This would make it a child component of the one being
+instantiated (i.e. the parent).
 
-   5a. This cleanup method should _not_ clean up any child components given as
-   instantiation parameters.
+&nbsp;4... **Isolated**: A component may not use mutable global variables (i.e.
+singletons) or impure global functions (e.g. system calls). It may only use
+constants and variables/components given to it during instantiation.
 
-   5b. This cleanup method should not return until the component's cleanup is
-   complete.
+&nbsp;5... **Ephemeral**: A component may have a specific method used to clean
+up all resources that it's holding (e.g. network connections, file handles,
+language-specific lightweight threads, etc).
+
+&nbsp;&nbsp;&nbsp;5a... This cleanup method should _not_ clean up any child
+components given as instantiation parameters.
+
+&nbsp;&nbsp;&nbsp;5b... This cleanup method should not return until the
+component's cleanup is complete.
 
 Components are composed together to create programs. This is done by passing
 components as parameters to other components during instantiation. The `main`
@@ -128,12 +113,12 @@ fast to run, (usually) easy to formulate, and yield consistent results.
 
 This program could instead be written as being composed of three components:
 
-* `stdin`, a construct given by the runtime which outputs a stream of bytes.
+* `stdin`: a construct given by the runtime which outputs a stream of bytes.
 
-* `disk`, accepts a file name and file contents as input, writes the file
+* `disk`: accepts a file name and file contents as input, writes the file
   contents to a file of the given name, and potentially returns an error back.
 
-* `hashFileWriter`, reads a stream of bytes off a `stdin`, collects the stream
+* `hashFileWriter`: reads a stream of bytes off a `stdin`, collects the stream
   into a string, hashes that string to generate a file name, and uses `disk` to
   create a corresponding file with the string as its contents. If `disk` returns
   an error then `hashFileWriter` returns that error.
@@ -201,14 +186,15 @@ gain. This is because we have not yet written tests.
 
 ## Testing
 
-As has already been firmly established, testing is important.
+Testing is important. This post won't attempt to defend that statement, that's
+for another time. Let's just accept it as true for now.
 
 In the second form of the program we can test the core-functionality of the
 `hashFileWriter` component without resorting to using the actual `stdin` and
 `disk` components. Instead we use mocks of those components. A mock component
 implements the same input/outputs that the "real" component does, but in a way
-which makes testing a particular component possible without reaching outside the
-process. These are unit tests.
+which makes it possible to write tests of another component which don't reach
+outside the process. These are unit tests.
 
 Tests for the latest form of the program might look like this:
 
@@ -277,9 +263,9 @@ func TestHashFileWriter(t *testing.T) {
 
 Notice that these tests do not _completely_ cover the desired functionality of
 the program: if `disk` returns an error that error should be returned from
-`hashFileWriter`. Whether or not this must be tested as well, and indeed the
-pedantry level of tests overall, is a matter of taste. I believe these to be
-sufficient.
+`hashFileWriter`, but this functionality is not tested. Whether or not this must
+be tested as well, and indeed the pedantry level of tests overall, is a matter
+of taste. I believe these tests to be sufficient.
 
 ## Configuration
 
@@ -299,7 +285,7 @@ on the command-line, rather than reading from stdin, and second, there should be
 a command-line parameter declaring which directory to write files into. The new
 implementation looks like:
 
-```
+```go
 package main
 
 import (
@@ -376,12 +362,12 @@ meaning all unit tests remained valid.
 A program can be split into three stages: setup, runtime, and cleanup. Setup
 is the stage during which internal state is assembled in order to make runtime
 possible. Runtime is the stage during which a program's actual function is being
-performed. Cleanup is the stage during which runtime stop and internal state is
+performed. Cleanup is the stage during which runtime stops and internal state is
 disassembled.
 
 A graceful (i.e. reliably correct) setup is quite natural to accomplish, but
-unfortunately a graceful cleanup is not a programmer's first concern, and
-frequently is not a concern at all. However, when building reliable and correct
+unfortunately a graceful cleanup is not a programmer's first concern (and
+frequently is not a concern at all). However, when building reliable and correct
 programs, a graceful cleanup is as important as a graceful setup and runtime. A
 program is still running while it is being cleaned up, and it's possibly even
 acting on the outside world still. Shouldn't it behave correctly during that
@@ -393,7 +379,17 @@ During setup a single-threaded process (usually `main`) will construct the
 "leaf" components (those which have no child components of their own) first,
 then the components which take those leaves as parameters, then the components
 which take _those_ as parameters, and so on, until all are constructed. The
-components end up assembled into a directed acyclic graph.
+components end up assembled into a directed acyclic graph (DAG).
+
+In the previous examples our DAG looked like this:
+
+```
+               ---> stdin
+              /
+hashFileWriter
+              \
+               ---> disk
+```
 
 At this point the program will begin runtime.
 
@@ -405,12 +401,13 @@ called until all of its parent components have been cleaned up.
 Inherent to the pattern is the fact that each component will certainly be
 cleaned up before any of its child components, since its child components must
 have been instantiated first and a component will not clean up child components
-given as parameters (as-per component property 5a).
+given as parameters (as-per component property 5a). Therefore the pattern avoids
+use-after-cleanup situations.
 
 With go this pattern can be achieved easily using `defer`, but writing it out
 manually is not so hard, as in this toy example:
 
-```
+```go
 package main
 
 import (
@@ -510,14 +507,14 @@ func main() {
 In lieu of a FAQ I will attempt to premeditate criticisms of the component
 oriented pattern laid out in this post:
 
-*This seems like a lot of extra work.*
+**This seems like a lot of extra work.**
 
-Building reliable programs is a lot of work, just as building reliable-anything
-is a lot of work. Many of us work in an industry which likes to balance
-reliability (sometimes referred to by the more specious "quality") with
-maleability and deliverability, which naturally leads to skepticism of any
-suggestions which require more time spent on reliability. This is not
-necessarily a bad thing, it's just how the industry functions.
+Building reliable programs is a lot of work, just as building a
+reliable-anything is a lot of work. Many of us work in an industry which likes
+to balance reliability (sometimes referred to by the more specious "quality")
+with maleability and deliverability, which naturally leads to skepticism of any
+suggestions requiring more time spent on reliability. This is not necessarily a
+bad thing, it's just how the industry functions.
 
 All that said, a pattern need not be followed perfectly to be worthwhile, and
 the amount of extra work incurred by it can be decided based on practical
@@ -525,19 +522,19 @@ considerations. I merely maintain that when it comes time to revisit some
 existing code, either to fix or augment it, that the job will be notably easier
 if the code _mostly_ follows this pattern.
 
-*My language makes this difficult.*
+**My language makes this difficult.**
 
-I don't know of any language which makes this pattern particularly easy, so
-unfortunately we're all in the same boat to some extent (though I recognize that
-some languages, or their ecosystems, make it more difficult than others). It
-seems to me that this pattern shouldn't be unbearably difficult for anyone to
-implement in any language either, however, as the only language feature needed
-is abstract typing.
+I don't know of any language which makes this pattern particularly easier than
+others, so unfortunately we're all in the same boat to some extent (though I
+recognize that some languages, or their ecosystems, make it more difficult than
+others). It seems to me that this pattern shouldn't be unbearably difficult for
+anyone to implement in any language either, however, as the only language
+feature needed is abstract typing.
 
 It would be nice to one day see a language which explicitly supported this
 pattern by baking the component properties in as compiler checked rules.
 
-*This will result in over-abstraction.*
+**This will result in over-abstraction.**
 
 Abstraction is a necessary tool in a programmer's toolkit, there is simply no
 way around it. The only questions are "how much?" and "where?".
@@ -548,7 +545,7 @@ between the different abstracted types once they've been established using other
 methods. Over-abstraction is the fault of the programmer, not the language or
 pattern or framework.
 
-*The acronymn is CoP.*
+**The acronymn is CoP.**
 
 Why do you think I've just been ackwardly using "this pattern" instead of the
 acronymn for the whole post? Better names are welcome.

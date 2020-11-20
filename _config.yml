@@ -9,6 +9,7 @@ repository: mediocregopher/blog.mediocregopher.com
 twitter_username: mediocre_gopher
 github_username:  mediocregopher
 rss: rss
+highlighter: rouge
 
 plugins:
  - jekyll-feed
