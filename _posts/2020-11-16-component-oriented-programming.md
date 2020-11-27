@@ -6,7 +6,7 @@ description: >-
 ---
 
 [A previous post in this
-blog](2019-08-02-program-structure-and-composability.html) focused on a
+blog](/2019/08/02/program-structure-and-composability.html) focused on a
 framework developed to make designing component-based programs easier. In
 retrospect, the pattern/framework proposed was over-engineered. This post
 attempts to present the same ideas in a more distilled form, as a simple

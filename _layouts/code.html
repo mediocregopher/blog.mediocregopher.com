@@ -1,0 +1,10 @@
+---
+layout: default
+---
+
+{% capture body %}```{{ page.lang | default: "go" }}
+{% include_relative {{ page.include }} %}```{% endcapture %}
+
+<br/><a href="{{ page.include }}">Raw source file</a>
+
+{{ body | markdownify }}
