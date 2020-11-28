@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -12,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"sort"
 	"strconv"
 	"sync"
@@ -42,6 +44,12 @@ type scoreboard struct {
 
 	pointsOnCorrect, pointsOnIncorrect int
 
+	// The cleanup method closes cleanupCh to signal to all scoreboard's running
+	// go-routines to clean themselves up, and cleanupWG is then used to wait
+	// for those goroutines to do so.
+	cleanupCh chan struct{}
+	cleanupWG sync.WaitGroup
+
 	// this field will only be set in tests, and is used to synchronize with the
 	// the for-select loop in saveLoop.
 	saveLoopWaitCh chan struct{}
@@ -68,12 +76,27 @@ func newScoreboard(file File, saveTicker <-chan time.Time, logger Logger, points
 		scoresM:           scoresM,
 		pointsOnCorrect:   pointsOnCorrect,
 		pointsOnIncorrect: pointsOnIncorrect,
+		cleanupCh:         make(chan struct{}),
 		saveLoopWaitCh:    make(chan struct{}),
 	}
 
-	go scoreboard.saveLoop(saveTicker, logger)
+	scoreboard.cleanupWG.Add(1)
+	go func() {
+		scoreboard.saveLoop(saveTicker, logger)
+		scoreboard.cleanupWG.Done()
+	}()
 
 	return scoreboard, nil
+}
+
+func (s *scoreboard) cleanup() error {
+	close(s.cleanupCh)
+	s.cleanupWG.Wait()
+
+	if err := s.save(); err != nil {
+		return fmt.Errorf("saving scores during cleanup: %w", err)
+	}
+	return nil
 }
 
 func (s *scoreboard) guessedCorrect(name string) int {
@@ -123,6 +146,8 @@ func (s *scoreboard) saveLoop(ticker <-chan time.Time, logger Logger) {
 			if err := s.save(); err != nil {
 				logger.Printf("error saving scoreboard to file: %v", err)
 			}
+		case <-s.cleanupCh:
+			return
 		case <-s.saveLoopWaitCh:
 			// test will unblock, nothing to do here.
 		}
@@ -275,6 +300,15 @@ func newHTTPServer(listener net.Listener, httpHandlers *httpHandlers, logger Log
 	return server
 }
 
+func (s *httpServer) cleanup() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	if err := s.httpServer.Shutdown(ctx); err != nil {
+		return fmt.Errorf("shutting down http server: %w", err)
+	}
+	return <-s.errCh
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // main
 
@@ -313,8 +347,44 @@ func main() {
 	httpHandlers := newHTTPHandlers(scoreboard, randSrc, logger)
 
 	logger.Printf("serving HTTP requests")
-	newHTTPServer(listener, httpHandlers, logger)
+	httpServer := newHTTPServer(listener, httpHandlers, logger)
 
-	logger.Printf("initialization done")
-	select {} // block forever
+	logger.Printf("initialization done, waiting for interrupt signal")
+	sigCh := make(chan os.Signal)
+	signal.Notify(sigCh, os.Interrupt)
+	<-sigCh
+	logger.Printf("interrupt signal received, cleaning up")
+	go func() {
+		<-sigCh
+		log.Fatalf("interrupt signal received again, forcing shutdown")
+	}()
+
+	if err := httpServer.cleanup(); err != nil {
+		logger.Fatalf("cleaning up http server: %v", err)
+	}
+
+	// NOTE go's builtin http server does not follow component property 5a, and
+	// instead closes the net.Listener given to it as a parameter when Shutdown
+	// is called. Because of that inconsistency this Close would error if it
+	// were called.
+	//
+	// While there are ways to work around this, it's instead highlighted in
+	// this example as an instance of a language making the component-oriented
+	// pattern more difficult.
+	//
+	//if err := listener.Close(); err != nil {
+	//	logger.Fatalf("closing listener %q: %v", listenAddr, err)
+	//}
+
+	if err := scoreboard.cleanup(); err != nil {
+		logger.Fatalf("cleaning up scoreboard: %v", err)
+	}
+
+	saveTicker.Stop()
+
+	if err := file.Close(); err != nil {
+		logger.Fatalf("closing file %q: %v", *saveFilePath, err)
+	}
+
+	os.Stdout.Sync()
 }

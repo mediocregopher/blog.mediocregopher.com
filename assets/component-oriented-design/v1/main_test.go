@@ -114,7 +114,7 @@ func TestScoreboard(t *testing.T) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Test httpHandler component
+// Test httpHandlers component
 
 type mockScoreboard map[string]int
 
@@ -155,3 +155,13 @@ func TestHTTPHandlers(t *testing.T) {
 	r = httptest.NewRequest("GET", "/scores", nil)
 	assertRequest(t, 200, "bar: 2\nfoo: 1\n", r)
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// httpServer is NOT tested, for the following reasons:
+// * It depends on a `net.Listener`, which is not trivial to mock.
+// * It does very little besides passing an httpHandlers along to an http.Server
+//   and managing cleanup.
+// * It isn't likely to be changed often.
+// * If it were to break it would be very apparent in subsequent testing stages.
+//

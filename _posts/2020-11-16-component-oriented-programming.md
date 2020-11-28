@@ -1,6 +1,6 @@
 ---
 title: >-
-    Component Oriented Programming
+    Component-Oriented Programming
 description: >-
     A concise description of.
 ---
@@ -16,29 +16,31 @@ programming pattern and without the unnecessary framework.
 
 Many languages, libraries, and patterns make use of a concept called
 "component", but in each case the meaning of "component" might be slightly
-different. Therefore to begin talking about components we must first describe
-specifically what is meant by "component" in this post.
+different. Therefore to begin talking about components it is necessary to first
+describe what is meant by "component" in this post.
 
 For the purposes of this post, properties of components include:
 
 &nbsp;1... **Abstract**: A component is an interface consisting of one or more
-methods. Being an interface, a component may have one or more implementations,
-but generally will have a primary implementation, which is used during a
-program's runtime, and secondary "mock" implementations, which are only used
-when testing other components.
+methods. 
 
-&nbsp;&nbsp;&nbsp;1a... A function might be considered a single-method
-component if the language supports first-class functions.
+&nbsp;&nbsp;&nbsp;1a... A function might be considered to be a single-method
+component _if_ the language supports first-class functions.
 
-&nbsp;2... **Creatable**: An instance of a component, given some defined set of
-parameters, can be created independently of any other instance of that or any
-other component.
+&nbsp;&nbsp;&nbsp;1b... A component, being an interface, may have one or more
+implementations. Generally there will be a primary implementation, which is used
+during a program's runtime, and secondary "mock" implementations, which are only
+used when testing other components.
+
+&nbsp;2... **Instantiatable**: An instance of a component, given some set of
+parameters, can be instantiated as a standalone entity. More than one of the
+same component can be instantiated, as needed.
 
 &nbsp;3... **Composable**: A component may be used as a parameter of another
 component's instantiation. This would make it a child component of the one being
-instantiated (i.e. the parent).
+instantiated (the parent).
 
-&nbsp;4... **Isolated**: A component may not use mutable global variables (i.e.
+&nbsp;4... **Pure**: A component may not use mutable global variables (i.e.
 singletons) or impure global functions (e.g. system calls). It may only use
 constants and variables/components given to it during instantiation.
 
@@ -52,312 +54,167 @@ components given as instantiation parameters.
 &nbsp;&nbsp;&nbsp;5b... This cleanup method should not return until the
 component's cleanup is complete.
 
-Components are composed together to create programs. This is done by passing
-components as parameters to other components during instantiation. The `main`
-process of the program is responsible for instantiating and composing most, if
-not all, components in the program.
+&nbsp;&nbsp;&nbsp;5c... A component should not be cleaned up until all of its
+parent components are cleaned up.
 
-A component oriented program is one which primarily, if not entirely, uses
-components for its functionality. Components generally have the quality of being
-able to interact with code written in other patterns without any toes being
-stepped on.
+Components are composed together to create component-oriented programs This is
+done by passing components as parameters to other components during
+instantiation. The `main` process of the program is responsible for
+instantiating and composing the components of the program.
 
 ## Example
 
-Let's start with an example: suppose a program is desired which accepts a string
-over stdin, hashes it, then writes the string to a file whose name is the hash.
+It's easier to show than to tell. This section will posit a simple program and
+then describe how it would be implemented in a component-oriented way. The
+program chooses a random number and exposes an HTTP interface which allows
+users to try and guess that number. The following are requirements of the
+program:
 
-A naive implementation of this program in go might look like:
+* A guess consists of a name identifying the user performing the guess and the
+  number which is being guessed.
 
-```go
-package main
+* A score is kept for each user who has performed a guess.
 
-import (
-	"crypto/sha1"
-	"encoding/hex"
-	"io"
-	"io/ioutil"
-	"os"
-)
+* Upon an incorrect guess the user should be informed of whether they guessed
+  too high or too low, and 1 point should be deducted from their score.
 
-func hashFileWriter() error {
-	h := sha1.New()
-	r := io.TeeReader(os.Stdin, h)
-	body, _ := ioutil.ReadAll(r)
-	fileName := hex.EncodeToString(h.Sum(nil))
+* Upon a correct guess the program should pick a new random number to check
+  subsequent guesses against, and 1000 points should be added to the user's
+  score.
 
-	if err := ioutil.WriteFile(fileName, body, 0644); err != nil {
-		return err
-	}
+* The HTTP interface should have two endpoints: one for users to submit guesses,
+  and another which lists out user scores from highest to lowest.
 
-	return nil
-}
+* Scores should be saved to disk so they survive program restarts.
 
-func main() {
-	if err := hashFileWriter(); err != nil {
-		panic(err) // consider the error handled
-	}
-}
+It seems clear that there will be two major areas of functionality to our
+program: keeping scores and user interaction via HTTP. Each of these can be
+encapsulated into components called `scoreboard` and `httpHandlers`,
+respectively.
+
+`scoreboard` will need to interact with a filesystem component in order to
+save/restore scores (since it can't use system calls directly, see property 4).
+It would be wasteful for `scoreboard` to save the scores to disk on every score
+update, so instead it will do so every 5 seconds. A time component will be
+required to support this.
+
+`httpHandlers` will be choosing the random number which is being guessed, and so
+will need a component which produces random numbers. `httpHandlers` will also be
+recording score changes to the `scoreboard`, so will need access to the
+`scoreboard`.
+
+The example implementation will be written in go, which makes differentiating
+HTTP handler functionality from the actual HTTP server quite easy, so there will
+be an `httpServer` component which uses the `httpHandlers`.
+
+Finally a `logger` component will be used in various places to log useful
+information during runtime.
+
+[The example implementation can be found
+here.](/assets/component-oriented-design/v1/main.html) While most of it can be
+skimmed, it is recommended to at least read through the `main` function to see
+how components are composed together. Note how `main` is where all components
+are instantiated, and how all components' take in their child components as part
+of their instantiation.
+
+## DAG
+
+One way to look at a component-oriented program is as a directed acyclic graph
+(DAG), where each node in the graph represents a component, and each edge
+indicates the one component depends upon another component for instantiation.
+For the previous program it's quite easy to construct such a DAG just by looking
+at `main`:
+
+```
+net.Listener     rand.Rand        os.File
+     ^               ^               ^
+     |               |               |
+ httpServer --> httpHandlers --> scoreboard --> time.Ticker
+     |               |               |
+     +---------------+---------------+--> log.Logger
 ```
 
-Notice that there's not a clear separation here between different components;
-`hashFileWriter` _might_ be considered a one method component, except that it
-breaks component property 4, which says that a component may not use mutable
-global variables (`os.Stdin`) or impure global functions (`ioutil.WriteFile`).
+Note that all the leaves of the DAG (i.e. nodes with no children) describe the
+points where the program meets the operating system via system calls. The leaves
+are, in essence, the program's interface with the outside world.
 
-Notice also that testing the program would require integration tests, and could
-not be unit tested (because there are no units, i.e. components). For a trivial
-program like this one writing unit and integration tests would be redundant, but
-for larger programs it may not be. Unit tests are important because they are
-fast to run, (usually) easy to formulate, and yield consistent results.
+While it's not necessary to actually draw out the DAG for every program one
+writes, it can be helpful to at least think about the program's structure in
+these terms.
 
-This program could instead be written as being composed of three components:
+## Benefits
 
-* `stdin`: a construct given by the runtime which outputs a stream of bytes.
+Looking at the previous example implementation, one would be forgiven for having
+the immediate reaction of "This seems like a lot of extra work for little gain.
+Why can't I just make the system calls where I need to, and not bother with
+wrapping them in interfaces and all these other rules?"
 
-* `disk`: accepts a file name and file contents as input, writes the file
-  contents to a file of the given name, and potentially returns an error back.
+The following sections will answer that concern by showing the benefits gained
+by following a component-oriented pattern.
 
-* `hashFileWriter`: reads a stream of bytes off a `stdin`, collects the stream
-  into a string, hashes that string to generate a file name, and uses `disk` to
-  create a corresponding file with the string as its contents. If `disk` returns
-  an error then `hashFileWriter` returns that error.
+### Testing
 
-Sprucing up our previous example to use these more clearly defined components
-might look like:
+Testing is important, that much is being assumed.
 
-```go
-package main
+A distinction to be made with testing is between unit and non-unit (sometimes
+called "integration") tests. Unit tests are those which do not make any
+requirements of the environment outside the test, such as the existence of a
+running database, filesystem, or network service. Unit tests do not interact
+with the world outside the testing process, but instead use mocks in place of
+functionality which would be expected by that world.
 
-import (
-	"crypto/sha1"
-	"encoding/hex"
-	"fmt"
-	"io"
-	"io/ioutil"
-	"os"
-)
+Unit tests are important because they are faster to run and more consistent than
+non-unit tests. Unit tests also force the programmer to consider different
+possible states of a component's dependencies during the mocking process.
 
-// Disk defines the methods of the disk component.
-type Disk interface {
-	WriteFile(fileName string, fileContents []byte) error
-}
+Unit tests are often not employed by programmers because they are difficult to
+implement for code which does not expose any way of swapping out dependencies
+for mocks of those dependencies. The primary culprit of this difficulty is
+direct usage of singletons and impure global functions. With component-oriented
+programs all components inherently allow for swapping out any dependencies via
+their instantiation parameters, so there's no extra effort needed to support
+unit tests.
 
-// disk is the primary implementation of Disk. It implements the methods of
-// Disk (WriteFile) by performing actual system calls.
-type disk struct{}
+[Tests for the example implementation can be found
+here.](/assets/component-oriented-design/v1/main_test.html) Note that all
+dependencies of each component being tested are mocked/stubbed next to them.
 
-func NewDisk() Disk { return disk{} }
-
-func (disk) WriteFile(fileName string, fileContents []byte) error {
-	return ioutil.WriteFile(fileName, fileContents, 0644)
-}
-
-func hashFileWriter(stdin io.Reader, disk Disk) error {
-	h := sha1.New()
-	r := io.TeeReader(stdin, h)
-	body, err := ioutil.ReadAll(r)
-	if err != nil {
-		return fmt.Errorf("reading input: %w", err)
-	}
-
-	fileName := hex.EncodeToString(h.Sum(nil))
-
-	if err := disk.WriteFile(fileName, body); err != nil {
-		return fmt.Errorf("writing to file %q: %w", fileName, err)
-	}
-	return nil
-}
-
-func main() {
-	if err := hashFileWriter(os.Stdin, NewDisk()); err != nil {
-		panic(err) // consider the error handled
-	}
-}
-```
-
-`hashFileWriter` no longer directly uses `os.Stdin` and `ioutil.WriteFile`, but
-instead takes in components wrapping them; `io.Reader` is a built-in interface
-which `os.Stdin` inherently implements, and `Disk` is a simple interface defined
-just for this program.
-
-At first glance this would seem to have doubled the line-count for very little
-gain. This is because we have not yet written tests.
-
-## Testing
-
-Testing is important. This post won't attempt to defend that statement, that's
-for another time. Let's just accept it as true for now.
-
-In the second form of the program we can test the core-functionality of the
-`hashFileWriter` component without resorting to using the actual `stdin` and
-`disk` components. Instead we use mocks of those components. A mock component
-implements the same input/outputs that the "real" component does, but in a way
-which makes it possible to write tests of another component which don't reach
-outside the process. These are unit tests.
-
-Tests for the latest form of the program might look like this:
-
-```go
-package main
-
-import (
-	"strings"
-	"testing"
-)
-
-// mockDisk implements the Disk interface. When WriteFile is called mockDisk
-// will pretend to write the file, but instead will simply store what arguments
-// WriteFile was called with.
-type mockDisk struct {
-	fileName     string
-	fileContents []byte
-}
-
-func (d *mockDisk) WriteFile(fileName string, fileContents []byte) error {
-	d.fileName = fileName
-	d.fileContents = fileContents
-	return nil
-}
-
-func TestHashFileWriter(t *testing.T) {
-	type test struct {
-		in          string
-		expFileName string
-		// expFileContents can be inferred from in
-	}
-
-	tests := []test{
-		{
-			in:          "",
-			expFileName: "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-		},
-		{
-			in:          "hello",
-			expFileName: "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d",
-		},
-		{
-			in:          "hello\nworld", // make sure newlines don't break things
-			expFileName: "7db827c10afc1719863502cf95397731b23b8bae",
-		},
-	}
-
-	for _, test := range tests {
-		// stdin is mocked via a strings.Reader, which outputs the string it was
-		// initialized with as a stream of bytes.
-		in := strings.NewReader(test.in)
-
-		// Disk is mocked by mockDisk, go figure.
-		disk := new(mockDisk)
-
-		if err := hashFileWriter(in, disk); err != nil {
-			t.Errorf("in:%q got err:%v", test.in, err)
-		} else if string(disk.fileContents) != test.in {
-			t.Errorf("in:%q got contents:%q", test.in, disk.fileContents)
-		} else if string(disk.fileName) != test.expFileName {
-			t.Errorf("in:%q got fileName:%q", test.in, disk.fileName)
-		}
-	}
-}
-```
-
-Notice that these tests do not _completely_ cover the desired functionality of
-the program: if `disk` returns an error that error should be returned from
-`hashFileWriter`, but this functionality is not tested. Whether or not this must
-be tested as well, and indeed the pedantry level of tests overall, is a matter
-of taste. I believe these tests to be sufficient.
-
-## Configuration
+### Configuration
 
 Practically all programs require some level of runtime configuration. This may
 take the form of command-line arguments, environment variables, configuration
-files, etc. Almost all configuration methods will require some system call, and
-so any component accessing configuration directly would likely break component
-property 4.
+files, etc.
 
-Instead each component should take in whatever configuration parameters it needs
-during instantiation, and let `main` handle collecting all configuration from
-outside of the process and instantiating the components appropriately.
+With a component-oriented program all components are instantiated in the same
+place, `main`, so it's very easy to expose any arbitrary parameter to the user.
+For any component which a configurable parameter effects, that component merely
+needs to take an instantiation parameter for that configurable parameter;
+`main` can connect the two together. This accounts for unit testing a
+component with different configurations, while still allowing for configuring
+any arbitrary internal functionality.
 
-Let's take our previous program, but add in two new desired behaviors: first,
-there should be a command-line parameter which allows for specifying the string
-on the command-line, rather than reading from stdin, and second, there should be
-a command-line parameter declaring which directory to write files into. The new
-implementation looks like:
+For more complex configuration systems it is also possible to implement a
+`configuration` component, wrapping whatever configuration-related functionality
+is needed, which other components use as a sub-component. The effect is the
+same.
 
-```go
-package main
+To demonstrate how configuration works in a component-oriented program the
+example program's requirements will be augmented to include the following:
 
-import (
-	"crypto/sha1"
-	"encoding/hex"
-	"flag"
-	"fmt"
-	"io"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"strings"
-)
+* The point change amounts for both correct and incorrect guesses (currently
+  hardcoded at 1000 and 1, respectively) should be configurable on the
+  command-line.
 
-// Disk defines the methods of the disk component.
-type Disk interface {
-	WriteFile(fileName string, fileContents []byte) error
-}
+* The save file's path, HTTP listen address, and save interval should all be
+  configurable on the command-line.
 
-// disk is the concrete implementation of Disk. It implements the methods of
-// Disk (WriteFile) by performing actual OS calls.
-type disk struct {
-	dir string
-}
+[The new implementation, with newly configurable parameters, can be found
+here.](/assets/component-oriented-design/v2/main.html) Most of the program has
+remained the same, and all unit tests from before remain valid. The primary
+difference is that `scoreboard` takes in two new parameters for the point change
+amounts, and configuration is set up inside `main`.
 
-func NewDisk(dir string) Disk { return disk{dir: dir} }
-
-func (d disk) WriteFile(fileName string, fileContents []byte) error {
-	fileName = filepath.Join(d.dir, fileName)
-	return ioutil.WriteFile(fileName, fileContents, 0644)
-}
-
-func hashFileWriter(in io.Reader, disk Disk) error {
-	h := sha1.New()
-	r := io.TeeReader(in, h)
-	body, err := ioutil.ReadAll(r)
-	if err != nil {
-		return fmt.Errorf("reading input: %w", err)
-	}
-
-	fileName := hex.EncodeToString(h.Sum(nil))
-
-	if err := disk.WriteFile(fileName, body); err != nil {
-		return fmt.Errorf("writing to file %q: %w", fileName, err)
-	}
-	return nil
-}
-
-func main() {
-	str := flag.String("str", "", "If set, hash and write this string instead of stdin")
-	dir := flag.String("dir", ".", "Directory which files should be written to")
-	flag.Parse()
-
-	var in io.Reader
-	if *str == "" {
-		in = os.Stdin
-	} else {
-		in = strings.NewReader(*str)
-	}
-
-	disk := NewDisk(*dir)
-
-	if err := hashFileWriter(in, disk); err != nil {
-		panic(err) // consider the error handled
-	}
-}
-```
-
-Very little has changed, and in fact `hashFileWriter` was not touched at all,
-meaning all unit tests remained valid. 
-
-## Setup/Runtime/Cleanup
+### Setup/Runtime/Cleanup
 
 A program can be split into three stages: setup, runtime, and cleanup. Setup
 is the stage during which internal state is assembled in order to make runtime
@@ -365,147 +222,66 @@ possible. Runtime is the stage during which a program's actual function is being
 performed. Cleanup is the stage during which runtime stops and internal state is
 disassembled.
 
-A graceful (i.e. reliably correct) setup is quite natural to accomplish, but
-unfortunately a graceful cleanup is not a programmer's first concern (and
-frequently is not a concern at all). However, when building reliable and correct
-programs, a graceful cleanup is as important as a graceful setup and runtime. A
-program is still running while it is being cleaned up, and it's possibly even
-acting on the outside world still. Shouldn't it behave correctly during that
-time?
+A graceful (i.e. reliably correct) setup is quite natural to accomplish for
+most. On the other hand a graceful cleanup is, unfortunately, not a programmer's
+first concern (frequently it is not a concern at all).
+
+When building reliable and correct programs a graceful cleanup is as important
+as a graceful setup and runtime. A program is still running while it is being
+cleaned up, and it's possibly even acting on the outside world still. Shouldn't
+it behave correctly during that time?
 
 Achieving a graceful setup and cleanup with components is quite simple:
 
-During setup a single-threaded process (usually `main`) will construct the
-"leaf" components (those which have no child components of their own) first,
-then the components which take those leaves as parameters, then the components
-which take _those_ as parameters, and so on, until all are constructed. The
-components end up assembled into a directed acyclic graph (DAG).
+During setup a single-threaded procedure (`main`) constructs the leaf components
+first, then the components which take those leaves as parameters, then the
+components which take _those_ as parameters, and so on, until the component DAG
+is constructed.
 
-In the previous examples our DAG looked like this:
+At this point the program's runtime has begun.
 
-```
-               ---> stdin
-              /
-hashFileWriter
-              \
-               ---> disk
-```
+Once runtime is over, signified by a process signal or some other mechanism,
+it's only necessary to call each component's cleanup method (if any, see
+property 5) in the reverse of the order the components were instantiated in.
+This order is inherently deterministic, since the components were instantiated
+by a single-threaded procedure.
 
-At this point the program will begin runtime.
-
-Once runtime is over and it is time for the program to exit it's only necessary
-to call each component's cleanup method(s) in the reverse of the order the
-components were instantiated in. A component's cleanup method should not be
-called until all of its parent components have been cleaned up.
-
-Inherent to the pattern is the fact that each component will certainly be
+Inherent to this pattern is the fact that each component will certainly be
 cleaned up before any of its child components, since its child components must
 have been instantiated first and a component will not clean up child components
-given as parameters (as-per component property 5a). Therefore the pattern avoids
+given as parameters (properties 5a and 5c). Therefore the pattern avoids
 use-after-cleanup situations.
 
-With go this pattern can be achieved easily using `defer`, but writing it out
-manually is not so hard, as in this toy example:
+To demonstrate a graceful cleanup in a component-oriented program the example
+program's requirements will be augmented to include the following:
 
-```go
-package main
+* The program will terminate itself upon an interrupt signal.
 
-import (
-	"fmt"
-	"time"
-)
+* During termination (cleanup) the program will save the latest set of scores to
+  disk one final time.
 
-// sleeper is a component which prints its children and sleeps when it's time to
-// cleanup.
-type sleeper struct {
-	children []*sleeper
-	toSleep  time.Duration
+[The new implementation which accounts for these new requirements can be found
+here.](/assets/component-oriented-design/v3/main.html) For this example go's
+`defer` feature could have been used instead, which would have been even
+cleaner, but was omitted for the sake of those using other languages.
 
-	// The builtin time.Sleep is an impure global function, a component can't
-	// use it, so the component must be instantiated with it as a parameter.
-	sleep func(time.Duration)
 
-	// likewise os.Stdout is a global singleton, and so must also be a
-	parameter.
-	stdout io.Writer
-}
+## Conclusion
 
-func (s *sleeper) print() {
-	fmt.Fprintf(s.stdout, "I will sleep for %v\n", s.toSleep)
-	for _, child := range s.children {
-		child.print()
-	}
-}
+The component pattern helps make programs more reliable with only a small amount
+of extra effort incurred. In fact most of the pattern has to do with
+establishing sensible abstractions around global functionality and remembering
+certain idioms for how those abstractions should be composed together, something
+most of us do to some extent already anyway.
 
-func (s *sleeper) cleanup() {
-	s.sleep(s.toSleep)
-	fmt.Fprintf(s.stdout, "I slept for %v\n", s.toSleep)
-}
+While beneficial in many ways, component-oriented programming is merely a tool
+which can be applied in many cases. It is certain that there are cases where it
+is not the right tool for the job, so apply it deliberately and intelligently.
 
-func main() {
+## Criticisms/Questions
 
-	// Within main we make a helper function to easily construct sleepers. for a
-	// toy like this it's not worth the effort of giving sleeper a real
-	// initialization function.
-	newSleeper := func(toSleep time.Duration, children ...*sleeper) *sleeper {
-		return &sleeper{
-			children: children,
-			toSleep:  toSleep,
-			sleep:    time.Sleep,
-			stdout:   os.Stdout,
-		}
-	}
-
-	aa := newSleeper(250 * time.Millisecond)
-	defer aa.cleanup()
-
-	ab := newSleeper(250 * time.Millisecond)
-	defer ab.cleanup()
-
-	// A's children are AA and AB
-	a := newSleeper(500*time.Millisecond, aa, ab)
-	defer a.cleanup()
-
-	b := newSleeper(750 * time.Millisecond)
-	defer b.cleanup()
-
-	// root's children are A and B
-	root := newSleeper(1*time.Second, a, b)
-	defer root.cleanup()
-
-	// All components are now instantiated and runtime begins.
-	root.print()
-    // ... and just like that, runtime ends.
-	fmt.Println("--- Alright, fun is over, time for bed ---")
-
-	// Now to clean up, cleanup methods are called in the reverse order of the
-	// component's instantiation.
-	root.cleanup()
-	b.cleanup()
-	a.cleanup()
-	ab.cleanup()
-	aa.cleanup()
-
-	// Expected output is:
-	//
-	// I will sleep for 1s
-	// I will sleep for 500ms
-	// I will sleep for 250ms
-	// I will sleep for 250ms
-	// I will sleep for 750ms
-	// --- Alright, fun is over, time for bed ---
-	// I slept for 1s
-	// I slept for 750ms
-	// I slept for 500ms
-	// I slept for 250ms
-	// I slept for 250ms
-}
-```
-
-## Criticisms
-
-In lieu of a FAQ I will attempt to premeditate criticisms of the component
-oriented pattern laid out in this post:
+In lieu of a FAQ I will attempt to premeditate questions and criticisms of the
+component-oriented programming pattern laid out in this post:
 
 **This seems like a lot of extra work.**
 
@@ -518,9 +294,9 @@ bad thing, it's just how the industry functions.
 
 All that said, a pattern need not be followed perfectly to be worthwhile, and
 the amount of extra work incurred by it can be decided based on practical
-considerations. I merely maintain that when it comes time to revisit some
-existing code, either to fix or augment it, that the job will be notably easier
-if the code _mostly_ follows this pattern.
+considerations. I merely maintain that code which is (mostly) component-oriented
+is easier to maintain in the long run, even if it might be harder to get off the
+ground initially.
 
 **My language makes this difficult.**
 
@@ -534,32 +310,43 @@ feature needed is abstract typing.
 It would be nice to one day see a language which explicitly supported this
 pattern by baking the component properties in as compiler checked rules.
 
-**This will result in over-abstraction.**
+**My `main` is too big**
+
+There's no law saying all component construction needs to happen in `main`,
+that's just the most sensible place for it. If there's large sections of your
+program which are independent of each other then they could each have their own
+construction functions which `main` then calls.
+
+Other questions which are worth asking: Can my program be split up
+into multiple programs? Can the responsibilities of any of my components be
+refactored to reduce the overall complexity of the component DAG? Can the
+instantiation of any components be moved within their parent's
+instantiation function?
+
+(This last suggestion may seem to be disallowed, but is in fact fine as long as
+the parent's instantiation function remains pure.)
+
+**Won't this will result in over-abstraction?**
 
 Abstraction is a necessary tool in a programmer's toolkit, there is simply no
 way around it. The only questions are "how much?" and "where?".
 
-The use of this pattern does not effect how those questions are answered, but
-instead aims to more clearly delineate the relationships and interactions
-between the different abstracted types once they've been established using other
-methods. Over-abstraction is the fault of the programmer, not the language or
-pattern or framework.
+The use of this pattern does not effect how those questions are answered, in my
+opinion, but instead aims to more clearly delineate the relationships and
+interactions between the different abstracted types once they've been
+established using other methods. Over-abstraction is possible and avoidable no
+matter what language, pattern, or framework is being used.
 
-**The acronymn is CoP.**
+**Does CoP conflict with object-oriented or functional programming?**
 
-Why do you think I've just been ackwardly using "this pattern" instead of the
-acronymn for the whole post? Better names are welcome.
+I don't think so. OoP languages will have abstract types as part of their core
+feature-set; most difficulties are going to be with deliberately _not_ using
+other features of an OoP language, and with imported libraries in the language
+perhaps making life inconvenient by not following CoP (specifically when it
+comes to cleanup and use of singletons).
 
-## Conclusion
-
-The component oriented pattern helps make our code more reliable with only a
-small amount of extra effort incurred. In fact most of the pattern has to do
-establishing sensible abstractions around global functionality and remembering
-certain idioms for how those abstractions should be composed together, something
-most of us do to some extent already anyway.
-
-While beneficial in many ways, component oriented programming is merely a tool
-which can be applied in many cases. It is certain that there are cases where it
-is not the right tool for the job. I've found these cases to be
-few-and-far-between, however. It's a solid pattern that I've gotten good use out
-of, and hopefully you'll find it, or some parts of it, to be useful as well.
+With functional programming it may well be, depending on the language, that CoP
+is technically being used, as functional languages are generally antagonistic
+towards to globals and impure functions already, which is most of the battle.
+Going from functional to component-oriented programming will generally be a
+problem of organization.
