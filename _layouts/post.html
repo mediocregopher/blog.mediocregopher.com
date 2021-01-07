@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<article itemscope itemtype="http://schema.org/BlogPosting" style="margin-bottom: 50vh;">
+<article itemscope itemtype="http://schema.org/BlogPosting">
 
   <header id="post-header">
     <h1 id="post-headline" itemprop="name headline">
@@ -22,7 +22,7 @@ layout: default
       </time>
       •
       {% endif -%}
-      <span itemprop="about"><em>{{ page.description }}</em></span>
+      <description itemprop="about"><em>{{ page.description }}</em></description>
     </div>
   </header>
 

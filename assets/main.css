@@ -28,7 +28,8 @@ ul {
 #title-header  {
     border-bottom: 1px solid #666;
     padding-top: 2rem;
-    padding-bottom:2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 4rem;
 }
 
 #title-header .title {
@@ -55,37 +56,14 @@ ul {
     text-decoration: none;
 }
 
-#crypto-display {
-    min-width: 1px;
-}
-
-#crypto-display-qr img,
-#crypto-display-qr canvas {
-    width: 100%;
-    max-width: 512px;
-}
-
-#crypto-display-addr {
-    overflow-wrap: break-word;
-    margin-top: 1em;
-}
-
-#crypto-display-x {
-    text-align: center;
-    margin-top: 1em;
-}
-
-#crypto-display-x span:hover {
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#crypto-display-x span {
-    cursor: pointer;
+footer {
+    margin-top: 4rem;
+    border-top: 1px solid #666;
+    padding-top: 2rem;
+    margin-bottom: 50vh;
 }
 
 #posts-list {
-    margin-top: 3rem;
     list-style: none;
 }
 
@@ -99,17 +77,12 @@ ul {
 }
 
 #post-header {
-    margin-top: 3rem;
+    margin-top: 2rem;
     margin-bottom: 2rem;
 }
 
 #post-headline {
     margin: 0;
-}
-
-#post-content {
-    border-bottom: 1px solid #666;
-    margin-bottom: 2rem;
 }
 
 #post-content ul {
@@ -120,4 +93,45 @@ ul {
 #post-content canvas
 {
     max-width: 100%;
+}
+
+/* The Modal (background) */
+#modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+#modal-body {
+    position: relative;
+    background-color: #fefefe;
+    margin: 10rem auto; /* 15% from the top and centered */
+    padding: 5rem;
+    border: 1px solid #888;
+    max-width: 30%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+#modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    line-height: 1rem;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#modal-close:hover,
+#modal-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

@@ -1,67 +1,48 @@
-console.log("main.js started");
+// showModal will create the modal structure the first time it is called.
+var modal, modalContent;
+const showModal = function() {
+  if (!modal) {
+    // make the modal
+    const modalClose = document.createElement('span');
+    modalClose.id = 'modal-close';
+    modalClose.innerHTML = '&times;';
 
-// For asynchronously loading the qr code library, loadQRLib returns a promise
-// which will be resolved when the library is loaded.
-var qrLibProm;
-var loadQRLib = () => {
-    if (qrLibProm) { return qrLibProm; }
-    qrLibProm = new Promise((resolve, reject) => {
-        console.log("loading qrcode.min.js");
-        var script = document.createElement('script');
-        script.src = "/assets/qrcode.min.js";
-        script.async = true;
-        script.onload = () => { resolve(); };
-        document.querySelectorAll('head')[0].appendChild(script);
-    });
-    return qrLibProm;
-};
+    modalContent = document.createElement('div');
+    modalContent.id = 'modal-content';
+
+    const modalBody = document.createElement('div');
+    modalBody.id = 'modal-body';
+    modalBody.appendChild(modalContent);
+    modalBody.appendChild(modalClose);
+
+    modal = document.createElement('div');
+    modal.id = 'modal';
+    modal.appendChild(modalBody);
+
+    // add the modal to the document
+    document.getElementsByTagName('body')[0].appendChild(modal);
+
+    // setup modal functionality
+    modalClose.onclick = function() {
+        modal.style.display = "none";
+    }
+  }
+
+  modalContent.innerHTML = '';
+  for (var i = 0; i < arguments.length; i++) {
+    modalContent.appendChild(arguments[i]);
+  }
+  modal.style.display = "block";
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+      window.onclick = undefined;
+    }
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM loaded");
-
-    var cryptoDisplay = document.querySelector('#crypto-display');
-    var clearCryptoDisplay = () => {
-        cryptoDisplay.innerHTML = '&nbsp;';
-    };
-
-    console.log("setting up crypto buttons");
-    document.querySelectorAll('.crypto').forEach((el) => {
-        var href = el.href;
-        el.href="#";
-        el.onclick = () => {
-            var parts = href.split(":");
-            if (parts.length != 2) {
-                console.error(el, "href not properly formatted");
-                return;
-            }
-            var currency = parts[0];
-            var address = parts[1];
-
-            clearCryptoDisplay();
-
-            var cryptoDisplayQR = document.createElement('div');
-            cryptoDisplayQR.id = "crypto-display-qr";
-
-            var cryptoDisplayAddr = document.createElement('div');
-            cryptoDisplayAddr.id = "crypto-display-addr";
-            cryptoDisplayAddr.innerHTML = '<span>'+currency + " address: " + address + '</span>';
-
-            var cryptoDisplayX = document.createElement('div');
-            cryptoDisplayX.id = "crypto-display-x";
-            cryptoDisplayX.onclick = clearCryptoDisplay;
-            cryptoDisplayX.innerHTML = '<span>X</span>';
-
-            cryptoDisplay.appendChild(cryptoDisplayQR);
-            cryptoDisplay.appendChild(cryptoDisplayAddr);
-            cryptoDisplay.appendChild(cryptoDisplayX);
-
-            loadQRLib().then(() => {
-                new QRCode(cryptoDisplayQR, {
-                    text: currency,
-                    width: 512,
-                    height: 512,
-                });
-            });
-        };
-    });
 })

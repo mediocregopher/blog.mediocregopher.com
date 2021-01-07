@@ -1,6 +1,6 @@
 <header id="title-header" role="banner">
   <div class="row">
-    <div class="four columns">
+    <div class="six columns">
       <h1 class="title">
         <a href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
       </h1>
@@ -23,32 +23,11 @@
           </a>
         </span>
       </div>
-      <div class="light license">
-        Unless otherwised specified, all works are licensed under the
-        <a href="{{ '/assets/wtfpl.txt' | relative_url}}">WTFPL</a>.
-      </div>
     </div>
-
-    <div id="crypto-display" class="four columns">&nbsp;</div>
-
-    <div class="four columns light">
-      <div class="donation">
-        <span>If you like what I do, consider donating!</span><br/>
-        <span>
-          <a href="https://cash.me/$mediocregopher" target="_blank">USD</a>
-          •
-          <a class="crypto" href="bitcoin:18kqNYjUZ4zNEp4VjE3pKPLBitUy6U76rk">BTC</a>
-          •
-          <a class="crypto" href="litecoin:LZgyna6Nw4phzWv24QP4xgUi7hC9DDHV7o">LTC</a>
-          •
-          <a class="crypto" href="ethereum:0xB8e1608059174760f4652178303f7c7a59121922">ETH</a>
-          •
-          <a class="crypto" href="zcash:zcMmjd2gNetan9QciRExVdTb64ZEYPjk8w6NiEXnLRcDbVQQxZ9xvKH3Ab3y7uccCrN5HRvR5YVvq684gC1drvnYadp3Yz2">ZEC</a>
-          •
-          <a class="crypto" href="monero:4HJsnT47QLPH3GaTUZsMZrCyFErJiHM5gSCtxLnYvYPsabuBqV3d4Wa1TW6Fa4Zdw9b29xqKUNf9qHev3gEXFEFK4W3oeRDaFvWQN6fePM">XMR</a>
-        </span>
-      </div>
-    </div>
-
+    {%- if!page.nofollow != true %}
+    <!--<div class="six-columns">
+      <a href="/follow.html">FOLLOW PLZ</a>
+    </div>-->
+    {% endif -%}
   </div>
 </header>
