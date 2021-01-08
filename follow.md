@@ -1,22 +1,23 @@
 ---
-layout: post
+layout: page
 title: "Follow the Blog"
-description: "There's lots of ways to do it"
 nofollow: true
 ---
 
-There are a few ways to get notified of new posts to the Mediocre Blog.
+Here's your options for receiving updates about new blog posts:
 
-## Method 1: RSS
+## Option 1: RSS
 
-RSS is the classic way to follow any blog. Simply give any RSS reader the
-following URL...
+RSS is the classic way to follow any blog. It comes from a time before
+aggregators like reddit and twitter stole the show, when people felt capable to
+manage their own content feeds. We should use it again.
+
+To follow over RSS give any RSS reader the following URL...
 
 <a href="{{site.url}}/feed.xml">{{site.url}}/feed.xml</a>
 
-...and posts from this blog will show up as soon as they are published.
-
-There are literally thousands of RSS readers out there. Here's some
+...and posts from this blog will show up in your RSS feed as soon as they are
+published. There are literally thousands of RSS readers out there. Here's some
 recommendations:
 
 * [Google Chrome Browser Extension](https://chrome.google.com/webstore/detail/rss-feed-reader/pnjaodmkngahhkoihejjehlcdlnohgmp)
@@ -30,13 +31,13 @@ recommendations:
   me](mailto:mediocregopher.com) a recommendation.
 
 
-## Method 2: Twitter
+## Option 2: Twitter
 
 New posts are automatically published to [my Twitter](https://twitter.com/{{
 site.twitter_username }}). Simply follow me there and pray the algorithm smiles
 upon my tweets enough to show them to you! :pray: :pray: :pray:
 
-## Method 3: Email
+## Option 3: Email
 
 I do solemnly swear to never ever ever:
 

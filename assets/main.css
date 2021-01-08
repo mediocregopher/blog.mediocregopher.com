@@ -35,7 +35,6 @@ ul {
 #title-header .title {
     margin: 0;
     font-size: 4.4rem; /* magic number yooooo */
-    font-weight: bold;
 }
 
 #title-header .title a {
@@ -83,6 +82,7 @@ footer {
 
 #post-headline {
     margin: 0;
+    font-weight: bold;
 }
 
 #post-content ul {
