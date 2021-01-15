@@ -43,7 +43,7 @@ clean_title=$(echo "$title" |\
     )
 
 description="$2"
-if $(echo "$description" | grep -q '[^.$!]$'); then
+if $(echo "$description" | grep -q '[^.$!?]$'); then
     echo 'Description needs to be a complete sentence, with ending punctuation.'
     exit 1
 fi
