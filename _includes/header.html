@@ -22,7 +22,14 @@
     {%- if!page.nofollow != true %}
     <div class="five columns light" style="text-align: right">
       <span style="display:block; margin-bottom:0.5rem;">Get notified when new posts are published!</span>
-      <a href="{{ "/follow.html" | relative_url }}"><button class="button-primary">Follow the blog</button></a>
+      <a href="{{ "/follow.html" | relative_url }}"><button class="button-primary">
+          <i class="fab fa-twitter"></i>
+          Follow
+      </button></a>
+      <a href="{{ "/feed.xml" | relative_url }}"><button class="button">
+          <i class="fas fa-rss"></i>
+          RSS
+      </button></a>
     </div>
     {% endif -%}
   </div>
