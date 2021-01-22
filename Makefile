@@ -1,12 +1,11 @@
 serve:
-	docker run -it --rm \
-		-v $$(pwd):/srv/jekyll \
-		-p 4000:4000 \
-		jekyll/jekyll \
-			jekyll serve -w -I -D -H 0.0.0.0
+	nix-shell -A serve
 
 update:
-	docker run -it --rm \
-		-v $$(pwd):/srv/jekyll \
-		jekyll/jekyll \
-			bundle update
+	nix-shell -p bundler --run 'bundler update'
+
+lock:
+	nix-shell -p bundler -p bundix --run 'bundler lock; bundler package --no-install --path vendor; bundix; rm -rf .bundle vendor'
+
+build:
+	nix-build -A build

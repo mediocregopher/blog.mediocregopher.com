@@ -48,7 +48,7 @@ if $(echo "$description" | grep -q '[^.$!?]$'); then
     exit 1
 fi
 
-postFileName=_posts/$td-$clean_title.md
+postFileName=src/_posts/$td-$clean_title.md
 echo "Creating $postFileName"
 postContent=$(cat <<EOF
 ---

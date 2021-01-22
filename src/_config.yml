@@ -11,6 +11,12 @@ github_username:  mediocregopher
 rss: rss
 highlighter: rouge
 
+defaults:
+  - scope:
+      path: "_posts"
+    values:
+      layout: "post"
+
 plugins:
  - jekyll-feed
  - jekyll-seo-tag
