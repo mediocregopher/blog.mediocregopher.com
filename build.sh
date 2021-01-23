@@ -1,5 +1,6 @@
 source $stdenv/setup
 set -e
 
-mkdir -p "$out"
-$jekyll_env/bin/jekyll build -s "$src" -d "$out"
+d="$out/var/www/blog.mediocregopher.com"
+mkdir -p "$d"
+$jekyll_env/bin/jekyll build -s "$src" -d "$d"

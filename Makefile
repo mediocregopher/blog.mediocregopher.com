@@ -1,3 +1,12 @@
+result:
+	nix-build -A build
+
+install: result
+	nix-env -i "$$(readlink result)"
+
+clean:
+	rm result
+
 serve:
 	nix-shell -A serve
 
@@ -6,6 +15,3 @@ update:
 
 lock:
 	nix-shell -p bundler -p bundix --run 'bundler lock; bundler package --no-install --path vendor; bundix; rm -rf .bundle vendor'
-
-build:
-	nix-build -A build
