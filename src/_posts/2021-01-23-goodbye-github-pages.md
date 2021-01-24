@@ -191,10 +191,11 @@ which I'm not prepared to do yet. So for now I've done something janky.
 
 If you look at the `Makefile` above you'll notice the `install` target. What
 that target does is to install the static blog files to my nix profile, which
-exists at `~/.nix-profile`. nix allows any package to be installed to a profile
-in this way. All packages within a profile are independent and can be added,
-updated, and removed atomically. By installing the built blog package to my
-profile I make it available at `~/.nix-profile/var/www/blog.mediocregopher.com`.
+exists at `$HOME/.nix-profile`. nix allows any package to be installed to a
+profile in this way. All packages within a profile are independent and can be
+added, updated, and removed atomically. By installing the built blog package to
+my profile I make it available at
+`$HOME/.nix-profile/var/www/blog.mediocregopher.com`.
 
 So to serve those files via nginx all I need to do is add a read-only volume to
 the container...
@@ -229,6 +230,11 @@ make clean install
 This will remove any existing `result`, regenerate the site (with the new post)
 under a new symlink, and install/update that newer package to my nix profile,
 overwriting the previous package which was there.
+
+EDIT: apparently this isn't quite true. Because `$HOME/.nix-profile` is a
+symlink docker doesn't handle the case of that symlink being updated correctly,
+so I also have to do `docker restart nginx` for changes to be reflected in
+nginx.
 
 And that's it! Nix is a cool tool that I'm still getting the hang of, but
 hopefully this post might be useful to anyone else thinking of self-hosting
