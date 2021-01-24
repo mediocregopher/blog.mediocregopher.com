@@ -12,18 +12,17 @@
     in
         {
             build = derivation {
-                system = system;
+                inherit jekyll_env system;
                 name = "mediocre-blog";
                 builder = "${pkgs.bash}/bin/bash";
                 args = [ ./build.sh ];
 
                 src = ./src;
                 stdenv = pkgs.stdenv;
-                inherit jekyll_env;
             };
 
-            serve = pkgs.stdenv.mkDerivation rec {
-                name = "jekyll_env";
+            serve = pkgs.stdenv.mkDerivation {
+                name = "mediocre-blog-shell";
 
                 # glibcLocales is required so to fill in LC_ALL and other locale
                 # related environment vars. Without those jekyll's scss compiler
@@ -36,6 +35,8 @@
                     exec ${jekyll_env}/bin/jekyll serve -s ./src -d ./_site -w -I -D -H 0.0.0.0
                 '';
             };
+
+            env = jekyll_env;
         }
 
 

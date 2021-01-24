@@ -1,6 +1,6 @@
 <header id="title-header" role="banner">
   <div class="row">
-    <div class="seven columns">
+    <div class="seven columns" style="margin-bottom: 3rem;">
       <h1 class="title">
         <a href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
       </h1>
@@ -20,7 +20,7 @@
       </div>
     </div>
     {%- if!page.nofollow != true %}
-    <div class="five columns light" style="text-align: right">
+    <div class="five columns light">
       <span style="display:block; margin-bottom:0.5rem;">Get notified when new posts are published!</span>
       <a href="{{ "/follow.html" | relative_url }}"><button class="button-primary">
           <i class="fab fa-twitter"></i>

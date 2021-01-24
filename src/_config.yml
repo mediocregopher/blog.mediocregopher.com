@@ -5,7 +5,7 @@ description: >-
   A mix of tech, art, travel, and who knows what else.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: https://blog.mediocregopher.com # the base hostname & protocol for your site, e.g. http://example.com
-repository: mediocregopher/blog.mediocregopher.com
+repository: https://github.com/mediocregopher/blog.mediocregopher.com
 twitter_username: mediocre_gopher
 github_username:  mediocregopher
 rss: rss
