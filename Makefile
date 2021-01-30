@@ -5,7 +5,7 @@ install: result
 	nix-env -i "$$(readlink result)"
 
 clean:
-	rm result
+	rm -f result
 	rm -rf _site
 
 serve:
