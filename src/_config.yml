@@ -3,8 +3,7 @@ author: Brian Picciano
 email: mediocregopher@gmail.com
 description: >-
   A mix of tech, art, travel, and who knows what else.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: https://blog.mediocregopher.com # the base hostname & protocol for your site, e.g. http://example.com
+url: https://blog.mediocregopher.com
 repository: https://github.com/mediocregopher/blog.mediocregopher.com
 twitter_username: mediocre_gopher
 github_username:  mediocregopher
@@ -20,9 +19,8 @@ defaults:
 plugins:
  - jekyll-feed
  - jekyll-seo-tag
- - jekyll-paginate
  - jekyll-relative-links
-
+ - jekyll-sitemap
 
 date_format: "%b %-d, %Y"
 

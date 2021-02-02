@@ -23,14 +23,7 @@
 
             serve = pkgs.stdenv.mkDerivation {
                 name = "mediocre-blog-shell";
-
-                # glibcLocales is required so to fill in LC_ALL and other locale
-                # related environment vars. Without those jekyll's scss compiler
-                # fails.
-                #
-                # TODO probably get rid of the scss compiler.
-                buildInputs = [ jekyll_env pkgs.glibcLocales ];
-
+                buildInputs = [ jekyll_env ];
                 shellHook = ''
                     exec ${jekyll_env}/bin/jekyll serve -s ./src -d ./_site -w -I -D -H 0.0.0.0
                 '';
