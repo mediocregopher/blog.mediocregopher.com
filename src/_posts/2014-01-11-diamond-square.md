@@ -4,6 +4,7 @@ description: >-
     Tackling the problem of semi-realistic looking terrain generation in
     clojure.
 updated: 2018-09-06
+tags: tech art
 ---
 
 ![terrain][terrain]

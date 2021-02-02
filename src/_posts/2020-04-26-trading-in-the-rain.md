@@ -3,6 +3,7 @@ title: >-
     Trading in the Rain
 description: >-
     All those... gains... will be lost like... tears...
+tags: tech art crypto
 ---
 
 <!-- MIDI.js -->

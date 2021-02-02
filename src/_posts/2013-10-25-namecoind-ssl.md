@@ -3,6 +3,7 @@ title: Namecoin, A Replacement For SSL
 description: >-
     If we use the namecoin chain as a DNS service we get security almost for
     free, along with lots of other benefits.
+tags: tech crypto
 ---
 
 At [cryptic.io][cryptic] we are creating a client-side, in-browser encryption

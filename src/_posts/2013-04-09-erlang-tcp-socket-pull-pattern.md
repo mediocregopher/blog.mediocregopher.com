@@ -2,6 +2,7 @@
 title: "Erlang, tcp sockets, and active true"
 description: >-
     Using `{active:once}` isn't always the best way to handle connections.
+tags: tech
 ---
 
 If you don't know erlang then [you're missing out][0].  If you do know erlang,

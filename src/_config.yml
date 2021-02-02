@@ -31,3 +31,6 @@ img_widths:
     - 2000
     - 2500
     - 3000
+
+feed:
+  tags: true

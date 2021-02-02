@@ -2,6 +2,7 @@
 title: Rabbit Hole
 description: >-
     Complex systems sometimes require complex debugging.
+tags: tech
 ---
 
 We've begun rolling out [SkyDNS][skydns] at my job, which has been pretty neat.

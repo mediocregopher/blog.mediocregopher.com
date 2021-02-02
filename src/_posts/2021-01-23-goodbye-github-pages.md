@@ -3,6 +3,7 @@ title: >-
     Goodbye, Github Pages
 description: >-
     This blog is no longer sponsored by Microsoft!
+tags: tech
 ---
 
 Slowly but surely I'm working on moving my digital life back to being

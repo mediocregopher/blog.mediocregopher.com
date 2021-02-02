@@ -3,6 +3,7 @@ title: >-
     Building Mobile Nebula
 description: >-
     Getting my hands dirty with Android development.
+tags: tech
 ---
 
 This post is going to be cheating a bit. I want to start working on adding DNS

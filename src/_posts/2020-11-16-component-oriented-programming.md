@@ -3,6 +3,7 @@ title: >-
     Component-Oriented Programming
 description: >-
     A concise description of.
+tags: tech
 ---
 
 [A previous post in this

@@ -3,6 +3,7 @@ title: Rethinking Identity
 description: >-
     A more useful way of thinking about identity on the internet, and using that
     to build a service which makes our online life better.
+tags: tech
 ---
 
 In my view, the major social media platforms (Facebook, Twitter, Instagram,

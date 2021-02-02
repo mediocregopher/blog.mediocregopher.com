@@ -3,6 +3,7 @@ title: Generations
 description: >-
     A simple file distribution strategy for very large scale, high-availability
     file-services.
+tags: tech
 ---
 
 ## The problem

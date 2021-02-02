@@ -4,6 +4,7 @@ title: >-
 description: >-
     Discussing the nature of program structure, the problems presented by
     complex structures, and a pattern that helps in solving those problems.
+tags: tech
 ---
 
 ## Part 0: Introduction
