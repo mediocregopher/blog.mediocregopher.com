@@ -3,6 +3,7 @@ title: >-
     Old Code, New Ideas
 description: >-
     Looking back at my old code with bemusement and horror.
+tags: tech
 ---
 
 About 3 years ago I put a lot of effort into a set of golang packages called
