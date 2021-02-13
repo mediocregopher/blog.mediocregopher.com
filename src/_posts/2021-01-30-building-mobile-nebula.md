@@ -3,6 +3,7 @@ title: >-
     Building Mobile Nebula
 description: >-
     Getting my hands dirty with Android development.
+series: nebula
 tags: tech
 ---
 
