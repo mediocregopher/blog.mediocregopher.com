@@ -11,6 +11,9 @@ clean:
 serve:
 	nix-shell -A serve
 
+shell:
+	nix-shell -A shell
+
 lock:
 	nix-shell -p bundler -p bundix --run 'bundler lock; bundix; rm -rf .bundle vendor'
 

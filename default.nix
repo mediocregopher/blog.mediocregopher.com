@@ -9,10 +9,13 @@
             ruby = pkgs.ruby;
             gemdir = ./.;
         };
+
+        shell_inputs = [ jekyll_env pkgs.imagemagick pkgs.exiftool ];
     in
         {
             build = derivation {
                 inherit jekyll_env system;
+
                 name = "mediocre-blog";
                 builder = "${pkgs.bash}/bin/bash";
                 args = [ ./build.sh ];
@@ -22,14 +25,15 @@
             };
 
             serve = pkgs.stdenv.mkDerivation {
-                name = "mediocre-blog-shell";
-                buildInputs = [ jekyll_env ];
+                name = "mediocre-blog-shell-serve";
+                buildInputs = shell_inputs;
                 shellHook = ''
                     exec ${jekyll_env}/bin/jekyll serve -s ./src -d ./_site -w -I -D -H 0.0.0.0
                 '';
             };
 
-            env = jekyll_env;
+            shell = pkgs.stdenv.mkDerivation {
+                name = "mediocre-blog-shell";
+                buildInputs = shell_inputs;
+            };
         }
-
-
