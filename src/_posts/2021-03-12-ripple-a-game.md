@@ -3,6 +3,7 @@ title: >-
     Ripple: A Game
 description: >-
     Hop Till You Drop!
+tags: tech
 ---
 
 <p>
