@@ -283,10 +283,11 @@ function doTick() {
         }
     }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    player.draw()
-    drops.forEach(drop => drop.draw());
     drops = drops.filter(drop => !drop.canGC());
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drops.forEach(drop => drop.draw());
+    player.draw()
 
     if (gameState == 'play') currTick++;
     requestAnimationFrame(doTick);
