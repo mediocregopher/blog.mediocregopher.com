@@ -3,6 +3,7 @@ title: >-
     How to Secure a Webapp
 description: >-
     Get ready to jump through some hoops.
+tags: tech
 ---
 
 In this post I will be documenting all security hoops that one must jump through
