@@ -1,4 +1,4 @@
-result:
+build:
 	nix-build -A build
 
 clean:
