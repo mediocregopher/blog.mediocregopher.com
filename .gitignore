@@ -1,6 +1,1 @@
-.bundle
-.sass-cache
-*.gem
-.jekyll-metadata
 result
-_site
