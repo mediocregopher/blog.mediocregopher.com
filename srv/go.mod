@@ -1,4 +1,4 @@
-module blog.mediocregopher.com/srv
+module github.com/mediocregopher/blog.mediocregopher.com/srv
 
 go 1.16
 
