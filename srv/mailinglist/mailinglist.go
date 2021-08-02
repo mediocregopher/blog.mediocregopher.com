@@ -51,6 +51,11 @@ type Params struct {
 	UnsubURL string
 }
 
+// New initializes and returns a MailingList instance using the given Params.
+func New(params Params) MailingList {
+	return &mailingList{params: params}
+}
+
 type mailingList struct {
 	params Params
 }
