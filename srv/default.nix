@@ -9,7 +9,7 @@ in
             pname = "mediocre-blog-srv";
             version = "dev";
             src = ./.;
-            vendorSha256 = "0xr5gks5mrh34s5npncw71wncrzqrhnm3vjfwdakd7fzd6iw049z";
+            vendorSha256 = "08wv94yv2wmlxzmanw551gixc8v8nl6zq2m721ig9nl3r540x46f";
         };
 
         shell = pkgs.stdenv.mkDerivation {

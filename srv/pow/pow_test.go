@@ -114,7 +114,7 @@ func TestManager(t *testing.T) {
 		c := mgr.NewChallenge()
 		solution := Solve(c)
 		clock.Add(2 * time.Second)
-		assert.ErrorIs(t, mgr.CheckSolution(c.Seed, solution), ErrExpiredSolution)
+		assert.ErrorIs(t, mgr.CheckSolution(c.Seed, solution), ErrExpiredSeed)
 	}
 
 }

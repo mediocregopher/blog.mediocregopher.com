@@ -143,8 +143,8 @@ func main() {
 		Store:          mlStore,
 		Mailer:         mailer,
 		Clock:          clock,
-		FinalizeSubURL: path.Join(publicURL.String(), "/mailinglist/finalize.html"),
-		UnsubURL:       path.Join(publicURL.String(), "/mailinglist/unsubscribe.html"),
+		FinalizeSubURL: publicURL.String() + "/mailinglist/finalize.html",
+		UnsubURL:       publicURL.String() + "/mailinglist/unsubscribe.html",
 	})
 
 	mux := http.NewServeMux()
@@ -181,6 +181,12 @@ func main() {
 	l, err := net.Listen(*listenProto, *listenAddr)
 	if err != nil {
 		loggerFatalErr(ctx, logger, "creating listen socket", err)
+	}
+
+	if *listenProto == "unix" {
+		if err := os.Chmod(*listenAddr, 0777); err != nil {
+			loggerFatalErr(ctx, logger, "chmod-ing unix socket", err)
+		}
 	}
 
 	srv := &http.Server{Handler: mux}
