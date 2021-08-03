@@ -2,14 +2,20 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
+	"os/signal"
 	"path"
 	"strconv"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/emersion/go-sasl"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
@@ -25,10 +31,17 @@ func loggerFatalErr(ctx context.Context, logger *mlog.Logger, descr string, err 
 
 func main() {
 
+	ctx := context.Background()
+
 	logger := mlog.NewLogger(nil)
+	defer logger.Close()
+
+	logger.Info(ctx, "process started")
+	defer logger.Info(ctx, "process exiting")
 
 	publicURLStr := flag.String("public-url", "http://localhost:4000", "URL this service is accessible at")
-	listenAddr := flag.String("listen-addr", ":4000", "Address to listen for HTTP requests on")
+	listenProto := flag.String("listen-proto", "tcp", "Protocol to listen for HTTP requests with")
+	listenAddr := flag.String("listen-addr", ":4000", "Address/path to listen for HTTP requests on")
 	dataDir := flag.String("data-dir", ".", "Directory to use for long term storage")
 
 	staticDir := flag.String("static-dir", "", "Directory from which static files are served (mutually exclusive with -static-proxy-url)")
@@ -46,45 +59,46 @@ func main() {
 
 	switch {
 	case *staticDir == "" && *staticProxyURLStr == "":
-		logger.Fatal(context.Background(), "-static-dir or -static-proxy-url is required")
+		logger.Fatal(ctx, "-static-dir or -static-proxy-url is required")
 	case *powSecret == "":
-		logger.Fatal(context.Background(), "-pow-secret is required")
+		logger.Fatal(ctx, "-pow-secret is required")
 	case *smtpAddr == "":
-		logger.Fatal(context.Background(), "-ml-smtp-addr is required")
+		logger.Fatal(ctx, "-ml-smtp-addr is required")
 	case *smtpAuthStr == "":
-		logger.Fatal(context.Background(), "-ml-smtp-auth is required")
+		logger.Fatal(ctx, "-ml-smtp-auth is required")
 	}
 
 	publicURL, err := url.Parse(*publicURLStr)
 	if err != nil {
-		loggerFatalErr(context.Background(), logger, "parsing -public-url", err)
+		loggerFatalErr(ctx, logger, "parsing -public-url", err)
 	}
 
 	var staticProxyURL *url.URL
 	if *staticProxyURLStr != "" {
 		var err error
 		if staticProxyURL, err = url.Parse(*staticProxyURLStr); err != nil {
-			loggerFatalErr(context.Background(), logger, "parsing -static-proxy-url", err)
+			loggerFatalErr(ctx, logger, "parsing -static-proxy-url", err)
 		}
 	}
 
 	powTargetUint, err := strconv.ParseUint(*powTargetStr, 0, 32)
 	if err != nil {
-		loggerFatalErr(context.Background(), logger, "parsing -pow-target", err)
+		loggerFatalErr(ctx, logger, "parsing -pow-target", err)
 	}
 	powTarget := uint32(powTargetUint)
 
 	smtpAuthParts := strings.SplitN(*smtpAuthStr, ":", 2)
 	if len(smtpAuthParts) < 2 {
-		logger.Fatal(context.Background(), "invalid -ml-smtp-auth")
+		logger.Fatal(ctx, "invalid -ml-smtp-auth")
 	}
 	smtpAuth := sasl.NewPlainClient("", smtpAuthParts[0], smtpAuthParts[1])
 	smtpSendAs := smtpAuthParts[0]
 
 	// initialization
 
-	ctx := mctx.Annotate(context.Background(),
+	ctx = mctx.Annotate(ctx,
 		"publicURL", publicURL.String(),
+		"listenProto", *listenProto,
 		"listenAddr", *listenAddr,
 		"dataDir", *dataDir,
 		"powTarget", fmt.Sprintf("%x", powTarget),
@@ -164,7 +178,32 @@ func main() {
 
 	logger.Info(ctx, "listening")
 
-	// TODO graceful shutdown
-	err = http.ListenAndServe(*listenAddr, mux)
-	loggerFatalErr(ctx, logger, "listening", err)
+	l, err := net.Listen(*listenProto, *listenAddr)
+	if err != nil {
+		loggerFatalErr(ctx, logger, "creating listen socket", err)
+	}
+
+	srv := &http.Server{Handler: mux}
+	go func() {
+		if err := srv.Serve(l); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			loggerFatalErr(ctx, logger, "serving http server", err)
+		}
+	}()
+
+	defer func() {
+		closeCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		defer cancel()
+
+		logger.Info(ctx, "beginning graceful shutdown of http server")
+
+		if err := srv.Shutdown(closeCtx); err != nil {
+			loggerFatalErr(ctx, logger, "gracefully shutting down http server", err)
+		}
+	}()
+
+	sigCh := make(chan os.Signal)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	<-sigCh
+
+	// let the defers begin
 }
