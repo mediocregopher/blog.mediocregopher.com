@@ -16,6 +16,7 @@ func mailingListSubscribeHandler(ml mailinglist.MailingList) http.Handler {
 			parts[1] == "" ||
 			len(email) >= 512 {
 			badRequest(rw, r, errors.New("invalid email"))
+			return
 		}
 
 		if err := ml.BeginSubscription(email); errors.Is(err, mailinglist.ErrAlreadyVerified) {
@@ -23,7 +24,10 @@ func mailingListSubscribeHandler(ml mailinglist.MailingList) http.Handler {
 			// verification email was sent.
 		} else if err != nil {
 			internalServerError(rw, r, err)
+			return
 		}
+
+		jsonResult(rw, r, struct{}{})
 	})
 }
 
@@ -44,6 +48,8 @@ func mailingListFinalizeHandler(ml mailinglist.MailingList) http.Handler {
 			internalServerError(rw, r, err)
 			return
 		}
+
+		jsonResult(rw, r, struct{}{})
 	})
 }
 
@@ -63,5 +69,7 @@ func mailingListUnsubscribeHandler(ml mailinglist.MailingList) http.Handler {
 			internalServerError(rw, r, err)
 			return
 		}
+
+		jsonResult(rw, r, struct{}{})
 	})
 }

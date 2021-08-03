@@ -6,7 +6,121 @@ nofollow: true
 
 Here's your options for receiving updates about new blog posts:
 
-## Option 1: RSS
+## Option 1: Email
+
+Email is by far my preferred option for notifying followers of new posts.
+
+The entire email list system for this blog, from storing subscriber email
+addresses to the email server which sends the notifications out, has been
+designed from scratch and is completely self-hosted in my living room.
+
+I solemnly swear that:
+
+* You will never receive an email from this blog except to notify of a new post.
+
+* Your email will never be provided or sold to anyone else for any reason.
+
+With all that said, if you'd like to receive an email everytime a new blog post
+is published then input your email below and smash that subscribe button!
+
+<style>
+
+#emailStatus.success {
+    color: green;
+}
+
+#emailStatus.fail {
+    color: red;
+}
+
+</style>
+
+<input type="email" placeholder="name@host.com" id="emailAddress" />
+<input class="button-primary" type="submit" value="Subscribe" id="emailSubscribe" />
+<span id="emailStatus"></span>
+
+<script>
+const emailAddress = document.getElementById("emailAddress");
+const emailSubscribe = document.getElementById("emailSubscribe");
+const emailSubscribeOrigValue = emailSubscribe.value;
+const emailStatus = document.getElementById("emailStatus");
+
+const solvePow = async (seedHex, target) => {
+
+    const worker = new Worker('/assets/solvePow.js');
+
+    const p = new Promise((resolve, reject) => {
+        worker.postMessage({seedHex, target});
+        worker.onmessage = resolve;
+    });
+
+    const solutionHex = (await p).data;
+    worker.terminate();
+
+    return solutionHex;
+}
+
+emailSubscribe.onclick = async () => {
+
+    emailSubscribe.disabled = true;
+    emailSubscribe.className = "";
+    emailSubscribe.value = "Please hold...";
+
+    await (async () => {
+
+        setErr = (errStr, retry) => {
+            emailStatus.className = "fail";
+            emailStatus.innerHTML = errStr
+            if (retry) emailStatus.innerHTML += "  (please try again)";
+        };
+
+        if (!window.isSecureContext) {
+            setErr("The browser environment is not secure.", false);
+            return;
+        }
+
+        const getPowReq = new Request('/api/pow/challenge');
+        const res = await fetch(getPowReq)
+            .then(response => response.json())
+
+        if (res.error) {
+            setErr(res.error, true);
+            return;
+        }
+
+        const powSol = await solvePow(res.seed, res.target);
+
+        const subscribeForm = new FormData();
+        subscribeForm.append('powSeed', res.seed);
+        subscribeForm.append('powSolution', powSol);
+        subscribeForm.append('email', emailAddress.value);
+
+        const subscribeReq = new Request('/api/mailinglist/subscribe', {
+            method: 'POST',
+            body: subscribeForm,
+        });
+
+        const subRes = await fetch(subscribeReq)
+            .then(response => response.json());
+
+        if (subRes.error) {
+            setErr(subRes.error, true);
+            return;
+        }
+
+        emailStatus.className = "success";
+        emailStatus.innerHTML = "Verification email sent (check your spam folder)";
+
+    })();
+
+    emailSubscribe.disabled = false;
+    emailSubscribe.className = "button-primary";
+    emailSubscribe.value = emailSubscribeOrigValue;
+};
+
+</script>
+
+## Option 2: RSS
 
 RSS is the classic way to follow any blog. It comes from a time before
 aggregators like reddit and twitter stole the show, when people felt capable to
@@ -31,14 +145,9 @@ recommendations:
   iPhone/iPad/Mac devices, so I'm told. Their homepage description makes a much
   better sales pitch for RSS than I ever could.
 
-## Option 2: Twitter
+## Option 3: Twitter
 
 New posts are automatically published to [my Twitter](https://twitter.com/{{
 site.twitter_username }}). Simply follow me there and pray the algorithm smiles
 upon my tweets enough to show them to you! :pray: :pray: :pray:
 
-## Option 3: Email?
-
-I tried setting up an RSS-to-Email list thing on Mailchimp but it doesn't seem
-to like my RSS feed. If anyone knows a better alternative please [email
-me.](mailto:mediocregopher@gmail.com)

@@ -37,7 +37,7 @@ in
             name = "mediocre-blog-static-dev";
             buildInputs = all_inputs;
             shellHook = ''
-                exec ${jekyll_env}/bin/jekyll serve -s ./src -d ./_site -w -I -D -H 0.0.0.0
+                exec ${jekyll_env}/bin/jekyll serve -s ./src -d ./_site -w -I -D -H 0.0.0.0 -P 4001
             '';
         };
 

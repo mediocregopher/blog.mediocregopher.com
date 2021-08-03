@@ -11,6 +11,7 @@ import (
 
 func newPowChallengeHandler(mgr pow.Manager) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
 		challenge := mgr.NewChallenge()
 
 		jsonResult(rw, r, struct {
@@ -25,6 +26,7 @@ func newPowChallengeHandler(mgr pow.Manager) http.Handler {
 
 func requirePowMiddleware(mgr pow.Manager, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
 		seedHex := r.PostFormValue("powSeed")
 		seed, err := hex.DecodeString(seedHex)
 		if err != nil || len(seed) == 0 {

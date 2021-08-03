@@ -141,7 +141,7 @@ type Challenge struct {
 // Errors which may be produced by a Manager.
 var (
 	ErrInvalidSolution = errors.New("invalid solution")
-	ErrExpiredSolution = errors.New("expired solution")
+	ErrExpiredSeed     = errors.New("expired seed")
 )
 
 // Manager is used to both produce proof-of-work challenges and check their
@@ -150,7 +150,7 @@ type Manager interface {
 	NewChallenge() Challenge
 
 	// Will produce ErrInvalidSolution if the solution is invalid, or
-	// ErrExpiredSolution if the solution has expired.
+	// ErrExpiredSeed if the seed has expired.
 	CheckSolution(seed, solution []byte) error
 }
 
@@ -193,6 +193,7 @@ type manager struct {
 // NewManager initializes and returns a Manager instance using the given
 // parameters.
 func NewManager(params ManagerParams) Manager {
+	params = params.withDefaults()
 	return &manager{
 		params: params,
 	}
@@ -252,8 +253,8 @@ func (m *manager) CheckSolution(seed, solution []byte) error {
 	if err != nil {
 		return fmt.Errorf("parsing challenge parameters from seed: %w", err)
 
-	} else if c.ExpiresAt <= m.params.Clock.Now().Unix() {
-		return ErrExpiredSolution
+	} else if now := m.params.Clock.Now().Unix(); c.ExpiresAt <= now {
+		return ErrExpiredSeed
 	}
 
 	ok := (SolutionChecker{}).Check(
