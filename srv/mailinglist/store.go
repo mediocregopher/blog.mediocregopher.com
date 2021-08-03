@@ -17,7 +17,7 @@ import (
 var (
 	// ErrNotFound is used to indicate an email could not be found in the
 	// database.
-	ErrNotFound = errors.New("no record for given email found")
+	ErrNotFound = errors.New("no record found")
 )
 
 // EmailIterator will iterate through a sequence of emails, returning the next

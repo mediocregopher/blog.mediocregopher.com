@@ -32,18 +32,24 @@ func mailingListSubscribeHandler(ml mailinglist.MailingList) http.Handler {
 }
 
 func mailingListFinalizeHandler(ml mailinglist.MailingList) http.Handler {
+	var errInvalidSubToken = errors.New("invalid subToken")
+
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		subToken := r.PostFormValue("subToken")
 		if l := len(subToken); l == 0 || l > 128 {
-			badRequest(rw, r, errors.New("invalid subToken"))
+			badRequest(rw, r, errInvalidSubToken)
 			return
 		}
 
 		err := ml.FinalizeSubscription(subToken)
-		if errors.Is(err, mailinglist.ErrNotFound) ||
-			errors.Is(err, mailinglist.ErrAlreadyVerified) {
-			badRequest(rw, r, err)
+
+		if errors.Is(err, mailinglist.ErrNotFound) {
+			badRequest(rw, r, errInvalidSubToken)
 			return
+
+		} else if errors.Is(err, mailinglist.ErrAlreadyVerified) {
+			// no problem
+
 		} else if err != nil {
 			internalServerError(rw, r, err)
 			return
@@ -54,17 +60,21 @@ func mailingListFinalizeHandler(ml mailinglist.MailingList) http.Handler {
 }
 
 func mailingListUnsubscribeHandler(ml mailinglist.MailingList) http.Handler {
+	var errInvalidUnsubToken = errors.New("invalid unsubToken")
+
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		unsubToken := r.PostFormValue("unsubToken")
 		if l := len(unsubToken); l == 0 || l > 128 {
-			badRequest(rw, r, errors.New("invalid unsubToken"))
+			badRequest(rw, r, errInvalidUnsubToken)
 			return
 		}
 
 		err := ml.Unsubscribe(unsubToken)
+
 		if errors.Is(err, mailinglist.ErrNotFound) {
-			badRequest(rw, r, err)
+			badRequest(rw, r, errInvalidUnsubToken)
 			return
+
 		} else if err != nil {
 			internalServerError(rw, r, err)
 			return

@@ -27,7 +27,7 @@ func main() {
 
 	logger := mlog.NewLogger(nil)
 
-	hostname := flag.String("hostname", "localhost:4000", "Hostname to advertise this server as")
+	publicURLStr := flag.String("public-url", "http://localhost:4000", "URL this service is accessible at")
 	listenAddr := flag.String("listen-addr", ":4000", "Address to listen for HTTP requests on")
 	dataDir := flag.String("data-dir", ".", "Directory to use for long term storage")
 
@@ -55,6 +55,11 @@ func main() {
 		logger.Fatal(context.Background(), "-ml-smtp-auth is required")
 	}
 
+	publicURL, err := url.Parse(*publicURLStr)
+	if err != nil {
+		loggerFatalErr(context.Background(), logger, "parsing -public-url", err)
+	}
+
 	var staticProxyURL *url.URL
 	if *staticProxyURLStr != "" {
 		var err error
@@ -79,7 +84,7 @@ func main() {
 	// initialization
 
 	ctx := mctx.Annotate(context.Background(),
-		"hostname", *hostname,
+		"publicURL", publicURL.String(),
 		"listenAddr", *listenAddr,
 		"dataDir", *dataDir,
 		"powTarget", fmt.Sprintf("%x", powTarget),
@@ -124,8 +129,8 @@ func main() {
 		Store:          mlStore,
 		Mailer:         mailer,
 		Clock:          clock,
-		FinalizeSubURL: *hostname + "/mailinglist/finalize.html",
-		UnsubURL:       *hostname + "/mailinglist/unsubscribe.html",
+		FinalizeSubURL: path.Join(publicURL.String(), "/mailinglist/finalize.html"),
+		UnsubURL:       path.Join(publicURL.String(), "/mailinglist/unsubscribe.html"),
 	})
 
 	mux := http.NewServeMux()
