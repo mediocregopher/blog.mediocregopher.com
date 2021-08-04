@@ -172,6 +172,12 @@ func main() {
 
 	apiHandler := logMiddleware(logger.WithNamespace("api"), apiMux)
 	apiHandler = annotateMiddleware(apiHandler)
+	apiHandler = addResponseHeaders(map[string]string{
+		"Cache-Control": "no-store, max-age=0",
+		"Pragma":        "no-cache",
+		"Expires":       "0",
+	}, apiHandler)
+
 	mux.Handle("/api/", http.StripPrefix("/api", apiHandler))
 
 	// run

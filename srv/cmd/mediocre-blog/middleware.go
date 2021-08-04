@@ -9,6 +9,15 @@ import (
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
 
+func addResponseHeaders(headers map[string]string, h http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		for k, v := range headers {
+			rw.Header().Set(k, v)
+		}
+		h.ServeHTTP(rw, r)
+	})
+}
+
 func annotateMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
