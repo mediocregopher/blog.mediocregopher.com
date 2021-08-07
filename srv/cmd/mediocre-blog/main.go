@@ -62,10 +62,6 @@ func main() {
 		logger.Fatal(ctx, "-static-dir or -static-proxy-url is required")
 	case *powSecret == "":
 		logger.Fatal(ctx, "-pow-secret is required")
-	case *smtpAddr == "":
-		logger.Fatal(ctx, "-ml-smtp-addr is required")
-	case *smtpAuthStr == "":
-		logger.Fatal(ctx, "-ml-smtp-auth is required")
 	}
 
 	publicURL, err := url.Parse(*publicURLStr)
@@ -87,14 +83,22 @@ func main() {
 	}
 	powTarget := uint32(powTargetUint)
 
-	smtpAuthParts := strings.SplitN(*smtpAuthStr, ":", 2)
-	if len(smtpAuthParts) < 2 {
-		logger.Fatal(ctx, "invalid -ml-smtp-auth")
-	}
-	smtpAuth := sasl.NewPlainClient("", smtpAuthParts[0], smtpAuthParts[1])
-	smtpSendAs := smtpAuthParts[0]
+	var mailerCfg mailinglist.MailerParams
 
-	// initialization
+	if *smtpAddr != "" {
+		mailerCfg.SMTPAddr = *smtpAddr
+		smtpAuthParts := strings.SplitN(*smtpAuthStr, ":", 2)
+		if len(smtpAuthParts) < 2 {
+			logger.Fatal(ctx, "invalid -ml-smtp-auth")
+		}
+		mailerCfg.SMTPAuth = sasl.NewPlainClient("", smtpAuthParts[0], smtpAuthParts[1])
+		mailerCfg.SendAs = smtpAuthParts[0]
+
+		ctx = mctx.Annotate(ctx,
+			"smtpAddr", mailerCfg.SMTPAddr,
+			"smtpSendAs", mailerCfg.SendAs,
+		)
+	}
 
 	ctx = mctx.Annotate(ctx,
 		"publicURL", publicURL.String(),
@@ -102,9 +106,9 @@ func main() {
 		"listenAddr", *listenAddr,
 		"dataDir", *dataDir,
 		"powTarget", fmt.Sprintf("%x", powTarget),
-		"smtpAddr", *smtpAddr,
-		"smtpSendAs", smtpSendAs,
 	)
+
+	// initialization
 
 	if *staticDir != "" {
 		ctx = mctx.Annotate(ctx, "staticDir", *staticDir)
@@ -127,11 +131,13 @@ func main() {
 	// sugar
 	requirePow := func(h http.Handler) http.Handler { return requirePowMiddleware(powMgr, h) }
 
-	mailer := mailinglist.NewMailer(mailinglist.MailerParams{
-		SMTPAddr: *smtpAddr,
-		SMTPAuth: smtpAuth,
-		SendAs:   smtpSendAs,
-	})
+	var mailer mailinglist.Mailer
+	if *smtpAddr == "" {
+		logger.Info(ctx, "-smtp-addr not given, using NullMailer")
+		mailer = mailinglist.NullMailer
+	} else {
+		mailer = mailinglist.NewMailer(mailerCfg)
+	}
 
 	mlStore, err := mailinglist.NewStore(path.Join(*dataDir, "mailinglist.sqlite3"))
 	if err != nil {

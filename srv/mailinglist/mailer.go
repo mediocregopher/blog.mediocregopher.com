@@ -10,6 +10,15 @@ type Mailer interface {
 	Send(to, subject, body string) error
 }
 
+// NullMailer acts as a Mailer but actually just does nothing.
+var NullMailer = nullMailer{}
+
+type nullMailer struct{}
+
+func (nullMailer) Send(to, subject, body string) error {
+	return nil
+}
+
 // MailerParams are used to initialize a new Mailer instance
 type MailerParams struct {
 	SMTPAddr string
