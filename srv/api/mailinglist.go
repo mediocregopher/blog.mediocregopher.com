@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 )
 
-func mailingListSubscribeHandler(ml mailinglist.MailingList) http.Handler {
+func (a *api) mailingListSubscribeHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		email := r.PostFormValue("email")
 		if parts := strings.Split(email, "@"); len(parts) != 2 ||
@@ -19,7 +19,9 @@ func mailingListSubscribeHandler(ml mailinglist.MailingList) http.Handler {
 			return
 		}
 
-		if err := ml.BeginSubscription(email); errors.Is(err, mailinglist.ErrAlreadyVerified) {
+		err := a.params.MailingList.BeginSubscription(email)
+
+		if errors.Is(err, mailinglist.ErrAlreadyVerified) {
 			// just eat the error, make it look to the user like the
 			// verification email was sent.
 		} else if err != nil {
@@ -31,7 +33,7 @@ func mailingListSubscribeHandler(ml mailinglist.MailingList) http.Handler {
 	})
 }
 
-func mailingListFinalizeHandler(ml mailinglist.MailingList) http.Handler {
+func (a *api) mailingListFinalizeHandler() http.Handler {
 	var errInvalidSubToken = errors.New("invalid subToken")
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
@@ -41,7 +43,7 @@ func mailingListFinalizeHandler(ml mailinglist.MailingList) http.Handler {
 			return
 		}
 
-		err := ml.FinalizeSubscription(subToken)
+		err := a.params.MailingList.FinalizeSubscription(subToken)
 
 		if errors.Is(err, mailinglist.ErrNotFound) {
 			badRequest(rw, r, errInvalidSubToken)
@@ -59,7 +61,7 @@ func mailingListFinalizeHandler(ml mailinglist.MailingList) http.Handler {
 	})
 }
 
-func mailingListUnsubscribeHandler(ml mailinglist.MailingList) http.Handler {
+func (a *api) mailingListUnsubscribeHandler() http.Handler {
 	var errInvalidUnsubToken = errors.New("invalid unsubToken")
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
@@ -69,7 +71,7 @@ func mailingListUnsubscribeHandler(ml mailinglist.MailingList) http.Handler {
 			return
 		}
 
-		err := ml.Unsubscribe(unsubToken)
+		err := a.params.MailingList.Unsubscribe(unsubToken)
 
 		if errors.Is(err, mailinglist.ErrNotFound) {
 			badRequest(rw, r, errInvalidUnsubToken)

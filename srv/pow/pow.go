@@ -3,6 +3,7 @@ package pow
 
 import (
 	"bytes"
+	"context"
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/rand"
@@ -11,8 +12,11 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"strconv"
 	"time"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
+	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/tilinna/clock"
 )
 
@@ -176,14 +180,42 @@ type ManagerParams struct {
 	ChallengeTimeout time.Duration
 }
 
-func (p ManagerParams) withDefaults() ManagerParams {
+func (p *ManagerParams) setDefaults() {
 	if p.Target == 0 {
 		p.Target = 0x00FFFFFF
 	}
 	if p.ChallengeTimeout == 0 {
 		p.ChallengeTimeout = 1 * time.Minute
 	}
-	return p
+}
+
+// SetupCfg implement the cfg.Cfger interface.
+func (p *ManagerParams) SetupCfg(cfg *cfg.Cfg) {
+	powTargetStr := cfg.String("pow-target", "0x0000FFFF", "Proof-of-work target, lower is more difficult")
+	powSecretStr := cfg.String("pow-secret", "", "Secret used to sign proof-of-work challenge seeds")
+
+	cfg.OnInit(func(ctx context.Context) error {
+		p.setDefaults()
+
+		if *powSecretStr == "" {
+			return errors.New("-pow-secret is required")
+		}
+
+		powTargetUint, err := strconv.ParseUint(*powTargetStr, 0, 32)
+		if err != nil {
+			return fmt.Errorf("parsing -pow-target: %w", err)
+		}
+
+		p.Target = uint32(powTargetUint)
+		p.Secret = []byte(*powSecretStr)
+
+		return nil
+	})
+}
+
+// Annotate implements mctx.Annotator interface.
+func (p *ManagerParams) Annotate(a mctx.Annotations) {
+	a["powTarget"] = fmt.Sprintf("%x", p.Target)
 }
 
 type manager struct {
@@ -193,7 +225,7 @@ type manager struct {
 // NewManager initializes and returns a Manager instance using the given
 // parameters.
 func NewManager(params ManagerParams) Manager {
-	params = params.withDefaults()
+	params.setDefaults()
 	return &manager{
 		params: params,
 	}

@@ -1,18 +1,16 @@
-package main
+package api
 
 import (
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"net/http"
-
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"
 )
 
-func newPowChallengeHandler(mgr pow.Manager) http.Handler {
+func (a *api) newPowChallengeHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		challenge := mgr.NewChallenge()
+		challenge := a.params.PowManager.NewChallenge()
 
 		jsonResult(rw, r, struct {
 			Seed   string `json:"seed"`
@@ -24,7 +22,7 @@ func newPowChallengeHandler(mgr pow.Manager) http.Handler {
 	})
 }
 
-func requirePowMiddleware(mgr pow.Manager, h http.Handler) http.Handler {
+func (a *api) requirePowMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		seedHex := r.PostFormValue("powSeed")
@@ -41,7 +39,9 @@ func requirePowMiddleware(mgr pow.Manager, h http.Handler) http.Handler {
 			return
 		}
 
-		if err := mgr.CheckSolution(seed, solution); err != nil {
+		err = a.params.PowManager.CheckSolution(seed, solution)
+
+		if err != nil {
 			badRequest(rw, r, fmt.Errorf("checking proof-of-work solution: %w", err))
 			return
 		}

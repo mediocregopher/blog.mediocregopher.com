@@ -1,8 +1,14 @@
 package mailinglist
 
 import (
+	"context"
+	"errors"
+	"strings"
+
 	"github.com/emersion/go-sasl"
 	"github.com/emersion/go-smtp"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
+	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 )
 
 // Mailer is used to deliver emails to arbitrary recipients.
@@ -28,6 +34,39 @@ type MailerParams struct {
 
 	// The sending email address to use for all emails being sent.
 	SendAs string
+}
+
+// SetupCfg implement the cfg.Cfger interface.
+func (m *MailerParams) SetupCfg(cfg *cfg.Cfg) {
+
+	cfg.StringVar(&m.SMTPAddr, "ml-smtp-addr", "", "Address of SMTP server to use for sending emails for the mailing list")
+	smtpAuthStr := cfg.String("ml-smtp-auth", "", "user:pass to use when authenticating with the mailing list SMTP server. The given user will also be used as the From address.")
+
+	cfg.OnInit(func(ctx context.Context) error {
+		if m.SMTPAddr == "" {
+			return nil
+		}
+
+		smtpAuthParts := strings.SplitN(*smtpAuthStr, ":", 2)
+		if len(smtpAuthParts) < 2 {
+			return errors.New("invalid -ml-smtp-auth")
+		}
+
+		m.SMTPAuth = sasl.NewPlainClient("", smtpAuthParts[0], smtpAuthParts[1])
+		m.SendAs = smtpAuthParts[0]
+
+		return nil
+	})
+}
+
+// Annotate implements mctx.Annotator interface.
+func (m *MailerParams) Annotate(a mctx.Annotations) {
+	if m.SMTPAddr == "" {
+		return
+	}
+
+	a["smtpAddr"] = m.SMTPAddr
+	a["smtpSendAs"] = m.SendAs
 }
 
 type mailer struct {

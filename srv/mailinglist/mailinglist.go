@@ -4,13 +4,17 @@ package mailinglist
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"html/template"
 	"io"
+	"net/url"
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
+	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/tilinna/clock"
 )
 
@@ -42,13 +46,28 @@ type Params struct {
 	Mailer Mailer
 	Clock  clock.Clock
 
-	// URL of the page which should be navigated to in order to finalize a
-	// subscription.
-	FinalizeSubURL string
+	// PublicURL is the base URL which site visitors can navigate to.
+	// MailingList will generate links based on this value.
+	PublicURL *url.URL
+}
 
-	// URL of the page which should be navigated to in order to remove a
-	// subscription.
-	UnsubURL string
+// SetupCfg implement the cfg.Cfger interface.
+func (p *Params) SetupCfg(cfg *cfg.Cfg) {
+	publicURLStr := cfg.String("public-url", "http://localhost:4000", "URL this service is accessible at")
+
+	cfg.OnInit(func(ctx context.Context) error {
+		var err error
+		if p.PublicURL, err = url.Parse(*publicURLStr); err != nil {
+			return fmt.Errorf("parsing -public-url: %w", err)
+		}
+
+		return nil
+	})
+}
+
+// Annotate implements mctx.Annotator interface.
+func (p *Params) Annotate(a mctx.Annotations) {
+	a["publicURL"] = p.PublicURL
 }
 
 // New initializes and returns a MailingList instance using the given Params.
@@ -105,7 +124,11 @@ func (m *mailingList) BeginSubscription(email string) error {
 	err = beginSubTpl.Execute(body, struct {
 		SubLink string
 	}{
-		SubLink: fmt.Sprintf("%s?subToken=%s", m.params.FinalizeSubURL, emailRecord.SubToken),
+		SubLink: fmt.Sprintf(
+			"%s/mailinglist/finalize.html?subToken=%s",
+			m.params.PublicURL.String(),
+			emailRecord.SubToken,
+		),
 	})
 
 	if err != nil {
@@ -217,7 +240,11 @@ func (m *mailingList) Publish(postTitle, postURL string) error {
 		}{
 			PostTitle: postTitle,
 			PostURL:   postURL,
-			UnsubURL:  fmt.Sprintf("%s?unsubToken=%s", m.params.UnsubURL, emailRecord.UnsubToken),
+			UnsubURL: fmt.Sprintf(
+				"%s/mailinglist/unsubscribe.html?unsubToken=%s",
+				m.params.PublicURL.String(),
+				emailRecord.UnsubToken,
+			),
 		})
 
 		if err != nil {
