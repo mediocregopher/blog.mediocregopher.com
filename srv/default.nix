@@ -1,11 +1,14 @@
 {pkgs, config, staticBuild}: rec {
 
-    opts = [
-        "-pow-secret=${config.powSecret}"
+    mailingListOpts = [
         "-ml-smtp-addr=${config.mlSMTPAddr}"
         "-ml-smtp-auth='${config.mlSMTPAuth}'"
         "-data-dir=${config.dataDir}"
         "-public-url=${config.publicURL}"
+    ];
+
+    opts = mailingListOpts ++ [
+        "-pow-secret=${config.powSecret}"
         "-listen-proto=${config.listenProto}"
         "-listen-addr=${config.listenAddr}"
     ] ++ (
@@ -30,9 +33,13 @@
         go run ./cmd/mediocre-blog/main.go ${toString opts}
     '';
 
+    runMailingListCLIScript = pkgs.writeScriptBin "run-mailinglist-cli" ''
+        go run ./cmd/mailinglist-cli/main.go ${toString mailingListOpts} $@
+    '';
+
     shell = pkgs.stdenv.mkDerivation {
         name = "mediocre-blog-srv-shell";
-        buildInputs = [ pkgs.go runScript ];
+        buildInputs = [ pkgs.go runScript runMailingListCLIScript ];
     };
 
 }

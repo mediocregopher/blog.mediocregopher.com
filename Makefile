@@ -12,6 +12,9 @@ install.prod:
 srv.shell:
 	nix-shell -A srv.shell --command 'cd srv; return'
 
+srv.shell.prod:
+	nix-shell -A srv.shell --arg baseConfig '(import ./prod.config.nix)' --command 'cd srv; return'
+
 static.shell:
 	nix-shell -A static.shell --command 'cd static; return'
 
