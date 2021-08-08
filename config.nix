@@ -1,10 +1,14 @@
 {
+    runDir = "/tmp/mediocre-blog/run";
+    dataDir = "/tmp/mediocre-blog/data";
+
     powSecret = "ssshhh";
     mlSMTPAddr = "";
     mlSMTPAuth = "";
-    dataDir = "/tmp/mediocre-blog-data";
     publicURL = "http://localhost:4000";
     listenProto = "tcp";
     listenAddr = ":4000";
-    redisListenPath = "/tmp/mediocre-blog-redis";
+
+    # If empty then a derived static directory is used
+    staticProxyURL = "http://127.0.0.1:4001";
 }
