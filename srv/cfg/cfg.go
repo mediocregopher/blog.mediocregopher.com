@@ -19,12 +19,14 @@ type Cfg struct {
 	*flag.FlagSet
 
 	hooks []func(ctx context.Context) error
+	args  []string
 }
 
 // New initializes and returns a new instance of *Cfg.
 func New() *Cfg {
 	return &Cfg{
 		FlagSet: flag.NewFlagSet("", flag.ExitOnError),
+		args:    os.Args[1:],
 	}
 }
 
@@ -38,7 +40,7 @@ func (c *Cfg) OnInit(cb func(context.Context) error) {
 // called. If one returns an error that error is returned and no further hooks
 // are run.
 func (c *Cfg) Init(ctx context.Context) error {
-	if err := c.FlagSet.Parse(os.Args[1:]); err != nil {
+	if err := c.FlagSet.Parse(c.args); err != nil {
 		return err
 	}
 
@@ -49,4 +51,26 @@ func (c *Cfg) Init(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// SubCmd should be called _after_ Init. Init will have consumed all arguments
+// up until the first non-flag argument. This non-flag argument is a
+// sub-command, and is returned by this method. This method also resets Cfg's
+// internal state so that new options can be added to it.
+//
+// If there is no sub-command following the initial set of flags then this will
+// return empty string.
+func (c *Cfg) SubCmd() string {
+	c.args = c.FlagSet.Args()
+	if len(c.args) == 0 {
+		return ""
+	}
+
+	subCmd := c.args[0]
+
+	c.FlagSet = flag.NewFlagSet(subCmd, flag.ExitOnError)
+	c.hooks = nil
+	c.args = c.args[1:]
+
+	return subCmd
 }

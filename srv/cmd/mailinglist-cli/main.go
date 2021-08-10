@@ -68,14 +68,10 @@ func main() {
 	ml := mailinglist.New(mlParams)
 	_ = ml
 
-	args := cfg.Args()
-	if len(args) == 0 {
-		args = append(args, "")
-	}
+	subCmd := cfg.SubCmd()
+	ctx = mctx.Annotate(ctx, "subCmd", subCmd)
 
-	action, args := args[0], args[1:]
-
-	switch action {
+	switch subCmd {
 	case "list":
 		for it := mlStore.GetAll(); ; {
 			email, err := it()
@@ -94,7 +90,25 @@ func main() {
 			logger.Info(ctx, "next")
 		}
 
+	case "publish":
+
+		title := cfg.String("title", "", "Title of the post which was published")
+		url := cfg.String("url", "", "URL of the post which was published")
+		cfg.Init(ctx)
+
+		if *title == "" {
+			logger.Fatal(ctx, "-title is required")
+
+		} else if *url == "" {
+			logger.Fatal(ctx, "-url is required")
+		}
+
+		err := ml.Publish(*title, *url)
+		if err != nil {
+			loggerFatalErr(ctx, logger, "publishing", err)
+		}
+
 	default:
-		logger.Fatal(ctx, "invalid action")
+		logger.Fatal(ctx, "invalid sub-command, must be list|publish")
 	}
 }
