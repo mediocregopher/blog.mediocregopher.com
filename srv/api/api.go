@@ -12,6 +12,7 @@ import (
 	"os"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
@@ -24,6 +25,7 @@ type Params struct {
 	Logger      *mlog.Logger
 	PowManager  pow.Manager
 	MailingList mailinglist.MailingList
+	GlobalRoom  chat.Room
 
 	// ListenProto and ListenAddr are passed into net.Listen to create the
 	// API's listener. Both "tcp" and "unix" protocols are explicitly

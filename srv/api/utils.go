@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
@@ -57,4 +58,11 @@ func internalServerError(rw http.ResponseWriter, r *http.Request, err error) {
 	}{
 		Error: "internal server error",
 	})
+}
+
+func strToInt(str string, defaultVal int) (int, error) {
+	if str == "" {
+		return defaultVal, nil
+	}
+	return strconv.Atoi(str)
 }
