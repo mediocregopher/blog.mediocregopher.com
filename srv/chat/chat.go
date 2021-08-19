@@ -29,17 +29,6 @@ var (
 	errInvalidMessageID = ErrInvalidArg{Err: errors.New("invalid Message ID")}
 )
 
-// UserID uniquely identifies an individual user who has posted a message in a
-// Room.
-type UserID struct {
-
-	// Name will be the user's chosen display name.
-	Name string `json:"name"`
-
-	// Hash will be a hex string generated from a secret only the user knows.
-	Hash string `json:"id"`
-}
-
 // Message describes a message which has been posted to a Room.
 type Message struct {
 	ID     string `json:"id"`

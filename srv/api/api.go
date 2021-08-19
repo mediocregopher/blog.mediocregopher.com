@@ -22,10 +22,11 @@ import (
 // Params are used to instantiate a new API instance. All fields are required
 // unless otherwise noted.
 type Params struct {
-	Logger      *mlog.Logger
-	PowManager  pow.Manager
-	MailingList mailinglist.MailingList
-	GlobalRoom  chat.Room
+	Logger           *mlog.Logger
+	PowManager       pow.Manager
+	MailingList      mailinglist.MailingList
+	GlobalRoom       chat.Room
+	UserIDCalculator chat.UserIDCalculator
 
 	// ListenProto and ListenAddr are passed into net.Listen to create the
 	// API's listener. Both "tcp" and "unix" protocols are explicitly
