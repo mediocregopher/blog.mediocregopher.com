@@ -26,10 +26,12 @@
 
     bin = pkgs.writeScript "mediocre-blog-srv-bin" ''
         #!/bin/sh
+        mkdir -p "${config.dataDir}"
         exec ${build}/bin/mediocre-blog ${toString opts}
     '';
 
     runScript = pkgs.writeScriptBin "run-mediocre-blog" ''
+        mkdir -p "${config.dataDir}"
         go run ./cmd/mediocre-blog/main.go ${toString opts}
     '';
 
