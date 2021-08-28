@@ -21,7 +21,10 @@
         pname = "mediocre-blog-srv";
         version = "dev";
         src = ./.;
-        vendorSha256 = "08wv94yv2wmlxzmanw551gixc8v8nl6zq2m721ig9nl3r540x46f";
+        vendorSha256 = "0c6j989q6r2q967gx90cl4l8skflkx2npmxd3f5l16bwj2ldw11j";
+
+        # disable tests
+        checkPhase = '''';
     };
 
     bin = pkgs.writeScript "mediocre-blog-srv-bin" ''
@@ -36,7 +39,7 @@
     '';
 
     runMailingListCLIScript = pkgs.writeScriptBin "run-mailinglist-cli" ''
-        go run ./cmd/mailinglist-cli/main.go ${toString mailingListOpts} $@
+        go run ./cmd/mailinglist-cli/main.go ${toString mailingListOpts} "$@"
     '';
 
     shell = pkgs.stdenv.mkDerivation {
