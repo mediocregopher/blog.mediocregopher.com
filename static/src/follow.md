@@ -4,6 +4,8 @@ title: "Follow the Blog"
 nofollow: true
 ---
 
+<script async type="module" src="/assets/api.js"></script>
+
 Here's your options for receiving updates about new blog posts:
 
 ## Option 1: Email
@@ -40,82 +42,45 @@ is published then input your email below and smash that subscribe button!
 <span id="emailStatus"></span>
 
 <script>
+
 const emailAddress = document.getElementById("emailAddress");
 const emailSubscribe = document.getElementById("emailSubscribe");
 const emailSubscribeOrigValue = emailSubscribe.value;
 const emailStatus = document.getElementById("emailStatus");
 
-const solvePow = async (seedHex, target) => {
-
-    const worker = new Worker('/assets/solvePow.js');
-
-    const p = new Promise((resolve, reject) => {
-        worker.postMessage({seedHex, target});
-        worker.onmessage = resolve;
-    });
-
-    const solutionHex = (await p).data;
-    worker.terminate();
-
-    return solutionHex;
-}
-
 emailSubscribe.onclick = async () => {
+
+    const api = await import("/assets/api.js");
 
     emailSubscribe.disabled = true;
     emailSubscribe.className = "";
     emailSubscribe.value = "Please hold...";
+    emailStatus.innerHTML = '';
 
-    await (async () => {
-
-        setErr = (errStr, retry) => {
-            emailStatus.className = "fail";
-            emailStatus.innerHTML = errStr
-            if (retry) emailStatus.innerHTML += "  (please try again)";
-        };
+    try {
 
         if (!window.isSecureContext) {
-            setErr("The browser environment is not secure.", false);
-            return;
+            throw "The browser environment is not secure.";
         }
 
-        const getPowReq = new Request('/api/pow/challenge');
-        const res = await fetch(getPowReq)
-            .then(response => response.json())
-
-        if (res.error) {
-            setErr(res.error, true);
-            return;
-        }
-
-        const powSol = await solvePow(res.seed, res.target);
-
-        const subscribeForm = new FormData();
-        subscribeForm.append('powSeed', res.seed);
-        subscribeForm.append('powSolution', powSol);
-        subscribeForm.append('email', emailAddress.value);
-
-        const subscribeReq = new Request('/api/mailinglist/subscribe', {
-            method: 'POST',
-            body: subscribeForm,
+        await api.call('POST', '/api/mailinglist/subscribe', {
+            body: { email: emailAddress.value },
+            requiresPow: true,
         });
-
-        const subRes = await fetch(subscribeReq)
-            .then(response => response.json());
-
-        if (subRes.error) {
-            setErr(subRes.error, true);
-            return;
-        }
 
         emailStatus.className = "success";
         emailStatus.innerHTML = "Verification email sent (check your spam folder)";
 
-    })();
+    } catch (e) {
+        emailStatus.className = "fail";
+        emailStatus.innerHTML = e;
 
-    emailSubscribe.disabled = false;
-    emailSubscribe.className = "button-primary";
-    emailSubscribe.value = emailSubscribeOrigValue;
+    } finally {
+        emailSubscribe.disabled = false;
+        emailSubscribe.className = "button-primary";
+        emailSubscribe.value = emailSubscribeOrigValue;
+    }
+
 };
 
 </script>
