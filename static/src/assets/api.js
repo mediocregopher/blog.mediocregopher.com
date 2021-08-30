@@ -1,3 +1,4 @@
+import * as utils from "/assets/utils.js";
 
 const doFetch = async (req) => {
   let res, jsonRes;
@@ -48,7 +49,15 @@ const solvePow = async () => {
 const call = async (method, route, opts = {}) => {
   const { body = {}, requiresPow = false } = opts;
 
-  const reqOpts = { method };
+  if (!utils.cookies["csrf_token"]) 
+    throw "csrf_token cookie not set, can't make api call";
+
+  const reqOpts = {
+    method,
+    headers: {
+      "X-CSRF-Token": utils.cookies["csrf_token"],
+    },
+  };
 
   if (requiresPow) {
     const {seed, solution} = await solvePow();
@@ -57,7 +66,6 @@ const call = async (method, route, opts = {}) => {
   }
 
   if (Object.keys(body).length > 0) {
-
     const form = new FormData();
     for (const key in body) form.append(key, body[key]);
 

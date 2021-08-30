@@ -142,6 +142,8 @@ func (a *api) handler() http.Handler {
 		staticHandler = httputil.NewSingleHostReverseProxy(a.params.StaticProxy)
 	}
 
+	staticHandler = setCSRFMiddleware(staticHandler)
+
 	// sugar
 	requirePow := func(h http.Handler) http.Handler {
 		return a.requirePowMiddleware(h)
@@ -163,7 +165,9 @@ func (a *api) handler() http.Handler {
 	apiMux.Handle("/mailinglist/finalize", a.mailingListFinalizeHandler())
 	apiMux.Handle("/mailinglist/unsubscribe", a.mailingListUnsubscribeHandler())
 
-	apiHandler := logMiddleware(a.params.Logger, apiMux)
+	var apiHandler http.Handler = apiMux
+	apiHandler = checkCSRFMiddleware(apiHandler)
+	apiHandler = logMiddleware(a.params.Logger, apiHandler)
 	apiHandler = annotateMiddleware(apiHandler)
 	apiHandler = addResponseHeaders(map[string]string{
 		"Cache-Control": "no-store, max-age=0",

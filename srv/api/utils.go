@@ -2,7 +2,11 @@ package api
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -65,4 +69,23 @@ func strToInt(str string, defaultVal int) (int, error) {
 		return defaultVal, nil
 	}
 	return strconv.Atoi(str)
+}
+
+func getCookie(r *http.Request, cookieName, defaultVal string) (string, error) {
+	c, err := r.Cookie(cookieName)
+	if errors.Is(err, http.ErrNoCookie) {
+		return defaultVal, nil
+	} else if err != nil {
+		return "", fmt.Errorf("reading cookie %q: %w", cookieName, err)
+	}
+
+	return c.Value, nil
+}
+
+func randStr(numBytesEntropy int) string {
+	b := make([]byte, numBytesEntropy)
+	if _, err := rand.Read(b); err != nil {
+		panic(err)
+	}
+	return hex.EncodeToString(b)
 }
