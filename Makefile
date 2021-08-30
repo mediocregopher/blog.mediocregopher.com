@@ -1,4 +1,3 @@
-
 all:
 	nix-build -A entrypoint --arg baseConfig '(import ./config.nix) // { staticProxyURL = ""; }'
 

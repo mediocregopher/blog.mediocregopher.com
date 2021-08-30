@@ -74,8 +74,8 @@ func main() {
 
 	var mailer mailinglist.Mailer
 	if mailerParams.SMTPAddr == "" {
-		logger.Info(ctx, "-smtp-addr not given, using NullMailer")
-		mailer = mailinglist.NullMailer
+		logger.Info(ctx, "-smtp-addr not given, using a fake Mailer")
+		mailer = mailinglist.NewLogMailer(logger.WithNamespace("fake-mailer"))
 	} else {
 		mailer = mailinglist.NewMailer(mailerParams)
 	}

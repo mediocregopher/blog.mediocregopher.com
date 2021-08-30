@@ -9,11 +9,31 @@ import (
 	"github.com/emersion/go-smtp"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
+	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
 
 // Mailer is used to deliver emails to arbitrary recipients.
 type Mailer interface {
 	Send(to, subject, body string) error
+}
+
+type logMailer struct {
+	logger *mlog.Logger
+}
+
+// NewLogMailer returns a Mailer instance which will not actually send any
+// emails, it will only log to the given Logger when Send is called.
+func NewLogMailer(logger *mlog.Logger) Mailer {
+	return &logMailer{logger: logger}
+}
+
+func (l *logMailer) Send(to, subject, body string) error {
+	ctx := mctx.Annotate(context.Background(),
+		"to", to,
+		"subject", subject,
+	)
+	l.logger.Info(ctx, "would have sent email")
+	return nil
 }
 
 // NullMailer acts as a Mailer but actually just does nothing.
