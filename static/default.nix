@@ -13,7 +13,6 @@
         gemdir = ./.;
     };
 
-
     build = pkgs.stdenv.mkDerivation {
         name = "mediocre-blog-static";
         src = ./src;

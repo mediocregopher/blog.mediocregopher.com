@@ -12,7 +12,7 @@
         "-listen-proto=${config.listenProto}"
         "-listen-addr=${config.listenAddr}"
         "-redis-proto=unix"
-        "-redis-addr=${config.runDir}/redis"
+        "-redis-addr=${config.redisListenPath}"
     ] ++ (
         if config.staticProxyURL == ""
         then [ "-static-dir=${staticBuild}" ]

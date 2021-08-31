@@ -1,8 +1,20 @@
+SKIP_SERVICES = []
+
 all:
-	nix-build -A entrypoint --arg baseConfig '(import ./config.nix) // { staticProxyURL = ""; }'
+	nix-build -A entrypoint \
+		--arg baseConfig '(import ./config.nix)' \
+		--arg baseSkipServices '${SKIP_SERVICES}'
+
+run: all
+	./result
 
 all.prod:
-	nix-build -A entrypoint --arg baseConfig '(import ./prod.config.nix)'
+	nix-build -A entrypoint \
+		--arg baseConfig '(import ./prod.config.nix)' \
+		--arg baseSkipServices '${SKIP_SERVICES}'
+
+run.prod: all.prod
+	./result
 
 install.prod:
 	nix-build -A install --arg baseConfig '(import ./prod.config.nix)'

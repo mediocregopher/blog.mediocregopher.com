@@ -7,12 +7,19 @@
     }) {},
 
     baseConfig ? import ./config.nix,
+    baseSkipServices ? [],
 
 }: rec {
 
     config = baseConfig // {
         redisListenPath = "${config.runDir}/redis";
     };
+
+    skipServices = baseSkipServices ++ (
+        if baseConfig.staticProxyURL == ""
+        then [ "static" ]
+        else []
+    );
 
     static = (import ./static) { inherit pkgs; };
 
@@ -38,18 +45,35 @@
         exec ${pkgs.redis}/bin/redis-server ${redisCfg}
     '';
 
+    srvCircusCfg = ''
+        [watcher:srv]
+        cmd = ${srv.bin}
+        numprocesses = 1
+    '';
+
+    redisCircusCfg = ''
+        [watcher:redis]
+        cmd = ${redisBin}
+        numprocesses = 1
+    '';
+
+    staticCircusCfg = ''
+        [watcher:static]
+        cmd = ${static.serve}/bin/static-serve
+        numprocesses = 1
+        working_dir = ./static
+    '';
+
     circusCfg = pkgs.writeText "mediocre-blog-circusCfg" ''
         [circus]
         endpoint = tcp://127.0.0.1:0
         pubsub_endpoint = tcp://127.0.0.1:0
 
-        [watcher:srv]
-        cmd = ${srv.bin}
-        numprocesses = 1
+        ${if (!builtins.elem "srv" skipServices) then srvCircusCfg else ""}
 
-        [watcher:redis]
-        cmd = ${redisBin}
-        numprocesses = 1
+        ${if (!builtins.elem "redis" skipServices) then redisCircusCfg else ""}
+
+        ${if (!builtins.elem "static" skipServices) then staticCircusCfg else ""}
     '';
 
     entrypoint = pkgs.writeScript "mediocre-blog-entrypoint" ''
