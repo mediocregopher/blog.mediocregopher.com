@@ -38,8 +38,8 @@ type UserIDCalculator struct {
 }
 
 // NewUserIDCalculator returns a UserIDCalculator with sane defaults.
-func NewUserIDCalculator(secret []byte) UserIDCalculator {
-	return UserIDCalculator{
+func NewUserIDCalculator(secret []byte) *UserIDCalculator {
+	return &UserIDCalculator{
 		Secret:     secret,
 		TimeCost:   15,
 		MemoryCost: 128 * 1024,
@@ -50,7 +50,7 @@ func NewUserIDCalculator(secret []byte) UserIDCalculator {
 }
 
 // Calculate accepts a name and password and returns the calculated UserID.
-func (c UserIDCalculator) Calculate(name, password string) UserID {
+func (c *UserIDCalculator) Calculate(name, password string) UserID {
 
 	input := fmt.Sprintf("%q:%q", name, password)
 

@@ -63,7 +63,7 @@ emailSubscribe.onclick = async () => {
             throw "The browser environment is not secure.";
         }
 
-        await api.call('POST', '/api/mailinglist/subscribe', {
+        await api.call('/api/mailinglist/subscribe', {
             body: { email: emailAddress.value },
             requiresPow: true,
         });

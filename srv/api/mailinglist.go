@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutils"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 )
 
@@ -15,7 +16,7 @@ func (a *api) mailingListSubscribeHandler() http.Handler {
 			parts[0] == "" ||
 			parts[1] == "" ||
 			len(email) >= 512 {
-			badRequest(rw, r, errors.New("invalid email"))
+			apiutils.BadRequest(rw, r, errors.New("invalid email"))
 			return
 		}
 
@@ -25,11 +26,11 @@ func (a *api) mailingListSubscribeHandler() http.Handler {
 			// just eat the error, make it look to the user like the
 			// verification email was sent.
 		} else if err != nil {
-			internalServerError(rw, r, err)
+			apiutils.InternalServerError(rw, r, err)
 			return
 		}
 
-		jsonResult(rw, r, struct{}{})
+		apiutils.JSONResult(rw, r, struct{}{})
 	})
 }
 
@@ -39,25 +40,25 @@ func (a *api) mailingListFinalizeHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		subToken := r.PostFormValue("subToken")
 		if l := len(subToken); l == 0 || l > 128 {
-			badRequest(rw, r, errInvalidSubToken)
+			apiutils.BadRequest(rw, r, errInvalidSubToken)
 			return
 		}
 
 		err := a.params.MailingList.FinalizeSubscription(subToken)
 
 		if errors.Is(err, mailinglist.ErrNotFound) {
-			badRequest(rw, r, errInvalidSubToken)
+			apiutils.BadRequest(rw, r, errInvalidSubToken)
 			return
 
 		} else if errors.Is(err, mailinglist.ErrAlreadyVerified) {
 			// no problem
 
 		} else if err != nil {
-			internalServerError(rw, r, err)
+			apiutils.InternalServerError(rw, r, err)
 			return
 		}
 
-		jsonResult(rw, r, struct{}{})
+		apiutils.JSONResult(rw, r, struct{}{})
 	})
 }
 
@@ -67,21 +68,21 @@ func (a *api) mailingListUnsubscribeHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		unsubToken := r.PostFormValue("unsubToken")
 		if l := len(unsubToken); l == 0 || l > 128 {
-			badRequest(rw, r, errInvalidUnsubToken)
+			apiutils.BadRequest(rw, r, errInvalidUnsubToken)
 			return
 		}
 
 		err := a.params.MailingList.Unsubscribe(unsubToken)
 
 		if errors.Is(err, mailinglist.ErrNotFound) {
-			badRequest(rw, r, errInvalidUnsubToken)
+			apiutils.BadRequest(rw, r, errInvalidUnsubToken)
 			return
 
 		} else if err != nil {
-			internalServerError(rw, r, err)
+			apiutils.InternalServerError(rw, r, err)
 			return
 		}
 
-		jsonResult(rw, r, struct{}{})
+		apiutils.JSONResult(rw, r, struct{}{})
 	})
 }

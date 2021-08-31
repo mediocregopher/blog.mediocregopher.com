@@ -11,10 +11,12 @@ import (
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/api"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
+	"github.com/mediocregopher/radix/v4"
 	"github.com/tilinna/clock"
 )
 
@@ -45,6 +47,13 @@ func main() {
 	apiParams.SetupCfg(cfg)
 	ctx = mctx.WithAnnotator(ctx, &apiParams)
 
+	redisProto := cfg.String("redis-proto", "tcp", "Network protocol to connect to redis over, can be tcp or unix")
+	redisAddr := cfg.String("redis-addr", "127.0.0.1:6379", "Address redis is expected to listen on")
+	redisPoolSize := cfg.Int("redis-pool-size", 5, "Number of connections in the redis pool to keep")
+
+	chatGlobalRoomMaxMsgs := cfg.Int("chat-global-room-max-messages", 1000, "Maximum number of messages the global chat room can retain")
+	chatUserIDCalcSecret := cfg.String("chat-user-id-calc-secret", "", "Secret to use when calculating user ids")
+
 	// initialization
 	err := cfg.Init(ctx)
 
@@ -60,6 +69,10 @@ func main() {
 
 	ctx = mctx.Annotate(ctx,
 		"dataDir", *dataDir,
+		"redisProto", *redisProto,
+		"redisAddr", *redisAddr,
+		"redisPoolSize", *redisPoolSize,
+		"chatGlobalRoomMaxMsgs", *chatGlobalRoomMaxMsgs,
 	)
 
 	clock := clock.Realtime()
@@ -92,9 +105,35 @@ func main() {
 
 	ml := mailinglist.New(mlParams)
 
+	redis, err := (radix.PoolConfig{
+		Size: *redisPoolSize,
+	}).New(
+		ctx, *redisProto, *redisAddr,
+	)
+
+	if err != nil {
+		loggerFatalErr(ctx, logger, "initializing redis pool", err)
+	}
+	defer redis.Close()
+
+	chatGlobalRoom, err := chat.NewRoom(ctx, chat.RoomParams{
+		Logger:      logger.WithNamespace("global-chat-room"),
+		Redis:       redis,
+		ID:          "global",
+		MaxMessages: *chatGlobalRoomMaxMsgs,
+	})
+	if err != nil {
+		loggerFatalErr(ctx, logger, "initializing global chat room", err)
+	}
+	defer chatGlobalRoom.Close()
+
+	chatUserIDCalc := chat.NewUserIDCalculator([]byte(*chatUserIDCalcSecret))
+
 	apiParams.Logger = logger.WithNamespace("api")
 	apiParams.PowManager = powMgr
 	apiParams.MailingList = ml
+	apiParams.GlobalRoom = chatGlobalRoom
+	apiParams.UserIDCalculator = chatUserIDCalc
 
 	logger.Info(ctx, "listening")
 	a, err := api.New(apiParams)

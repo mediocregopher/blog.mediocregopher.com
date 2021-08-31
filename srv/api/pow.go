@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutils"
 )
 
 func (a *api) newPowChallengeHandler() http.Handler {
@@ -12,7 +14,7 @@ func (a *api) newPowChallengeHandler() http.Handler {
 
 		challenge := a.params.PowManager.NewChallenge()
 
-		jsonResult(rw, r, struct {
+		apiutils.JSONResult(rw, r, struct {
 			Seed   string `json:"seed"`
 			Target uint32 `json:"target"`
 		}{
@@ -28,21 +30,21 @@ func (a *api) requirePowMiddleware(h http.Handler) http.Handler {
 		seedHex := r.PostFormValue("powSeed")
 		seed, err := hex.DecodeString(seedHex)
 		if err != nil || len(seed) == 0 {
-			badRequest(rw, r, errors.New("invalid powSeed"))
+			apiutils.BadRequest(rw, r, errors.New("invalid powSeed"))
 			return
 		}
 
 		solutionHex := r.PostFormValue("powSolution")
 		solution, err := hex.DecodeString(solutionHex)
 		if err != nil || len(seed) == 0 {
-			badRequest(rw, r, errors.New("invalid powSolution"))
+			apiutils.BadRequest(rw, r, errors.New("invalid powSolution"))
 			return
 		}
 
 		err = a.params.PowManager.CheckSolution(seed, solution)
 
 		if err != nil {
-			badRequest(rw, r, fmt.Errorf("checking proof-of-work solution: %w", err))
+			apiutils.BadRequest(rw, r, fmt.Errorf("checking proof-of-work solution: %w", err))
 			return
 		}
 

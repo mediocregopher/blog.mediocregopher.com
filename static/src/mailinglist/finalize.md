@@ -28,7 +28,7 @@ nofollow: true
 
         const api = await import("/assets/api.js");
 
-        await api.call('POST', '/api/mailinglist/finalize', {
+        await api.call('/api/mailinglist/finalize', {
             body: { subToken },
         });
 

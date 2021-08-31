@@ -27,7 +27,7 @@ nofollow: true
 
         const api = await import("/assets/api.js");
 
-        await api.call('POST', '/api/mailinglist/unsubscribe', {
+        await api.call('/api/mailinglist/unsubscribe', {
             body: { unsubToken },
         });
 

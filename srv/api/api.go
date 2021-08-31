@@ -26,7 +26,7 @@ type Params struct {
 	PowManager       pow.Manager
 	MailingList      mailinglist.MailingList
 	GlobalRoom       chat.Room
-	UserIDCalculator chat.UserIDCalculator
+	UserIDCalculator *chat.UserIDCalculator
 
 	// ListenProto and ListenAddr are passed into net.Listen to create the
 	// API's listener. Both "tcp" and "unix" protocols are explicitly
@@ -165,7 +165,14 @@ func (a *api) handler() http.Handler {
 	apiMux.Handle("/mailinglist/finalize", a.mailingListFinalizeHandler())
 	apiMux.Handle("/mailinglist/unsubscribe", a.mailingListUnsubscribeHandler())
 
+	apiMux.Handle("/chat/global/", http.StripPrefix("/chat/global", newChatHandler(
+		a.params.GlobalRoom,
+		a.params.UserIDCalculator,
+		a.requirePowMiddleware,
+	)))
+
 	var apiHandler http.Handler = apiMux
+	apiHandler = allowedMethod("POST", apiHandler)
 	apiHandler = checkCSRFMiddleware(apiHandler)
 	apiHandler = logMiddleware(a.params.Logger, apiHandler)
 	apiHandler = annotateMiddleware(apiHandler)

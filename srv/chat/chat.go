@@ -84,7 +84,7 @@ type HistoryOpts struct {
 }
 
 func (o HistoryOpts) sanitize() (HistoryOpts, error) {
-	if o.Limit < 0 || o.Limit > 100 {
+	if o.Limit <= 0 || o.Limit > 100 {
 		o.Limit = 100
 	}
 

@@ -7,32 +7,57 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutils"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 )
 
-func (a *api) chatHistoryHandler() http.Handler {
+type chatHandler struct {
+	*http.ServeMux
+
+	room       chat.Room
+	userIDCalc *chat.UserIDCalculator
+}
+
+func newChatHandler(
+	room chat.Room, userIDCalc *chat.UserIDCalculator,
+	requirePowMiddleware func(http.Handler) http.Handler,
+) http.Handler {
+	c := &chatHandler{
+		ServeMux:   http.NewServeMux(),
+		room:       room,
+		userIDCalc: userIDCalc,
+	}
+
+	c.Handle("/history", c.historyHandler())
+	c.Handle("/user-id", requirePowMiddleware(c.userIDHandler()))
+	c.Handle("/append", requirePowMiddleware(c.appendHandler()))
+
+	return c
+}
+
+func (c *chatHandler) historyHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		limit, err := strToInt(r.FormValue("limit"), 0)
+		limit, err := apiutils.StrToInt(r.PostFormValue("limit"), 0)
 		if err != nil {
-			badRequest(rw, r, fmt.Errorf("invalid limit parameter: %w", err))
+			apiutils.BadRequest(rw, r, fmt.Errorf("invalid limit parameter: %w", err))
 			return
 		}
 
-		cursor := r.FormValue("cursor")
+		cursor := r.PostFormValue("cursor")
 
-		cursor, msgs, err := a.params.GlobalRoom.History(r.Context(), chat.HistoryOpts{
+		cursor, msgs, err := c.room.History(r.Context(), chat.HistoryOpts{
 			Limit:  limit,
 			Cursor: cursor,
 		})
 
 		if argErr := (chat.ErrInvalidArg{}); errors.As(err, &argErr) {
-			badRequest(rw, r, argErr.Err)
+			apiutils.BadRequest(rw, r, argErr.Err)
 			return
 		} else if err != nil {
-			internalServerError(rw, r, err)
+			apiutils.InternalServerError(rw, r, err)
 		}
 
-		jsonResult(rw, r, struct {
+		apiutils.JSONResult(rw, r, struct {
 			Cursor   string         `json:"cursor"`
 			Messages []chat.Message `json:"messages"`
 		}{
@@ -42,7 +67,7 @@ func (a *api) chatHistoryHandler() http.Handler {
 	})
 }
 
-func (a *api) getUserID(r *http.Request) (chat.UserID, error) {
+func (c *chatHandler) userID(r *http.Request) (chat.UserID, error) {
 	name := r.PostFormValue("name")
 	if l := len(name); l == 0 {
 		return chat.UserID{}, errors.New("name is required")
@@ -68,21 +93,58 @@ func (a *api) getUserID(r *http.Request) (chat.UserID, error) {
 		return chat.UserID{}, errors.New("password too long")
 	}
 
-	return a.params.UserIDCalculator.Calculate(name, password), nil
+	return c.userIDCalc.Calculate(name, password), nil
 }
 
-func (a *api) getUserIDHandler() http.Handler {
+func (c *chatHandler) userIDHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		userID, err := a.getUserID(r)
+		userID, err := c.userID(r)
 		if err != nil {
-			badRequest(rw, r, err)
+			apiutils.BadRequest(rw, r, err)
 			return
 		}
 
-		jsonResult(rw, r, struct {
+		apiutils.JSONResult(rw, r, struct {
 			UserID chat.UserID `json:"userID"`
 		}{
 			UserID: userID,
+		})
+	})
+}
+
+func (c *chatHandler) appendHandler() http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		userID, err := c.userID(r)
+		if err != nil {
+			apiutils.BadRequest(rw, r, err)
+			return
+		}
+
+		body := r.PostFormValue("body")
+
+		if l := len(body); l == 0 {
+			apiutils.BadRequest(rw, r, errors.New("body is required"))
+			return
+
+		} else if l > 300 {
+			apiutils.BadRequest(rw, r, errors.New("body too long"))
+			return
+		}
+
+		msg, err := c.room.Append(r.Context(), chat.Message{
+			UserID: userID,
+			Body:   body,
+		})
+
+		if err != nil {
+			apiutils.InternalServerError(rw, r, err)
+			return
+		}
+
+		apiutils.JSONResult(rw, r, struct {
+			MessageID string `json:"messageID"`
+		}{
+			MessageID: msg.ID,
 		})
 	})
 }

@@ -31,7 +31,7 @@ const doFetch = async (req) => {
 // may throw
 const solvePow = async () => {
 
-  const res = await call('GET', '/api/pow/challenge');
+  const res = await call('/api/pow/challenge');
 
   const worker = new Worker('/assets/solvePow.js');
 
@@ -46,8 +46,12 @@ const solvePow = async () => {
   return {seed: res.seed, solution: powSol};
 }
 
-const call = async (method, route, opts = {}) => {
-  const { body = {}, requiresPow = false } = opts;
+const call = async (route, opts = {}) => {
+  const {
+    method = 'POST',
+    body = {},
+    requiresPow = false,
+  } = opts;
 
   if (!utils.cookies["csrf_token"]) 
     throw "csrf_token cookie not set, can't make api call";

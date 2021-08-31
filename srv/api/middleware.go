@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutils"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
@@ -57,7 +58,7 @@ func (lrw *logResponseWriter) WriteHeader(statusCode int) {
 func logMiddleware(logger *mlog.Logger, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		r = setRequestLogger(r, logger)
+		r = apiutils.SetRequestLogger(r, logger)
 
 		lrw := newLogResponseWriter(rw)
 
@@ -74,5 +75,17 @@ func logMiddleware(logger *mlog.Logger, h http.Handler) http.Handler {
 		)
 
 		logger.Info(ctx, "handled HTTP request")
+	})
+}
+
+func allowedMethod(method string, h http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		if r.Method == method {
+			h.ServeHTTP(rw, r)
+			return
+		}
+
+		apiutils.GetRequestLogger(r).WarnString(r.Context(), "method not allowed")
+		rw.WriteHeader(405)
 	})
 }

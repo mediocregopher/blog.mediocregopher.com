@@ -11,6 +11,8 @@
         "-pow-secret=${config.powSecret}"
         "-listen-proto=${config.listenProto}"
         "-listen-addr=${config.listenAddr}"
+        "-redis-proto=unix"
+        "-redis-addr=${config.runDir}/redis"
     ] ++ (
         if config.staticProxyURL == ""
         then [ "-static-dir=${staticBuild}" ]
