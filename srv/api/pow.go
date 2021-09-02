@@ -27,14 +27,14 @@ func (a *api) newPowChallengeHandler() http.Handler {
 func (a *api) requirePowMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		seedHex := r.PostFormValue("powSeed")
+		seedHex := r.FormValue("powSeed")
 		seed, err := hex.DecodeString(seedHex)
 		if err != nil || len(seed) == 0 {
 			apiutils.BadRequest(rw, r, errors.New("invalid powSeed"))
 			return
 		}
 
-		solutionHex := r.PostFormValue("powSolution")
+		solutionHex := r.FormValue("powSolution")
 		solution, err := hex.DecodeString(solutionHex)
 		if err != nil || len(seed) == 0 {
 			apiutils.BadRequest(rw, r, errors.New("invalid powSolution"))

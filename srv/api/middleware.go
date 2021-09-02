@@ -40,12 +40,15 @@ func annotateMiddleware(h http.Handler) http.Handler {
 
 type logResponseWriter struct {
 	http.ResponseWriter
+	http.Hijacker
 	statusCode int
 }
 
 func newLogResponseWriter(rw http.ResponseWriter) *logResponseWriter {
+	h, _ := rw.(http.Hijacker)
 	return &logResponseWriter{
 		ResponseWriter: rw,
+		Hijacker:       h,
 		statusCode:     200,
 	}
 }
@@ -78,9 +81,11 @@ func logMiddleware(logger *mlog.Logger, h http.Handler) http.Handler {
 	})
 }
 
-func allowedMethod(method string, h http.Handler) http.Handler {
+func postOnlyMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		if r.Method == method {
+
+		// we allow websockets to not be POSTs because, well, they can't be
+		if r.Method == "POST" || r.Header.Get("Upgrade") == "websocket" {
 			h.ServeHTTP(rw, r)
 			return
 		}

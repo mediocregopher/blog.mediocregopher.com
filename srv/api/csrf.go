@@ -41,8 +41,14 @@ func checkCSRFMiddleware(h http.Handler) http.Handler {
 		if err != nil {
 			apiutils.InternalServerError(rw, r, err)
 			return
+		}
 
-		} else if csrfTok == "" || r.Header.Get(csrfTokenHeaderName) != csrfTok {
+		givenCSRFTok := r.Header.Get(csrfTokenHeaderName)
+		if givenCSRFTok == "" {
+			givenCSRFTok = r.FormValue("csrfToken")
+		}
+
+		if csrfTok == "" || givenCSRFTok != csrfTok {
 			apiutils.BadRequest(rw, r, errors.New("invalid CSRF token"))
 			return
 		}

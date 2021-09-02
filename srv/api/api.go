@@ -172,7 +172,7 @@ func (a *api) handler() http.Handler {
 	)))
 
 	var apiHandler http.Handler = apiMux
-	apiHandler = allowedMethod("POST", apiHandler)
+	apiHandler = postOnlyMiddleware(apiHandler)
 	apiHandler = checkCSRFMiddleware(apiHandler)
 	apiHandler = logMiddleware(a.params.Logger, apiHandler)
 	apiHandler = annotateMiddleware(apiHandler)

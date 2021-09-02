@@ -1,5 +1,7 @@
 import * as utils from "/assets/utils.js";
 
+const csrfTokenCookie  = "csrf_token";
+
 const doFetch = async (req) => {
   let res, jsonRes;
   try {
@@ -53,13 +55,13 @@ const call = async (route, opts = {}) => {
     requiresPow = false,
   } = opts;
 
-  if (!utils.cookies["csrf_token"]) 
-    throw "csrf_token cookie not set, can't make api call";
+  if (!utils.cookies[csrfTokenCookie]) 
+    throw `${csrfTokenCookie} cookie not set, can't make api call`;
 
   const reqOpts = {
     method,
     headers: {
-      "X-CSRF-Token": utils.cookies["csrf_token"],
+      "X-CSRF-Token": utils.cookies[csrfTokenCookie],
     },
   };
 
@@ -80,6 +82,50 @@ const call = async (route, opts = {}) => {
   return doFetch(req);
 }
 
+const ws = async (route, opts = {}) => {
+  const {
+    requiresPow = false,
+  } = opts;
+
+  const docURL = new URL(document.URL);
+  const protocol = docURL.protocol == "http:" ? "ws:" : "wss:";
+
+  const params = new URLSearchParams();
+  const csrfToken = utils.cookies[csrfTokenCookie];
+
+  if (!csrfToken)
+    throw `${csrfTokenCookie} cookie not set, can't make api call`;
+
+  params.set("csrfToken", csrfToken);
+
+  if (requiresPow) {
+    const {seed, solution} = await solvePow();
+    params.set("powSeed", seed);
+    params.set("powSolution", solution);
+  }
+
+  const rawConn = new WebSocket(`${protocol}//${docURL.host}${route}?${params.toString()}`);
+
+  const conn = {
+    next: () => new Promise((resolve, reject) => {
+      rawConn.onmessage = (m) => {
+        const mj = JSON.parse(m.data);
+        resolve(mj);
+      };
+      rawConn.onerror = reject;
+      rawConn.onclose = reject;
+    }),
+
+    close: rawConn.close,
+  };
+
+  return new Promise((resolve, reject) => {
+    rawConn.onopen = () => resolve(conn);
+    rawConn.onerror = reject;
+  });
+}
+
 export {
   call,
+  ws
 }

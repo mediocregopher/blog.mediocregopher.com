@@ -6,6 +6,7 @@ require (
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/mattn/go-sqlite3 v1.14.8
 	github.com/mediocregopher/mediocre-go-lib/v2 v2.0.0-beta.0
 	github.com/mediocregopher/radix/v4 v4.0.0-beta.1.0.20210726230805-d62fa1b2e3cb // indirect

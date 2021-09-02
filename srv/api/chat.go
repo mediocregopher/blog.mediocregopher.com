@@ -1,12 +1,14 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 	"unicode"
 
+	"github.com/gorilla/websocket"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutils"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 )
@@ -16,6 +18,8 @@ type chatHandler struct {
 
 	room       chat.Room
 	userIDCalc *chat.UserIDCalculator
+
+	wsUpgrader websocket.Upgrader
 }
 
 func newChatHandler(
@@ -26,11 +30,14 @@ func newChatHandler(
 		ServeMux:   http.NewServeMux(),
 		room:       room,
 		userIDCalc: userIDCalc,
+
+		wsUpgrader: websocket.Upgrader{},
 	}
 
 	c.Handle("/history", c.historyHandler())
 	c.Handle("/user-id", requirePowMiddleware(c.userIDHandler()))
 	c.Handle("/append", requirePowMiddleware(c.appendHandler()))
+	c.Handle("/listen", c.listenHandler())
 
 	return c
 }
@@ -146,5 +153,59 @@ func (c *chatHandler) appendHandler() http.Handler {
 		}{
 			MessageID: msg.ID,
 		})
+	})
+}
+
+func (c *chatHandler) listenHandler() http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		ctx := r.Context()
+		sinceID := r.FormValue("sinceID")
+
+		conn, err := c.wsUpgrader.Upgrade(rw, r, nil)
+		if err != nil {
+			apiutils.BadRequest(rw, r, err)
+			return
+		}
+		defer conn.Close()
+
+		it, err := c.room.Listen(ctx, sinceID)
+
+		if errors.As(err, new(chat.ErrInvalidArg)) {
+			apiutils.BadRequest(rw, r, err)
+			return
+
+		} else if errors.Is(err, context.Canceled) {
+			return
+
+		} else if err != nil {
+			apiutils.InternalServerError(rw, r, err)
+			return
+		}
+
+		defer it.Close()
+
+		for {
+
+			msg, err := it.Next(ctx)
+			if errors.Is(err, context.Canceled) {
+				return
+
+			} else if err != nil {
+				apiutils.InternalServerError(rw, r, err)
+				return
+			}
+
+			err = conn.WriteJSON(struct {
+				Message chat.Message `json:"message"`
+			}{
+				Message: msg,
+			})
+
+			if err != nil {
+				apiutils.GetRequestLogger(r).Error(ctx, "couldn't write message", err)
+				return
+			}
+		}
 	})
 }

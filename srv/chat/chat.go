@@ -31,9 +31,10 @@ var (
 
 // Message describes a message which has been posted to a Room.
 type Message struct {
-	ID     string `json:"id"`
-	UserID UserID `json:"userID"`
-	Body   string `json:"body"`
+	ID        string `json:"id"`
+	UserID    UserID `json:"userID"`
+	Body      string `json:"body"`
+	CreatedAt int64  `json:"createdAt,omitempty"`
 }
 
 func msgFromStreamEntry(entry radix.StreamEntry) (Message, error) {
@@ -59,6 +60,7 @@ func msgFromStreamEntry(entry radix.StreamEntry) (Message, error) {
 	}
 
 	msg.ID = entry.ID.String()
+	msg.CreatedAt = int64(entry.ID.Time / 1000)
 	return msg, nil
 }
 
@@ -211,7 +213,7 @@ func (r *room) Append(ctx context.Context, msg Message) (Message, error) {
 	maxLen := strconv.Itoa(r.params.MaxMessages)
 	body := string(b)
 
-	var id string
+	var id radix.StreamEntryID
 
 	err = r.params.Redis.Do(ctx, radix.Cmd(
 		&id, "XADD", key, "MAXLEN", "=", maxLen, "*", "json", body,
@@ -221,7 +223,8 @@ func (r *room) Append(ctx context.Context, msg Message) (Message, error) {
 		return Message{}, fmt.Errorf("posting message to redis: %w", err)
 	}
 
-	msg.ID = id
+	msg.ID = id.String()
+	msg.CreatedAt = int64(id.Time / 1000)
 	return msg, nil
 }
 
