@@ -85,26 +85,27 @@ const call = async (route, opts = {}) => {
 const ws = async (route, opts = {}) => {
   const {
     requiresPow = false,
+    params = {},
   } = opts;
 
   const docURL = new URL(document.URL);
   const protocol = docURL.protocol == "http:" ? "ws:" : "wss:";
 
-  const params = new URLSearchParams();
+  const fullParams = new URLSearchParams(params);
   const csrfToken = utils.cookies[csrfTokenCookie];
 
   if (!csrfToken)
     throw `${csrfTokenCookie} cookie not set, can't make api call`;
 
-  params.set("csrfToken", csrfToken);
+  fullParams.set("csrfToken", csrfToken);
 
   if (requiresPow) {
     const {seed, solution} = await solvePow();
-    params.set("powSeed", seed);
-    params.set("powSolution", solution);
+    fullParams.set("powSeed", seed);
+    fullParams.set("powSolution", solution);
   }
 
-  const rawConn = new WebSocket(`${protocol}//${docURL.host}${route}?${params.toString()}`);
+  const rawConn = new WebSocket(`${protocol}//${docURL.host}${route}?${fullParams.toString()}`);
 
   const conn = {
     next: () => new Promise((resolve, reject) => {

@@ -8,6 +8,7 @@ layout: page
     #messages {
         max-height: 65vh;
         overflow: auto;
+        padding-right: 2rem;
     }
 
     #messages .message {
@@ -43,14 +44,17 @@ layout: page
 
 const messagesEl = document.getElementById("messages");
 
-function renderMessages(msgs) {
+let messagesScrolledToBottom = true;
+messagesEl.onscroll = () => {
+    const el = messagesEl;
+    messagesScrolledToBottom = el.scrollHeight == el.scrollTop + el.clientHeight;
+};
 
-    msgs = [...msgs].reverse();
+function renderMessages(msgs) {
 
     messagesEl.innerHTML = '';
 
     msgs.forEach((msg) => {
-        console.log(msg);
         const el = document.createElement("div");
         el.className = "row message"
 
@@ -97,15 +101,39 @@ function renderMessages(msgs) {
 (async () => {
 
     const failEl = document.getElementById("fail");
-
     setErr = (msg) => failEl.innerHTML = `${msg} (please refresh the page to retry)`;
-
-    const api = await import("/assets/api.js");
 
     try {
 
+        const api = await import("/assets/api.js");
+
         const history = await api.call("/api/chat/global/history");
-        renderMessages(history.messages);
+        const msgs = history.messages;
+
+        // history returns msgs in time descending, but we display them in time
+        // ascending.
+        msgs.reverse()
+
+        const sinceID = (msgs.length > 0) ?  msgs[msgs.length-1].id : "";
+
+        const ws = await api.ws("/api/chat/global/listen", {
+            params: { sinceID },
+        });
+
+        while (true) {
+            renderMessages(msgs);
+
+            // If the user was previously scrolled to the bottom then keep them
+            // there.
+            if (messagesScrolledToBottom) {
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+
+            const msg = await ws.next();
+            msgs.push(msg.message);
+            renderMessages(msgs);
+        }
+
 
     } catch (e) {
         e = `Failed to fetch message history: ${e}`
@@ -114,13 +142,107 @@ function renderMessages(msgs) {
         return;
     }
 
-    //const ws = await api.ws("/api/chat/global/listen");
-
-    //while (true) {
-    //    const msg = await ws.next();
-    //    console.log("got msg", msg);
-    //}
-
 })()
+
+</script>
+
+<style>
+#append {
+    border: 1px dashed #AAA;
+    border-radius: 10px;
+    padding: 2rem;
+}
+
+#append #appendBody {
+    font-family: monospace;
+}
+
+#append #appendStatus {
+    color: red;
+}
+
+</style>
+
+<form id="append">
+    <h5>New Message</h5>
+    <div class="row">
+        <div class="columns four">
+            <input class="u-full-width" placeholder="Name" id="appendName" type="text" />
+            <input class="u-full-width" placeholder="Secret" id="appendSecret" type="password" />
+        </div>
+        <div class="columns eight">
+            <p>
+                Your name is displayed alongside your message.
+
+                Your name+secret is used to generate your userID, which is also
+                displayed alongside your message.
+
+                Other users can validate two messages are from the same person
+                by comparing the messages' userID.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns twelve">
+            <textarea
+                style="font-family: monospace"
+                id="appendBody"
+                class="u-full-width"
+                placeholder="Well thought out statement goes here..."
+                ></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns four">
+            <input class="u-full-width button-primary" id="appendSubmit" type="button" value="Submit" />
+        </div>
+    </div>
+    <span id="appendStatus"></span>
+</form>
+
+<script>
+
+const append = document.getElementById("append");
+const appendName = document.getElementById("appendName");
+const appendSecret = document.getElementById("appendSecret");
+const appendBody = document.getElementById("appendBody");
+const appendSubmit = document.getElementById("appendSubmit");
+const appendStatus = document.getElementById("appendStatus");
+
+appendSubmit.onclick = async () => {
+
+    const appendSubmitOrigValue = appendSubmit.value;
+
+    appendSubmit.disabled = true;
+    appendSubmit.className = "";
+    appendSubmit.value = "Please hold...";
+
+    appendStatus.innerHTML = '';
+
+    try {
+
+        const api = await import("/assets/api.js");
+
+        await api.call('/api/chat/global/append', {
+            body: {
+                name: appendName.value,
+                password: appendSecret.value,
+                body: appendBody.value,
+            },
+            requiresPow: true,
+        });
+
+        appendBody.value = '';
+
+    } catch (e) {
+
+        appendStatus.innerHTML = e;
+
+    } finally {
+        appendSubmit.disabled = false;
+        appendSubmit.className = "button-primary";
+        appendSubmit.value = appendSubmitOrigValue;
+    }
+};
 
 </script>
