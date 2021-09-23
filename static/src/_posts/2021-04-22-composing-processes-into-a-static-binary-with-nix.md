@@ -3,6 +3,7 @@ title: >-
     Composing Processes Into a Static Binary With Nix
 description: >-
     Goodbye, docker-compose!
+tags: tech
 ---
 
 It's pretty frequent that one wants to use a project that requires multiple
