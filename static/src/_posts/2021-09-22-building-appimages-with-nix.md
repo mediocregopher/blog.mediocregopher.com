@@ -29,7 +29,7 @@ fulfill the following requirements:
 * The builder itself should be deterministic; no matter where it runs it should
   produce the same binary given the same input parameters.
 
-Lacking such a build system we're not able to distribute the program in a way
+Lacking such a build system we're not able to distribute cryptic-net in a way
 which "just works"; it would require some kind of configuration, or some kind of
 runtime environment to be set up, both of which would be a pain for users. And
 lacking a definite build system makes it difficult to move forward on any other
@@ -136,11 +136,11 @@ the `pkgs.buildEnv` used to create the AppDir (see AppDir section below).
 
 ## Process Manager
 
-An important piece of the puzzle for getting our nebula project into an AppImage
-was a process manager. We need something which can run multiple service
-processes simultaneously, restart processes which exit unexpectedly, gracefully
-handle shutting down all those processes, and coalesce the logs of all processes
-into a single stream.
+An important piece of the puzzle for getting cryptic-net into an AppImage was a
+process manager. We need something which can run multiple service processes
+simultaneously, restart processes which exit unexpectedly, gracefully handle
+shutting down all those processes, and coalesce the logs of all processes into a
+single stream.
 
 There are quite a few process managers out there which could fit the bill, but
 finding any which could be statically compiled ended up not being an easy task.
@@ -179,11 +179,11 @@ places in the AppDir at `<AppDir-path>/etc/some/conf`.
 [These docs](https://docs.appimage.org/packaging-guide/manual.html#ref-manual)
 were very helpful for me in figuring out how to construct the AppDir. I then
 used the `pkgs.buildEnv` utility to create an AppDir derivation containing
-everything the nebula project needs to run:
+everything cryptic-net needs to run:
 
 ```
     appDir = pkgs.buildEnv {
-        name = "my-AppDir";
+        name = "cryptic-net-AppDir";
         paths = [
 
             # real directory containing non-built files, e.g. the pmux config
@@ -229,7 +229,7 @@ generates the AppImage from a created AppDir:
     appimagetool,
 }:
     pkgs.stdenv.mkDerivation {
-        name = "program-name-AppImage";
+        name = "cryptic-net-AppImage";
 
         src = appDir;
         buildInputs = [ appimagetool ];
@@ -241,24 +241,23 @@ generates the AppImage from a created AppDir:
             chmod +w buildAppDir -R
             mkdir $out
 
-            # program-name needs to match the desktop file in the AppDir
-            appimagetool program-name "$out/program-name-bin"
+            appimagetool cryptic-net "$out/cryptic-net-bin"
         '';
     }
 ```
 
 Running that derivation deterministically spits out a binary at
-`result/program-name-bin` which can be executed and run immediately, on any
-system using the same CPU architecture.
+`result/cryptic-net-bin` which can be executed and run immediately, on any
+system using the `x86_46` CPU architecture.
 
 ## Fin
 
-I'm extremely hyped to now have the ability to generate binaries for our nebula
-project that people can _just run_, without them worrying about which
-sub-services that binary is running under-the-hood. From a usability perspective
-it's way nicer than having to tell people to "install docker" or "install nix",
-and from a dev perspective we have a really solid foundation on which to build a
-quite complex application.
+I'm extremely hyped to now have the ability to generate binaries for cryptic-net
+that people can _just run_, without them worrying about which sub-services that
+binary is running under-the-hood. From a usability perspective it's way nicer
+than having to tell people to "install docker" or "install nix", and from a dev
+perspective we have a really solid foundation on which to build a quite complex
+application.
 
 [lastnix]: {% post_url 2021-04-22-composing-processes-into-a-static-binary-with-nix %}
 [nix-bundle]: https://github.com/matthewbauer/nix-bundle
