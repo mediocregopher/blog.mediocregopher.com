@@ -78,7 +78,13 @@
 
     entrypoint = pkgs.writeScript "mediocre-blog-entrypoint" ''
         #!/bin/sh
-        mkdir -p ${config.runDir}
+
+        set -e
+
+        if [ ! -d ${config.runDir} ]; then
+          mkdir -p ${config.runDir}
+        fi
+
         mkdir -p ${config.dataDir}
         exec ${pkgs.circus}/bin/circusd ${circusCfg}
     '';
@@ -93,6 +99,8 @@
         Restart=always
         RestartSec=1s
         User=mediocregopher
+        Group=mediocregopher
+        RuntimeDirectory=mediocre-blog
         ExecStart=${entrypoint}
 
         [Install]
