@@ -3,6 +3,7 @@ title: >-
     Self-Hosting a Blog Mailing List
 description: >-
     For fun and no profit.
+tags: tech
 ---
 
 As of this week the Mediocre Blog has a new follow mechanism: email! [Sign up
