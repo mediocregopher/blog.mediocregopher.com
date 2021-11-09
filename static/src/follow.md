@@ -113,6 +113,9 @@ recommendations:
 ## Option 3: Twitter
 
 New posts are automatically published to [my Twitter](https://twitter.com/{{
-site.twitter_username }}). Simply follow me there and pray the algorithm smiles
-upon my tweets enough to show them to you! :pray: :pray: :pray:
+site.twitter_username }}), so you can follow me there and pray the algorithm
+smiles upon my tweets enough to show them to you! :pray: :pray: :pray:
+
+(Apparently the twitter algo downranks posts with links in them, so don't waste
+your time praying too hard.)
 

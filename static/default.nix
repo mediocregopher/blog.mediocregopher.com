@@ -26,7 +26,7 @@
             -s ./src \
             -d ./_site \
             -w -I -D \
-            -P 4001
+            -P 4002
     '';
 
     allInputs = depInputs ++ [ jekyllEnv serve ];
