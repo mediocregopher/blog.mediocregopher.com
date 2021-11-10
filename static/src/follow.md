@@ -85,6 +85,9 @@ emailSubscribe.onclick = async () => {
 
 </script>
 
+(HINDSIGHT NOTE: We're like three posts in since I set the mailing list up, and
+GMail is already marking me as spam. So... check your spam folders folks!)
+
 ## Option 2: RSS
 
 RSS is the classic way to follow any blog. It comes from a time before
@@ -119,3 +122,6 @@ smiles upon my tweets enough to show them to you! :pray: :pray: :pray:
 (Apparently the twitter algo downranks posts with links in them, so don't waste
 your time praying too hard.)
 
+Also, fair warning, I've decided that twitter is only good for shitposting about
+crypto, so if you follow me there you're gonna see a lot of that. Sign up for
+the mailing list (and check your spam folder a lot, lol).
