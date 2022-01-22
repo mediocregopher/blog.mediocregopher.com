@@ -6,16 +6,9 @@
       </h1>
       <div class="light social">
         <span>By {{ site.author | escape }}</span>
-        <span class="author-icons">
-          <a href="mailto:mediocregopher@gmail.com">
-            <i class="fas fa-envelope"></i>
-          </a>
-          <a href="https://github.com/{{ site.github_username }}">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="https://twitter.com/{{ site.twitter_username }}">
-            <i class="fab fa-twitter"></i>
-          </a>
+        <span>
+          Even more @
+          <a href="{{ site.hub_url }}" target="_blank">{{ site.hub_url }}</a>
         </span>
       </div>
     </div>
@@ -23,7 +16,7 @@
     <div class="five columns light">
       <span style="display:block; margin-bottom:0.5rem;">Get notified when new posts are published!</span>
       <a href="{{ "/follow.html" | relative_url }}"><button class="button-primary">
-          <i class="fab fa-twitter"></i>
+          <i class="far fa-envelope"></i>
           Follow
       </button></a>
       <a href="{{ "/feed.xml" | relative_url }}"><button class="button">

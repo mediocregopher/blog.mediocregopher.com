@@ -4,9 +4,7 @@ email: mediocregopher@gmail.com
 description: >-
   A mix of tech, art, travel, and who knows what else.
 url: https://blog.mediocregopher.com
-repository: https://github.com/mediocregopher/blog.mediocregopher.com
-twitter_username: mediocre_gopher
-github_username:  mediocregopher
+hub_url: https://mediocregopher.eth.link
 rss: rss
 highlighter: rouge
 

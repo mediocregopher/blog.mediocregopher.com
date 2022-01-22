@@ -15,12 +15,12 @@ layout: default
       <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
         {{ page.date | date: site.date_format }}
       </time>
-      •
+      &nbsp;•&nbsp;
       {%- if page.updated %}
       <time datetime="{{ page.updated | date_to_xmlschema }}" itemprop="dateModified">
         (Updated {{ page.updated | date: site.date_format }})
       </time>
-      •
+      &nbsp;•&nbsp;
       {% endif -%}
       <description itemprop="about"><em>{{ page.description }}</em></description>
     </div>

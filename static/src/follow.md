@@ -112,16 +112,3 @@ recommendations:
 * [NetNewsWire](https://ranchero.com/netnewswire/) is a good reader for
   iPhone/iPad/Mac devices, so I'm told. Their homepage description makes a much
   better sales pitch for RSS than I ever could.
-
-## Option 3: Twitter
-
-New posts are automatically published to [my Twitter](https://twitter.com/{{
-site.twitter_username }}), so you can follow me there and pray the algorithm
-smiles upon my tweets enough to show them to you! :pray: :pray: :pray:
-
-(Apparently the twitter algo downranks posts with links in them, so don't waste
-your time praying too hard.)
-
-Also, fair warning, I've decided that twitter is only good for shitposting about
-crypto, so if you follow me there you're gonna see a lot of that. Sign up for
-the mailing list (and check your spam folder a lot, lol).
