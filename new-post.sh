@@ -56,6 +56,7 @@ title: >-
     $title
 description: >-
     $description
+#tags: tech art crypto
 ---
 
 Write stuff here, title will automatically be added as an h1
