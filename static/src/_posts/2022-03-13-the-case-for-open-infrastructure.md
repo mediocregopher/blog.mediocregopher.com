@@ -205,12 +205,14 @@ The open source movement has shown that participation, not profitability, is the
 primary driver of successful software. Why should it not be the case for our
 service infrastructure?
 
-## Footnotes
+-----
+
+**Footnotes**
 
 * I use a lot of words here whose definitions are by no means agreed upon. I've
   done my best to stick to my best understanding of word meanings, and to be
   consistent in them. If you disagree with my usage of a word, I'm sorry. It
-  doesn't mean either of us wrong, we just speak different.
+  doesn't mean either of us is wrong, we just speak different.
 
 * There is an existing project, under the OpenStack project, called Open
   Infrastructure. It has to do with some kind of standardization around the
