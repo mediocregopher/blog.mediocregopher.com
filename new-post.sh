@@ -25,6 +25,7 @@ while [ "$(echo $1 | head -c1)" = '-' -o "$#" -gt $numargs ]; do
     "-d") td=$1; shift;;
     "-V") VERBOSE=1;;
     "-x") DRY_RUN=1;;
+    "--no-editor") NO_EDITOR=1;;
     *)
         echo "Unknown option '$arg'"
         usage;;
@@ -77,4 +78,8 @@ if [ ! -z $IMG_DIR ]; then
     if [ -z $DRY_RUN ]; then
         mkdir -p "$imgDirName"
     fi
+fi
+
+if [ -z $DRY_RUN ] && [ -z $NO_EDITOR ]; then
+    exec $EDITOR "$postFileName"
 fi
