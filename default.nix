@@ -28,8 +28,6 @@
         staticBuild=static.build;
     };
 
-    srvBin = srv.bin;
-
     redisCfg = pkgs.writeText "mediocre-blog-redisCfg" ''
         port 0
         unixsocket ${config.redisListenPath}
