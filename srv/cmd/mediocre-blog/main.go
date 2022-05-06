@@ -91,7 +91,10 @@ func main() {
 		mailer = mailinglist.NewMailer(mailerParams)
 	}
 
-	mlStore, err := mailinglist.NewStore(path.Join(*dataDir, "mailinglist.sqlite3"))
+	mailingListDBFile := path.Join(*dataDir, "mailinglist.sqlite3")
+	ctx = mctx.Annotate(ctx, "mailingListDBFile", mailingListDBFile)
+
+	mlStore, err := mailinglist.NewStore(mailingListDBFile)
 	if err != nil {
 		logger.Fatal(ctx, "initializing mailing list storage", err)
 	}
