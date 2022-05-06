@@ -45,7 +45,7 @@ func (nullMailer) Send(to, subject, body string) error {
 	return nil
 }
 
-// MailerParams are used to initialize a new Mailer instance
+// MailerParams are used to initialize a new Mailer instance.
 type MailerParams struct {
 	SMTPAddr string
 

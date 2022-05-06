@@ -14,8 +14,12 @@ import (
 )
 
 func main() {
+
 	ctx := context.Background()
-	cfg := cfg.New()
+
+	cfg := cfg.New(cfg.Params{
+		EnvPrefix: "MEDIOCRE_BLOG",
+	})
 
 	dataDir := cfg.String("data-dir", ".", "Directory to use for long term storage")
 

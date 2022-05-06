@@ -13,6 +13,7 @@ func main() {
 	secret := flag.String("secret", "", "Secret to use when calculating UserIDs")
 	name := flag.String("name", "", "")
 	password := flag.String("password", "", "")
+
 	flag.Parse()
 
 	calc := chat.NewUserIDCalculator([]byte(*secret))
