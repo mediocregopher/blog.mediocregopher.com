@@ -108,6 +108,8 @@ github.com/mattn/go-sqlite3 v1.14.8/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
 github.com/mediocregopher/mediocre-go-lib/v2 v2.0.0-beta.0 h1:i9FBkcCaWXxteJ8458AD8dBL2YqSxVlpsHOMWg5N9Dc=
 github.com/mediocregopher/mediocre-go-lib/v2 v2.0.0-beta.0/go.mod h1:wOZVlnKYvIbkzyCJ3dxy1k40XkirvCd1pisX2O91qoQ=
+github.com/mediocregopher/mediocre-go-lib/v2 v2.0.0-beta.0.0.20220506011745-cbeee71cb1ee h1:AWRuhgn7iumyhPuxKwed1F1Ri2dXMwxKfp5YIdpnQIY=
+github.com/mediocregopher/mediocre-go-lib/v2 v2.0.0-beta.0.0.20220506011745-cbeee71cb1ee/go.mod h1:wOZVlnKYvIbkzyCJ3dxy1k40XkirvCd1pisX2O91qoQ=
 github.com/mediocregopher/radix/v4 v4.0.0-beta.1.0.20210726230805-d62fa1b2e3cb h1:7Y2vAC5q44VJzbBUdxRUEqfz88ySJ/6yXXkpQ+sxke4=
 github.com/mediocregopher/radix/v4 v4.0.0-beta.1.0.20210726230805-d62fa1b2e3cb/go.mod h1:ajchozX/6ELmydxWeWM6xCFHVpZ4+67LXHOTOVR0nCE=
 github.com/mitchellh/cli v1.1.2/go.mod h1:6iaV0fGdElS6dPBx0EApTxHrcWvmJphyh2n8YBLPPZ4=

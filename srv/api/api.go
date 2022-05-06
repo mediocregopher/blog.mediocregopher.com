@@ -118,7 +118,7 @@ func New(params Params) (API, error) {
 		err := a.srv.Serve(l)
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			ctx := mctx.Annotate(context.Background(), a.params)
-			params.Logger.Fatal(ctx, fmt.Sprintf("%s: %v", "serving http server", err))
+			params.Logger.Fatal(ctx, "serving http server", err)
 		}
 	}()
 

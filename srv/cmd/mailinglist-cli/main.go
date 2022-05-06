@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"path"
 
@@ -13,10 +12,6 @@ import (
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 	"github.com/tilinna/clock"
 )
-
-func loggerFatalErr(ctx context.Context, logger *mlog.Logger, descr string, err error) {
-	logger.Fatal(ctx, fmt.Sprintf("%s: %v", descr, err))
-}
 
 func main() {
 	ctx := context.Background()
@@ -42,7 +37,7 @@ func main() {
 	defer logger.Info(ctx, "process exiting")
 
 	if err != nil {
-		loggerFatalErr(ctx, logger, "initializing", err)
+		logger.Fatal(ctx, "initializing", err)
 	}
 
 	clock := clock.Realtime()
@@ -57,7 +52,7 @@ func main() {
 
 	mlStore, err := mailinglist.NewStore(path.Join(*dataDir, "mailinglist.sqlite3"))
 	if err != nil {
-		loggerFatalErr(ctx, logger, "initializing mailing list storage", err)
+		logger.Fatal(ctx, "initializing mailing list storage", err)
 	}
 	defer mlStore.Close()
 
@@ -72,13 +67,15 @@ func main() {
 	ctx = mctx.Annotate(ctx, "subCmd", subCmd)
 
 	switch subCmd {
+
 	case "list":
+
 		for it := mlStore.GetAll(); ; {
 			email, err := it()
 			if errors.Is(err, io.EOF) {
 				break
 			} else if err != nil {
-				loggerFatalErr(ctx, logger, "retrieving next email", err)
+				logger.Fatal(ctx, "retrieving next email", err)
 			}
 
 			ctx := mctx.Annotate(context.Background(),
@@ -94,21 +91,24 @@ func main() {
 
 		title := cfg.String("title", "", "Title of the post which was published")
 		url := cfg.String("url", "", "URL of the post which was published")
-		cfg.Init(ctx)
+
+		if err := cfg.Init(ctx); err != nil {
+			logger.Fatal(ctx, "initializing", err)
+		}
 
 		if *title == "" {
-			logger.Fatal(ctx, "-title is required")
+			logger.FatalString(ctx, "-title is required")
 
 		} else if *url == "" {
-			logger.Fatal(ctx, "-url is required")
+			logger.FatalString(ctx, "-url is required")
 		}
 
 		err := ml.Publish(*title, *url)
 		if err != nil {
-			loggerFatalErr(ctx, logger, "publishing", err)
+			logger.Fatal(ctx, "publishing", err)
 		}
 
 	default:
-		logger.Fatal(ctx, "invalid sub-command, must be list|publish")
+		logger.FatalString(ctx, "invalid sub-command, must be list|publish")
 	}
 }

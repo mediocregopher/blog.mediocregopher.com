@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/signal"
 	"path"
@@ -19,10 +18,6 @@ import (
 	"github.com/mediocregopher/radix/v4"
 	"github.com/tilinna/clock"
 )
-
-func loggerFatalErr(ctx context.Context, logger *mlog.Logger, descr string, err error) {
-	logger.Fatal(ctx, fmt.Sprintf("%s: %v", descr, err))
-}
 
 func main() {
 
@@ -64,7 +59,7 @@ func main() {
 	defer logger.Info(ctx, "process exiting")
 
 	if err != nil {
-		loggerFatalErr(ctx, logger, "initializing", err)
+		logger.Fatal(ctx, "initializing", err)
 	}
 
 	ctx = mctx.Annotate(ctx,
@@ -95,7 +90,7 @@ func main() {
 
 	mlStore, err := mailinglist.NewStore(path.Join(*dataDir, "mailinglist.sqlite3"))
 	if err != nil {
-		loggerFatalErr(ctx, logger, "initializing mailing list storage", err)
+		logger.Fatal(ctx, "initializing mailing list storage", err)
 	}
 	defer mlStore.Close()
 
@@ -112,7 +107,7 @@ func main() {
 	)
 
 	if err != nil {
-		loggerFatalErr(ctx, logger, "initializing redis pool", err)
+		logger.Fatal(ctx, "initializing redis pool", err)
 	}
 	defer redis.Close()
 
@@ -123,7 +118,7 @@ func main() {
 		MaxMessages: *chatGlobalRoomMaxMsgs,
 	})
 	if err != nil {
-		loggerFatalErr(ctx, logger, "initializing global chat room", err)
+		logger.Fatal(ctx, "initializing global chat room", err)
 	}
 	defer chatGlobalRoom.Close()
 
@@ -138,20 +133,20 @@ func main() {
 	logger.Info(ctx, "listening")
 	a, err := api.New(apiParams)
 	if err != nil {
-		loggerFatalErr(ctx, logger, "initializing api", err)
+		logger.Fatal(ctx, "initializing api", err)
 	}
 	defer func() {
 		shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 		defer cancel()
 
 		if err := a.Shutdown(shutdownCtx); err != nil {
-			loggerFatalErr(ctx, logger, "shutting down api", err)
+			logger.Fatal(ctx, "shutting down api", err)
 		}
 	}()
 
 	// wait
 
-	sigCh := make(chan os.Signal)
+	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 	<-sigCh
 
