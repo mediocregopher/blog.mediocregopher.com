@@ -23,10 +23,12 @@
 
     static = (import ./static) { inherit pkgs; };
 
-    srv = (import ./srv) {
-        inherit pkgs config;
+    srv = pkgs.callPackage (import ./srv) {
+        inherit config;
         staticBuild=static.build;
     };
+
+    srvBin = srv.bin;
 
     redisCfg = pkgs.writeText "mediocre-blog-redisCfg" ''
         port 0

@@ -1,25 +1,42 @@
-{pkgs, config, staticBuild}: rec {
+{
+  buildGoModule,
+  writeScript,
+  writeScriptBin,
+  stdenv,
 
-    mailingListOpts = [
-        "-ml-smtp-addr=${config.mlSMTPAddr}"
-        "-ml-smtp-auth='${config.mlSMTPAuth}'"
-        "-data-dir=${config.dataDir}"
-        "-public-url=${config.publicURL}"
-    ];
+  config,
+  staticBuild,
+}: rec {
 
-    opts = mailingListOpts ++ [
-        "-pow-secret=${config.powSecret}"
-        "-listen-proto=${config.listenProto}"
-        "-listen-addr=${config.listenAddr}"
-        "-redis-proto=unix"
-        "-redis-addr=${config.redisListenPath}"
-    ] ++ (
-        if config.staticProxyURL == ""
-        then [ "-static-dir=${staticBuild}" ]
-        else [ "-static-proxy-url=${config.staticProxyURL}" ]
-    );
+    env = ''
 
-    build = pkgs.buildGoModule {
+      export MEDIOCRE_BLOG_DATA_DIR=${config.dataDir}
+
+      # mailing list
+      export MEDIOCRE_BLOG_ML_SMTP_ADDR=${config.mlSMTPAddr}
+      export MEDIOCRE_BLOG_ML_SMTP_AUTH='${config.mlSMTPAuth}'
+      export MEDIOCRE_BLOG_ML_PUBLIC_URL=${config.mlPublicURL}
+
+      # redis
+      export MEDIOCRE_BLOG_REDIS_PROTO=unix
+      export MEDIOCRE_BLOG_REDIS_ADDR=${config.redisListenPath}
+
+      # pow
+      export MEDIOCRE_BLOG_POW_SECRET=${config.powSecret}
+
+      # static proxy
+      if [ "${config.staticProxyURL}" == "" ]; then
+        export MEDIOCRE_BLOG_STATIC_DIR=${staticBuild}
+      else
+        export MEDIOCRE_BLOG_STATIC_URL=${config.staticProxyURL}
+      fi
+
+      # listening
+      export MEDIOCRE_BLOG_LISTEN_PROTO=${config.listenProto}
+      export MEDIOCRE_BLOG_LISTEN_ADDR=${config.listenAddr}
+    '';
+
+    build = buildGoModule {
         pname = "mediocre-blog-srv";
         version = "dev";
         src = ./.;
@@ -29,24 +46,17 @@
         checkPhase = '''';
     };
 
-    bin = pkgs.writeScript "mediocre-blog-srv-bin" ''
+    bin = writeScript "mediocre-blog-srv-bin" ''
         #!/bin/sh
         mkdir -p "${config.dataDir}"
-        exec ${build}/bin/mediocre-blog ${toString opts}
+        source ${env}
+        exec ${build}/bin/mediocre-blog
     '';
 
-    runScript = pkgs.writeScriptBin "run-mediocre-blog" ''
-        mkdir -p "${config.dataDir}"
-        go run ./cmd/mediocre-blog/main.go ${toString opts}
-    '';
-
-    runMailingListCLIScript = pkgs.writeScriptBin "run-mailinglist-cli" ''
-        go run ./cmd/mailinglist-cli/main.go ${toString mailingListOpts} "$@"
-    '';
-
-    shell = pkgs.stdenv.mkDerivation {
+    shell = stdenv.mkDerivation {
         name = "mediocre-blog-srv-shell";
-        buildInputs = [ pkgs.go runScript runMailingListCLIScript ];
+        shellHook = ''
+          source ${env}
+        '';
     };
-
 }

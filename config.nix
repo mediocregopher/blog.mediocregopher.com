@@ -5,7 +5,7 @@
     powSecret = "ssshhh";
     mlSMTPAddr = "";
     mlSMTPAuth = "";
-    publicURL = "http://localhost:4000";
+    mlPublicURL = "http://localhost:4000";
     listenProto = "tcp";
     listenAddr = ":4000";
 

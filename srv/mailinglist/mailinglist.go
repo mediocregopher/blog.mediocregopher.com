@@ -53,7 +53,7 @@ type Params struct {
 
 // SetupCfg implement the cfg.Cfger interface.
 func (p *Params) SetupCfg(cfg *cfg.Cfg) {
-	publicURLStr := cfg.String("public-url", "http://localhost:4000", "URL this service is accessible at")
+	publicURLStr := cfg.String("ml-public-url", "http://localhost:4000", "URL this service is accessible at")
 
 	cfg.OnInit(func(ctx context.Context) error {
 		var err error
