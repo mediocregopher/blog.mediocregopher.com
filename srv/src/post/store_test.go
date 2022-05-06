@@ -1,0 +1,248 @@
+package post
+
+import (
+	"io/ioutil"
+	"os"
+	"sort"
+	"strconv"
+	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/tilinna/clock"
+)
+
+func testPost(i int) Post {
+	istr := strconv.Itoa(i)
+	return Post{
+		ID:          istr,
+		Title:       istr,
+		Description: istr,
+		Body:        istr,
+	}
+}
+
+type storeTestHarness struct {
+	clock *clock.Mock
+	store Store
+}
+
+func newStoreTestHarness(t *testing.T) storeTestHarness {
+
+	clock := clock.NewMock(time.Now().Truncate(1 * time.Hour))
+
+	tmpFile, err := ioutil.TempFile(os.TempDir(), "mediocre-blog-post-store-test-")
+	if err != nil {
+		t.Fatal("Cannot create temporary file", err)
+	}
+	tmpFilePath := tmpFile.Name()
+	tmpFile.Close()
+
+	t.Logf("using temporary sqlite file at %q", tmpFilePath)
+
+	t.Cleanup(func() {
+		if err := os.Remove(tmpFilePath); err != nil {
+			panic(err)
+		}
+	})
+
+	store, err := NewStore(StoreParams{
+		DBFilePath: tmpFilePath,
+		Clock:      clock,
+	})
+	assert.NoError(t, err)
+
+	t.Cleanup(func() {
+		assert.NoError(t, store.Close())
+	})
+
+	return storeTestHarness{
+		clock: clock,
+		store: store,
+	}
+}
+
+func (h *storeTestHarness) testStoredPost(i int) StoredPost {
+	post := testPost(i)
+	return StoredPost{
+		Post:        post,
+		PublishedAt: DateFromTime(h.clock.Now()),
+	}
+}
+
+func TestStore(t *testing.T) {
+
+	assertPostEqual := func(t *testing.T, exp, got StoredPost) {
+		t.Helper()
+		sort.Strings(exp.Tags)
+		sort.Strings(got.Tags)
+		assert.Equal(t, exp, got)
+	}
+
+	assertPostsEqual := func(t *testing.T, exp, got []StoredPost) {
+		t.Helper()
+
+		if !assert.Len(t, got, len(exp), "exp:%+v\ngot: %+v", exp, got) {
+			return
+		}
+
+		for i := range exp {
+			assertPostEqual(t, exp[i], got[i])
+		}
+	}
+
+	t.Run("not_found", func(t *testing.T) {
+		h := newStoreTestHarness(t)
+
+		_, err := h.store.GetByID("foo")
+		assert.ErrorIs(t, err, ErrNotFound)
+	})
+
+	t.Run("set_get_delete", func(t *testing.T) {
+		h := newStoreTestHarness(t)
+
+		nowDate := DateFromTime(h.clock.Now())
+
+		post := testPost(0)
+		post.Tags = []string{"foo", "bar"}
+
+		assert.NoError(t, h.store.Set(post))
+
+		gotPost, err := h.store.GetByID(post.ID)
+		assert.NoError(t, err)
+
+		assertPostEqual(t, StoredPost{
+			Post:        post,
+			PublishedAt: nowDate,
+		}, gotPost)
+
+		// we will now try updating the post on a different day, and ensure it
+		// updates properly
+
+		h.clock.Add(24 * time.Hour)
+		newNowDate := DateFromTime(h.clock.Now())
+
+		post.Title = "something else"
+		post.Series = "whatever"
+		post.Body = "anything"
+		post.Tags = []string{"bar", "baz"}
+
+		assert.NoError(t, h.store.Set(post))
+
+		gotPost, err = h.store.GetByID(post.ID)
+		assert.NoError(t, err)
+
+		assertPostEqual(t, StoredPost{
+			Post:          post,
+			PublishedAt:   nowDate,
+			LastUpdatedAt: newNowDate,
+		}, gotPost)
+
+		// delete the post, it should go away
+		assert.NoError(t, h.store.Delete(post.ID))
+
+		_, err = h.store.GetByID(post.ID)
+		assert.ErrorIs(t, err, ErrNotFound)
+	})
+
+	t.Run("get", func(t *testing.T) {
+		h := newStoreTestHarness(t)
+
+		posts := []StoredPost{
+			h.testStoredPost(0),
+			h.testStoredPost(1),
+			h.testStoredPost(2),
+			h.testStoredPost(3),
+		}
+
+		for _, post := range posts {
+			assert.NoError(t, h.store.Set(post.Post))
+		}
+
+		gotPosts, hasMore, err := h.store.Get(0, 2)
+		assert.NoError(t, err)
+		assert.True(t, hasMore)
+		assertPostsEqual(t, posts[:2], gotPosts)
+
+		gotPosts, hasMore, err = h.store.Get(1, 2)
+		assert.NoError(t, err)
+		assert.False(t, hasMore)
+		assertPostsEqual(t, posts[2:4], gotPosts)
+
+		posts = append(posts, h.testStoredPost(4))
+		assert.NoError(t, h.store.Set(posts[4].Post))
+
+		gotPosts, hasMore, err = h.store.Get(1, 2)
+		assert.NoError(t, err)
+		assert.True(t, hasMore)
+		assertPostsEqual(t, posts[2:4], gotPosts)
+
+		gotPosts, hasMore, err = h.store.Get(2, 2)
+		assert.NoError(t, err)
+		assert.False(t, hasMore)
+		assertPostsEqual(t, posts[4:], gotPosts)
+	})
+
+	t.Run("get_by_series", func(t *testing.T) {
+		h := newStoreTestHarness(t)
+
+		posts := []StoredPost{
+			h.testStoredPost(0),
+			h.testStoredPost(1),
+			h.testStoredPost(2),
+			h.testStoredPost(3),
+		}
+
+		posts[0].Series = "foo"
+		posts[1].Series = "bar"
+		posts[2].Series = "bar"
+
+		for _, post := range posts {
+			assert.NoError(t, h.store.Set(post.Post))
+		}
+
+		fooPosts, err := h.store.GetBySeries("foo")
+		assert.NoError(t, err)
+		assertPostsEqual(t, posts[:1], fooPosts)
+
+		barPosts, err := h.store.GetBySeries("bar")
+		assert.NoError(t, err)
+		assertPostsEqual(t, posts[1:3], barPosts)
+
+		bazPosts, err := h.store.GetBySeries("baz")
+		assert.NoError(t, err)
+		assert.Empty(t, bazPosts)
+	})
+
+	t.Run("get_by_tag", func(t *testing.T) {
+
+		h := newStoreTestHarness(t)
+
+		posts := []StoredPost{
+			h.testStoredPost(0),
+			h.testStoredPost(1),
+			h.testStoredPost(2),
+			h.testStoredPost(3),
+		}
+
+		posts[0].Tags = []string{"foo"}
+		posts[1].Tags = []string{"foo", "bar"}
+		posts[2].Tags = []string{"bar"}
+
+		for _, post := range posts {
+			assert.NoError(t, h.store.Set(post.Post))
+		}
+
+		fooPosts, err := h.store.GetByTag("foo")
+		assert.NoError(t, err)
+		assertPostsEqual(t, posts[:2], fooPosts)
+
+		barPosts, err := h.store.GetByTag("bar")
+		assert.NoError(t, err)
+		assertPostsEqual(t, posts[1:3], barPosts)
+
+		bazPosts, err := h.store.GetByTag("baz")
+		assert.NoError(t, err)
+		assert.Empty(t, bazPosts)
+	})
+}

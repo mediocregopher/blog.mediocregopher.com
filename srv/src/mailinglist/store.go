@@ -83,7 +83,8 @@ type store struct {
 	db *sql.DB
 }
 
-// NewStore initializes a new store using the given SQL DB instance.
+// NewStore initializes a new Store using a sqlite3 database at the given file
+// path.
 func NewStore(dbFile string) (Store, error) {
 
 	db, err := sql.Open("sqlite3", dbFile)
