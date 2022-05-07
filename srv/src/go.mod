@@ -3,6 +3,7 @@ module github.com/mediocregopher/blog.mediocregopher.com/srv
 go 1.16
 
 require (
+	github.com/adrg/frontmatter v0.2.0 // indirect
 	github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21
 	github.com/emersion/go-smtp v0.15.0
 	github.com/google/uuid v1.3.0

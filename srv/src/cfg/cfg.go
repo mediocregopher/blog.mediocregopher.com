@@ -130,6 +130,40 @@ func (c *Cfg) StringVar(p *string, name, value, usage string) {
 	}
 }
 
+// Args returns a pointer which will be filled with the process's positional
+// arguments after Init is called. The positional arguments are all CLI
+// arguments starting with the first non-flag argument.
+//
+// The usage argument should describe what these arguments are, and its notation
+// should indicate if they are optional or variadic. For example:
+//
+//	// optional variadic
+//	"[names...]"
+//
+//	// required single args
+//	"<something> <something else>"
+//
+//	// Mixed
+//	"<foo> <bar> [baz] [other...]"
+//
+func (c *Cfg) Args(usage string) *[]string {
+
+	args := new([]string)
+
+	c.flagSet.Usage = func() {
+		fmt.Fprintf(os.Stderr, "USAGE [flags...] %s\n", usage)
+		fmt.Fprintf(os.Stderr, "\nFLAGS\n\n")
+		c.flagSet.PrintDefaults()
+	}
+
+	c.OnInit(func(ctx context.Context) error {
+		*args = c.flagSet.Args()
+		return nil
+	})
+
+	return args
+}
+
 // String is equivalent to flag.FlagSet's String method, but will additionally
 // set up an environment variable for the parameter.
 func (c *Cfg) String(name, value, usage string) *string {
