@@ -67,7 +67,6 @@ func main() {
 	}
 
 	ctx = mctx.Annotate(ctx,
-		"dataDir", *dataDir,
 		"redisProto", *redisProto,
 		"redisAddr", *redisAddr,
 		"redisPoolSize", *redisPoolSize,
