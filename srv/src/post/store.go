@@ -9,6 +9,7 @@ import (
 	"time"
 
 	_ "github.com/mattn/go-sqlite3" // we need dis
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	migrate "github.com/rubenv/sql-migrate"
 )
 
@@ -99,9 +100,7 @@ var migrations = []*migrate.Migration{
 // Params are parameters used to initialize a new Store. All fields are required
 // unless otherwise noted.
 type StoreParams struct {
-
-	// Path to the file the database will be stored at.
-	DBFilePath string
+	DataDir cfg.DataDir
 }
 
 type store struct {
@@ -113,9 +112,11 @@ type store struct {
 // path.
 func NewStore(params StoreParams) (Store, error) {
 
-	db, err := sql.Open("sqlite3", params.DBFilePath)
+	path := path.Join(params.DataDir.Path, "post.sqlite3")
+
+	db, err := sql.Open("sqlite3", path)
 	if err != nil {
-		return nil, fmt.Errorf("opening sqlite file: %w", err)
+		return nil, fmt.Errorf("opening sqlite file at %q: %w", path, err)
 	}
 
 	migrations := &migrate.MemoryMigrationSource{Migrations: migrations}

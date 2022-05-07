@@ -7,10 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"path"
 	"strings"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	migrate "github.com/rubenv/sql-migrate"
 )
 
@@ -83,13 +85,15 @@ type store struct {
 	db *sql.DB
 }
 
-// NewStore initializes a new Store using a sqlite3 database at the given file
-// path.
-func NewStore(dbFile string) (Store, error) {
+// NewStore initializes a new Store using a sqlite3 database in the given
+// DataDir.
+func NewStore(dataDir cfg.DataDir) (Store, error) {
 
-	db, err := sql.Open("sqlite3", dbFile)
+	path := path.Join(dataDir.Path, "mailinglist.sqlite3")
+
+	db, err := sql.Open("sqlite3", path)
 	if err != nil {
-		return nil, fmt.Errorf("opening sqlite file: %w", err)
+		return nil, fmt.Errorf("opening sqlite file at %q: %w", path, err)
 	}
 
 	migrations := &migrate.MemoryMigrationSource{Migrations: migrations}

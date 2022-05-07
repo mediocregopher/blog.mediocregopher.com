@@ -4,12 +4,12 @@ import (
 	"context"
 	"os"
 	"os/signal"
-	"path"
 	"syscall"
 	"time"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/api"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
+	cfgpkg "github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"
@@ -23,11 +23,12 @@ func main() {
 
 	ctx := context.Background()
 
-	cfg := cfg.New(cfg.Params{
-		EnvPrefix: "MEDIOCRE_BLOG",
-	})
+	cfg := cfg.NewBlogCfg(cfg.Params{})
 
-	dataDir := cfg.String("data-dir", ".", "Directory to use for long term storage")
+	var dataDir cfgpkg.DataDir
+	dataDir.SetupCfg(cfg)
+	defer dataDir.Close()
+	ctx = mctx.WithAnnotator(ctx, &dataDir)
 
 	var powMgrParams pow.ManagerParams
 	powMgrParams.SetupCfg(cfg)
@@ -91,10 +92,7 @@ func main() {
 		mailer = mailinglist.NewMailer(mailerParams)
 	}
 
-	mailingListDBFile := path.Join(*dataDir, "mailinglist.sqlite3")
-	ctx = mctx.Annotate(ctx, "mailingListDBFile", mailingListDBFile)
-
-	mlStore, err := mailinglist.NewStore(mailingListDBFile)
+	mlStore, err := mailinglist.NewStore(dataDir)
 	if err != nil {
 		logger.Fatal(ctx, "initializing mailing list storage", err)
 	}

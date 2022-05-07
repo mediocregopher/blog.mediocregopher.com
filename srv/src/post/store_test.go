@@ -1,13 +1,12 @@
 package post
 
 import (
-	"io/ioutil"
-	"os"
 	"sort"
 	"strconv"
 	"testing"
 	"time"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/stretchr/testify/assert"
 	"github.com/tilinna/clock"
 )
@@ -29,25 +28,18 @@ type storeTestHarness struct {
 
 func newStoreTestHarness(t *testing.T) storeTestHarness {
 
+	var dataDir cfg.DataDir
+
+	if err := dataDir.Init(); err != nil {
+		t.Fatal(err)
+	}
+
+	t.Cleanup(func() { dataDir.Close() })
+
 	clock := clock.NewMock(time.Now().UTC().Truncate(1 * time.Hour))
 
-	tmpFile, err := ioutil.TempFile(os.TempDir(), "mediocre-blog-post-store-test-")
-	if err != nil {
-		t.Fatal("Cannot create temporary file", err)
-	}
-	tmpFilePath := tmpFile.Name()
-	tmpFile.Close()
-
-	t.Logf("using temporary sqlite file at %q", tmpFilePath)
-
-	t.Cleanup(func() {
-		if err := os.Remove(tmpFilePath); err != nil {
-			panic(err)
-		}
-	})
-
 	store, err := NewStore(StoreParams{
-		DBFilePath: tmpFilePath,
+		DataDir: dataDir,
 	})
 	assert.NoError(t, err)
 

@@ -2,31 +2,24 @@ package mailinglist
 
 import (
 	"io"
-	"io/ioutil"
-	"os"
 	"testing"
 	"time"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStore(t *testing.T) {
-	tmpFile, err := ioutil.TempFile(os.TempDir(), "mediocre-blog-mailinglist-store-test-")
-	if err != nil {
-		t.Fatal("Cannot create temporary file", err)
+
+	var dataDir cfg.DataDir
+
+	if err := dataDir.Init(); err != nil {
+		t.Fatal(err)
 	}
-	tmpFilePath := tmpFile.Name()
-	tmpFile.Close()
 
-	t.Logf("using temporary sqlite file at %q", tmpFilePath)
+	t.Cleanup(func() { dataDir.Close() })
 
-	t.Cleanup(func() {
-		if err := os.Remove(tmpFilePath); err != nil {
-			panic(err)
-		}
-	})
-
-	store, err := NewStore(tmpFilePath)
+	store, err := NewStore(dataDir)
 	assert.NoError(t, err)
 
 	t.Cleanup(func() {
