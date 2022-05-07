@@ -133,13 +133,13 @@ func main() {
 		logger.FatalString(ctx, "no paths given")
 	}
 
-	postStore, err := post.NewStore(post.StoreParams{
-		DataDir: dataDir,
-	})
+	postDB, err := post.NewSQLDB(dataDir)
 	if err != nil {
-		logger.Fatal(ctx, "initializing post store", err)
+		logger.Fatal(ctx, "initializing post sql db", err)
 	}
-	defer postStore.Close()
+	defer postDB.Close()
+
+	postStore := post.NewStore(postDB)
 
 	for _, path := range *paths {
 

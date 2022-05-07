@@ -38,14 +38,14 @@ func newStoreTestHarness(t *testing.T) storeTestHarness {
 
 	clock := clock.NewMock(time.Now().UTC().Truncate(1 * time.Hour))
 
-	store, err := NewStore(StoreParams{
-		DataDir: dataDir,
-	})
-	assert.NoError(t, err)
+	db, err := NewSQLDB(dataDir)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	t.Cleanup(func() {
-		assert.NoError(t, store.Close())
-	})
+	t.Cleanup(func() { db.Close() })
+
+	store := NewStore(db)
 
 	return storeTestHarness{
 		clock: clock,
