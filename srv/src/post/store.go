@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"path"
 	"strings"
+	"time"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3" // we need dis
 	migrate "github.com/rubenv/sql-migrate"
-	"github.com/tilinna/clock"
 )
 
 var (
@@ -23,8 +23,8 @@ var (
 type StoredPost struct {
 	Post
 
-	PublishedAt   Date
-	LastUpdatedAt Date
+	PublishedAt   time.Time
+	LastUpdatedAt time.Time
 }
 
 // URL returns the relative URL of the StoredPost.
@@ -32,9 +32,9 @@ func (p StoredPost) URL() string {
 	return path.Join(
 		fmt.Sprintf(
 			"%d/%0d/%0d",
-			p.PublishedAt.Year,
-			p.PublishedAt.Month,
-			p.PublishedAt.Day,
+			p.PublishedAt.Year(),
+			p.PublishedAt.Month(),
+			p.PublishedAt.Day(),
 		),
 		p.ID+".html",
 	)
@@ -45,7 +45,7 @@ type Store interface {
 
 	// Set sets the Post data into the storage, keyed by the Post's ID. It
 	// overwrites a previous Post with the same ID, if there was one.
-	Set(Post) error
+	Set(post Post, now time.Time) error
 
 	// Get returns count StoredPosts, sorted time descending, offset by the given page
 	// number. The returned boolean indicates if there are more pages or not.
@@ -102,8 +102,6 @@ type StoreParams struct {
 
 	// Path to the file the database will be stored at.
 	DBFilePath string
-
-	Clock clock.Clock
 }
 
 type store struct {
@@ -136,7 +134,7 @@ func (s *store) Close() error {
 	return s.db.Close()
 }
 
-// if the callback returns an error then the transaction is aborted
+// if the callback returns an error then the transaction is aborted.
 func (s *store) withTx(cb func(*sql.Tx) error) error {
 
 	tx, err := s.db.Begin()
@@ -164,9 +162,12 @@ func (s *store) withTx(cb func(*sql.Tx) error) error {
 	return nil
 }
 
-func (s *store) Set(post Post) error {
+func (s *store) Set(post Post, now time.Time) error {
 	return s.withTx(func(tx *sql.Tx) error {
-		currentDate := DateFromTime(s.params.Clock.Now())
+
+		nowTS := now.Unix()
+
+		nowSql := sql.NullInt64{Int64: nowTS, Valid: !now.IsZero()}
 
 		_, err := tx.Exec(
 			`INSERT INTO posts (
@@ -184,9 +185,9 @@ func (s *store) Set(post Post) error {
 			post.Title,
 			post.Description,
 			&sql.NullString{String: post.Series, Valid: post.Series != ""},
-			currentDate,
+			nowSql,
 			post.Body,
-			currentDate,
+			nowSql,
 		)
 
 		if err != nil {
@@ -257,13 +258,14 @@ func (s *store) get(
 	for rows.Next() {
 
 		var (
-			post        StoredPost
-			series, tag sql.NullString
+			post                       StoredPost
+			series, tag                sql.NullString
+			publishedAt, lastUpdatedAt sql.NullInt64
 		)
 
 		err := rows.Scan(
 			&post.ID, &post.Title, &post.Description, &series, &tag,
-			&post.PublishedAt, &post.LastUpdatedAt,
+			&publishedAt, &lastUpdatedAt,
 			&post.Body,
 		)
 
@@ -282,6 +284,14 @@ func (s *store) get(
 		}
 
 		post.Series = series.String
+
+		if publishedAt.Valid {
+			post.PublishedAt = time.Unix(publishedAt.Int64, 0).UTC()
+		}
+
+		if lastUpdatedAt.Valid {
+			post.LastUpdatedAt = time.Unix(lastUpdatedAt.Int64, 0).UTC()
+		}
 
 		posts = append(posts, post)
 	}

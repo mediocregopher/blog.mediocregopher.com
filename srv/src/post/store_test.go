@@ -29,7 +29,7 @@ type storeTestHarness struct {
 
 func newStoreTestHarness(t *testing.T) storeTestHarness {
 
-	clock := clock.NewMock(time.Now().Truncate(1 * time.Hour))
+	clock := clock.NewMock(time.Now().UTC().Truncate(1 * time.Hour))
 
 	tmpFile, err := ioutil.TempFile(os.TempDir(), "mediocre-blog-post-store-test-")
 	if err != nil {
@@ -48,7 +48,6 @@ func newStoreTestHarness(t *testing.T) storeTestHarness {
 
 	store, err := NewStore(StoreParams{
 		DBFilePath: tmpFilePath,
-		Clock:      clock,
 	})
 	assert.NoError(t, err)
 
@@ -66,7 +65,7 @@ func (h *storeTestHarness) testStoredPost(i int) StoredPost {
 	post := testPost(i)
 	return StoredPost{
 		Post:        post,
-		PublishedAt: DateFromTime(h.clock.Now()),
+		PublishedAt: h.clock.Now(),
 	}
 }
 
@@ -101,41 +100,41 @@ func TestStore(t *testing.T) {
 	t.Run("set_get_delete", func(t *testing.T) {
 		h := newStoreTestHarness(t)
 
-		nowDate := DateFromTime(h.clock.Now())
+		now := h.clock.Now().UTC()
 
 		post := testPost(0)
 		post.Tags = []string{"foo", "bar"}
 
-		assert.NoError(t, h.store.Set(post))
+		assert.NoError(t, h.store.Set(post, now))
 
 		gotPost, err := h.store.GetByID(post.ID)
 		assert.NoError(t, err)
 
 		assertPostEqual(t, StoredPost{
 			Post:        post,
-			PublishedAt: nowDate,
+			PublishedAt: now,
 		}, gotPost)
 
 		// we will now try updating the post on a different day, and ensure it
 		// updates properly
 
 		h.clock.Add(24 * time.Hour)
-		newNowDate := DateFromTime(h.clock.Now())
+		newNow := h.clock.Now().UTC()
 
 		post.Title = "something else"
 		post.Series = "whatever"
 		post.Body = "anything"
 		post.Tags = []string{"bar", "baz"}
 
-		assert.NoError(t, h.store.Set(post))
+		assert.NoError(t, h.store.Set(post, newNow))
 
 		gotPost, err = h.store.GetByID(post.ID)
 		assert.NoError(t, err)
 
 		assertPostEqual(t, StoredPost{
 			Post:          post,
-			PublishedAt:   nowDate,
-			LastUpdatedAt: newNowDate,
+			PublishedAt:   now,
+			LastUpdatedAt: newNow,
 		}, gotPost)
 
 		// delete the post, it should go away
@@ -148,6 +147,8 @@ func TestStore(t *testing.T) {
 	t.Run("get", func(t *testing.T) {
 		h := newStoreTestHarness(t)
 
+		now := h.clock.Now().UTC()
+
 		posts := []StoredPost{
 			h.testStoredPost(0),
 			h.testStoredPost(1),
@@ -156,7 +157,7 @@ func TestStore(t *testing.T) {
 		}
 
 		for _, post := range posts {
-			assert.NoError(t, h.store.Set(post.Post))
+			assert.NoError(t, h.store.Set(post.Post, now))
 		}
 
 		gotPosts, hasMore, err := h.store.Get(0, 2)
@@ -170,7 +171,7 @@ func TestStore(t *testing.T) {
 		assertPostsEqual(t, posts[2:4], gotPosts)
 
 		posts = append(posts, h.testStoredPost(4))
-		assert.NoError(t, h.store.Set(posts[4].Post))
+		assert.NoError(t, h.store.Set(posts[4].Post, now))
 
 		gotPosts, hasMore, err = h.store.Get(1, 2)
 		assert.NoError(t, err)
@@ -186,6 +187,8 @@ func TestStore(t *testing.T) {
 	t.Run("get_by_series", func(t *testing.T) {
 		h := newStoreTestHarness(t)
 
+		now := h.clock.Now().UTC()
+
 		posts := []StoredPost{
 			h.testStoredPost(0),
 			h.testStoredPost(1),
@@ -198,7 +201,7 @@ func TestStore(t *testing.T) {
 		posts[2].Series = "bar"
 
 		for _, post := range posts {
-			assert.NoError(t, h.store.Set(post.Post))
+			assert.NoError(t, h.store.Set(post.Post, now))
 		}
 
 		fooPosts, err := h.store.GetBySeries("foo")
@@ -218,6 +221,8 @@ func TestStore(t *testing.T) {
 
 		h := newStoreTestHarness(t)
 
+		now := h.clock.Now().UTC()
+
 		posts := []StoredPost{
 			h.testStoredPost(0),
 			h.testStoredPost(1),
@@ -230,7 +235,7 @@ func TestStore(t *testing.T) {
 		posts[2].Tags = []string{"bar"}
 
 		for _, post := range posts {
-			assert.NoError(t, h.store.Set(post.Post))
+			assert.NoError(t, h.store.Set(post.Post, now))
 		}
 
 		fooPosts, err := h.store.GetByTag("foo")
