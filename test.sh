@@ -9,14 +9,20 @@ test_cfg="(import ./config.nix) // {
     dataDir=\"${test_dir}/data\";
 }"
 
-$(nix-build --no-out-link -A entrypoint \
+entrypoint=$(nix-build --no-out-link -A entrypoint \
     --arg baseConfig "$test_cfg" \
-    --arg baseSkipServices '["srv" "static"]') &
+    --arg skipServices '["srv"]')
 
+$entrypoint &
 trap "kill $!; wait; rm -rf $test_dir" EXIT
 
-# TODO there's a race condition here, we should wait until redis is definitely
-# listening before commencing the tests.
+# NOTE this is a bit of a hack... the location of the redis socket's source of
+# truth is in default.nix, but it's not clear how to get that from there to
+# here, so we reproduce the calculation here.
+while [ ! -e $test_dir/run/redis ]; do
+    echo "waiting for redis unix socket"
+    sleep 1
+done
 
 nix-shell -A srv.test \
     --arg baseConfig "$test_cfg"  \
