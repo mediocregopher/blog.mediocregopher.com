@@ -1,4 +1,5 @@
 //go:build integration
+// +build integration
 
 package chat
 
@@ -9,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	cfgpkg "github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 	"github.com/mediocregopher/radix/v4"
 	"github.com/stretchr/testify/assert"
@@ -44,16 +46,25 @@ func (h *roomTestHarness) newMsg(t *testing.T) Message {
 }
 
 func newRoomTestHarness(t *testing.T) *roomTestHarness {
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	t.Cleanup(cancel)
 
-	redis, err := radix.Dial(ctx, "tcp", "127.0.0.1:6379")
-	assert.NoError(t, err)
-	t.Cleanup(func() { redis.Close() })
+	cfg := cfgpkg.NewBlogCfg(cfgpkg.Params{
+		Args: []string{}, // prevents the test process args from interfering
+	})
+
+	var radixClient cfgpkg.RadixClient
+	radixClient.SetupCfg(cfg)
+	t.Cleanup(func() { radixClient.Close() })
+
+	if err := cfg.Init(ctx); err != nil {
+		t.Fatal(err)
+	}
 
 	roomParams := RoomParams{
 		Logger:      mlog.NewLogger(nil),
-		Redis:       redis,
+		Redis:       radixClient.Client,
 		ID:          uuid.New().String(),
 		MaxMessages: roomTestHarnessMaxMsgs,
 	}
@@ -63,7 +74,7 @@ func newRoomTestHarness(t *testing.T) *roomTestHarness {
 	assert.NoError(t, err)
 
 	t.Cleanup(func() {
-		err := redis.Do(context.Background(), radix.Cmd(
+		err := radixClient.Client.Do(context.Background(), radix.Cmd(
 			nil, "DEL", roomParams.streamKey(),
 		))
 		assert.NoError(t, err)
