@@ -13,7 +13,6 @@
     init = writeText "mediocre-blog-srv-init" ''
 
       export MEDIOCRE_BLOG_DATA_DIR="${config.dataDir}"
-      mkdir -p "${config.dataDir}"
 
       # mailing list
       export MEDIOCRE_BLOG_ML_SMTP_ADDR="${config.mlSMTPAddr}"
@@ -28,11 +27,7 @@
       export MEDIOCRE_BLOG_POW_SECRET="${config.powSecret}"
 
       # static proxy
-      if [ "${config.staticProxyURL}" == "" ]; then
-        export MEDIOCRE_BLOG_STATIC_DIR="${staticBuild}"
-      else
-        export MEDIOCRE_BLOG_STATIC_URL="${config.staticProxyURL}"
-      fi
+      export MEDIOCRE_BLOG_STATIC_DIR="${staticBuild}"
 
       # listening
       export MEDIOCRE_BLOG_LISTEN_PROTO="${config.listenProto}"
@@ -43,14 +38,14 @@
         pname = "mediocre-blog-srv";
         version = "dev";
         src = ./src;
-        vendorSha256 = "sha256-/F62WVkI50woo5J0xZOAn0g0WWkDna4wIBeVvbhAGzs=";
+        vendorSha256 = "sha256-MdjPrNSAAiqkAnJRIhMFTVQDKIPuDCHqRQFEtnoe1Cc=";
 
         # disable tests
         checkPhase = '''';
     };
 
     bin = writeScript "mediocre-blog-srv-bin" ''
-        #!${bash}
+        #!${bash}/bin/bash
         source ${init}
         exec ${build}/bin/mediocre-blog
     '';
