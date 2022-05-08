@@ -1,34 +1,23 @@
-SKIP_SERVICES = []
 
-all:
+CONFIG = ./config.nix
+
+entrypoint:
 	nix-build -A entrypoint \
-		--arg baseConfig '(import ./config.nix)' \
-		--arg baseSkipServices '${SKIP_SERVICES}'
+		--arg baseConfig '(import ${CONFIG})'
 
-run: all
+install:
+	nix-build -A install --arg baseConfig '(import ${CONFIG})'
 	./result
 
-all.prod:
-	nix-build -A entrypoint \
-		--arg baseConfig '(import ./prod.config.nix)' \
-		--arg baseSkipServices '${SKIP_SERVICES}'
-
-run.prod: all.prod
-	./result
-
-install.prod:
-	nix-build -A install --arg baseConfig '(import ./prod.config.nix)'
-	./result
+test:
+	$$(nix-build --no-out-link -A pkgs.bash)/bin/bash test.sh
+	@if [ $$? == 0 ]; then echo "TESTS PASSED!"; else echo "TESTS FAILED!"; fi
 
 srv.shell:
-	nix-shell -A srv.shell --command 'cd srv; return'
+	nix-shell -A srv.shell --arg baseConfig '(import ${CONFIG})' \
+		--command 'cd srv; return'
 
-srv.shell.prod:
-	nix-shell -A srv.shell --arg baseConfig '(import ./prod.config.nix)' --command 'cd srv; return'
-
-static.shell:
-	nix-shell -A static.shell --command 'cd static; return'
-
+# TODO static is on the way out, these aren't well supported
 static.serve:
 	nix-shell -A static.shell --run 'cd static; static-serve'
 

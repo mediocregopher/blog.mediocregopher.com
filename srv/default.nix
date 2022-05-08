@@ -63,4 +63,12 @@
           cd src
         '';
     };
+
+    test = stdenv.mkDerivation {
+        name = "mediocre-blog-srv-test";
+        buildInputs = [ go ];
+        shellHook = ''
+          source ${init}
+        '';
+    };
 }
