@@ -12,14 +12,14 @@ type assetTestHarness struct {
 	store AssetStore
 }
 
-func newAssetTestHarness(t *testing.T) assetTestHarness {
+func newAssetTestHarness(t *testing.T) *assetTestHarness {
 
 	db := NewInMemSQLDB()
 	t.Cleanup(func() { db.Close() })
 
 	store := NewAssetStore(db)
 
-	return assetTestHarness{
+	return &assetTestHarness{
 		store: store,
 	}
 }
@@ -40,28 +40,41 @@ func (h *assetTestHarness) assertNotFound(t *testing.T, id string) {
 
 func TestAssetStore(t *testing.T) {
 
-	h := newAssetTestHarness(t)
+	testAssetStore := func(t *testing.T, h *assetTestHarness) {
+		t.Helper()
 
-	h.assertNotFound(t, "foo")
-	h.assertNotFound(t, "bar")
+		h.assertNotFound(t, "foo")
+		h.assertNotFound(t, "bar")
 
-	err := h.store.Set("foo", bytes.NewBufferString("FOO"))
-	assert.NoError(t, err)
+		err := h.store.Set("foo", bytes.NewBufferString("FOO"))
+		assert.NoError(t, err)
 
-	h.assertGet(t, "FOO", "foo")
-	h.assertNotFound(t, "bar")
+		h.assertGet(t, "FOO", "foo")
+		h.assertNotFound(t, "bar")
 
-	err = h.store.Set("foo", bytes.NewBufferString("FOOFOO"))
-	assert.NoError(t, err)
+		err = h.store.Set("foo", bytes.NewBufferString("FOOFOO"))
+		assert.NoError(t, err)
 
-	h.assertGet(t, "FOOFOO", "foo")
-	h.assertNotFound(t, "bar")
+		h.assertGet(t, "FOOFOO", "foo")
+		h.assertNotFound(t, "bar")
 
-	assert.NoError(t, h.store.Delete("foo"))
-	h.assertNotFound(t, "foo")
-	h.assertNotFound(t, "bar")
+		assert.NoError(t, h.store.Delete("foo"))
+		h.assertNotFound(t, "foo")
+		h.assertNotFound(t, "bar")
 
-	assert.NoError(t, h.store.Delete("bar"))
-	h.assertNotFound(t, "foo")
-	h.assertNotFound(t, "bar")
+		assert.NoError(t, h.store.Delete("bar"))
+		h.assertNotFound(t, "foo")
+		h.assertNotFound(t, "bar")
+	}
+
+	t.Run("sql", func(t *testing.T) {
+		h := newAssetTestHarness(t)
+		testAssetStore(t, h)
+	})
+
+	t.Run("mem", func(t *testing.T) {
+		h := newAssetTestHarness(t)
+		h.store = NewCachedAssetStore(h.store)
+		testAssetStore(t, h)
+	})
 }

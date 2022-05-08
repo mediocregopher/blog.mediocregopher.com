@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"sync"
 )
 
 var (
@@ -83,4 +84,70 @@ func (s *assetStore) Get(id string, into io.Writer) error {
 func (s *assetStore) Delete(id string) error {
 	_, err := s.db.Exec(`DELETE FROM assets WHERE id = ?`, id)
 	return err
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+type cachedAssetStore struct {
+	inner AssetStore
+	m     sync.Map
+}
+
+// NewCachedAssetStore wraps an AssetStore in an in-memory cache.
+func NewCachedAssetStore(assetStore AssetStore) AssetStore {
+	return &cachedAssetStore{
+		inner: assetStore,
+	}
+}
+
+func (s *cachedAssetStore) Set(id string, from io.Reader) error {
+
+	buf := new(bytes.Buffer)
+	from = io.TeeReader(from, buf)
+
+	if err := s.inner.Set(id, from); err != nil {
+		return err
+	}
+
+	s.m.Store(id, buf.Bytes())
+	return nil
+}
+
+func (s *cachedAssetStore) Get(id string, into io.Writer) error {
+
+	if bodyI, ok := s.m.Load(id); ok {
+
+		if err, ok := bodyI.(error); ok {
+			return err
+		}
+
+		if _, err := io.Copy(into, bytes.NewReader(bodyI.([]byte))); err != nil {
+			return fmt.Errorf("writing body to io.Writer: %w", err)
+		}
+
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	into = io.MultiWriter(into, buf)
+
+	if err := s.inner.Get(id, into); errors.Is(err, ErrAssetNotFound) {
+		s.m.Store(id, err)
+		return err
+	} else if err != nil {
+		return err
+	}
+
+	s.m.Store(id, buf.Bytes())
+	return nil
+}
+
+func (s *cachedAssetStore) Delete(id string) error {
+
+	if err := s.inner.Delete(id); err != nil {
+		return err
+	}
+
+	s.m.Delete(id)
+	return nil
 }
