@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"path"
 	"regexp"
 	"strings"
 	"time"
@@ -37,6 +36,12 @@ type Post struct {
 	Body        string
 }
 
+// HTTPPath returns the relative URL path of the StoredPost, when querying it
+// over HTTP.
+func (p Post) HTTPPath() string {
+	return fmt.Sprintf("%s.html", p.ID)
+}
+
 // StoredPost is a Post which has been stored in a Store, and has been given
 // some extra fields as a result.
 type StoredPost struct {
@@ -44,19 +49,6 @@ type StoredPost struct {
 
 	PublishedAt   time.Time
 	LastUpdatedAt time.Time
-}
-
-// URL returns the relative URL of the StoredPost.
-func (p StoredPost) URL() string {
-	return path.Join(
-		fmt.Sprintf(
-			"%d/%0d/%0d",
-			p.PublishedAt.Year(),
-			p.PublishedAt.Month(),
-			p.PublishedAt.Day(),
-		),
-		p.ID+".html",
-	)
 }
 
 // Store is used for storing posts to a persistent storage.

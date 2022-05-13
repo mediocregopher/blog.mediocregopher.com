@@ -38,7 +38,7 @@
         pname = "mediocre-blog-srv";
         version = "dev";
         src = ./src;
-        vendorSha256 = "sha256-MdjPrNSAAiqkAnJRIhMFTVQDKIPuDCHqRQFEtnoe1Cc=";
+        vendorSha256 = "1s5jhis1a2y7m50k29ap7kd0h4bgc3dzy1f9dqf5jrz8n27f3i87";
 
         # disable tests
         checkPhase = '''';
