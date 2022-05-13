@@ -14,6 +14,7 @@ import (
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
@@ -22,9 +23,14 @@ import (
 // Params are used to instantiate a new API instance. All fields are required
 // unless otherwise noted.
 type Params struct {
-	Logger           *mlog.Logger
-	PowManager       pow.Manager
-	MailingList      mailinglist.MailingList
+	Logger     *mlog.Logger
+	PowManager pow.Manager
+
+	PostStore        post.Store
+	PostHTTPRenderer post.Renderer
+
+	MailingList mailinglist.MailingList
+
 	GlobalRoom       chat.Room
 	UserIDCalculator *chat.UserIDCalculator
 
@@ -172,7 +178,7 @@ func (a *api) handler() http.Handler {
 	)))
 
 	var apiHandler http.Handler = apiMux
-	apiHandler = postOnlyMiddleware(apiHandler)
+	apiHandler = postOnlyMiddleware(apiHandler) // TODO probably should be last?
 	apiHandler = checkCSRFMiddleware(apiHandler)
 	apiHandler = logMiddleware(a.params.Logger, apiHandler)
 	apiHandler = annotateMiddleware(apiHandler)
@@ -183,6 +189,8 @@ func (a *api) handler() http.Handler {
 	}, apiHandler)
 
 	mux.Handle("/api/", http.StripPrefix("/api", apiHandler))
+
+	mux.Handle("/posts/", a.postHandler())
 
 	return mux
 }

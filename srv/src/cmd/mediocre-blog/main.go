@@ -11,6 +11,7 @@ import (
 	cfgpkg "github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
@@ -112,8 +113,18 @@ func main() {
 
 	chatUserIDCalc := chat.NewUserIDCalculator([]byte(*chatUserIDCalcSecret))
 
+	postSQLDB, err := post.NewSQLDB(dataDir)
+	if err != nil {
+		logger.Fatal(ctx, "initializing sql db for post data", err)
+	}
+	defer postSQLDB.Close()
+
+	postStore := post.NewStore(postSQLDB)
+
 	apiParams.Logger = logger.WithNamespace("api")
 	apiParams.PowManager = powMgr
+	apiParams.PostStore = postStore
+	apiParams.PostHTTPRenderer = post.NewMarkdownToHTMLRenderer()
 	apiParams.MailingList = ml
 	apiParams.GlobalRoom = chatGlobalRoom
 	apiParams.UserIDCalculator = chatUserIDCalc
