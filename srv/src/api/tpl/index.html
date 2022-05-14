@@ -1,0 +1,20 @@
+{{ define "body" }}
+<ul id="posts-list">
+
+  {{ range .Posts }}
+  <li>
+    <h2>
+      <a href="{{ .HTTPPath }}">{{ .Title }}</a>
+    </h2>
+    <span>{{ .PublishedAt.Format "2006-01-02" }}</span>
+    {{ if not .LastUpdatedAt.IsZero }}
+    <span>(Updated {{ .LastUpdatedAt.Format "2006-01-02" }})</span>
+    {{ end }}
+    <p>{{ .Description }}</p>
+  </li>
+  {{ end }}
+
+</ul>
+{{ end }}
+
+{{ template "base.html" . }}

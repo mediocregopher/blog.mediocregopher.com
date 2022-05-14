@@ -19,7 +19,7 @@ func addResponseHeaders(headers map[string]string, h http.Handler) http.Handler 
 	})
 }
 
-func annotateMiddleware(h http.Handler) http.Handler {
+func setLoggerMiddleware(logger *mlog.Logger, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		type reqInfoKey string
@@ -34,6 +34,7 @@ func annotateMiddleware(h http.Handler) http.Handler {
 		)
 
 		r = r.WithContext(ctx)
+		r = apiutil.SetRequestLogger(r, logger)
 		h.ServeHTTP(rw, r)
 	})
 }
@@ -58,10 +59,8 @@ func (lrw *logResponseWriter) WriteHeader(statusCode int) {
 	lrw.ResponseWriter.WriteHeader(statusCode)
 }
 
-func logMiddleware(logger *mlog.Logger, h http.Handler) http.Handler {
+func logReqMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-
-		r = apiutil.SetRequestLogger(r, logger)
 
 		lrw := newLogResponseWriter(rw)
 
@@ -77,7 +76,7 @@ func logMiddleware(logger *mlog.Logger, h http.Handler) http.Handler {
 			logCtxKey("response_code"), lrw.statusCode,
 		)
 
-		logger.Info(ctx, "handled HTTP request")
+		apiutil.GetRequestLogger(r).Info(ctx, "handled HTTP request")
 	})
 }
 

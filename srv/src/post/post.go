@@ -58,8 +58,9 @@ type Store interface {
 	// overwrites a previous Post with the same ID, if there was one.
 	Set(post Post, now time.Time) error
 
-	// Get returns count StoredPosts, sorted time descending, offset by the given page
-	// number. The returned boolean indicates if there are more pages or not.
+	// Get returns count StoredPosts, sorted time descending, offset by the
+	// given page number. The returned boolean indicates if there are more pages
+	// or not.
 	Get(page, count int) ([]StoredPost, bool, error)
 
 	// GetByID will return the StoredPost with the given ID, or ErrPostNotFound.

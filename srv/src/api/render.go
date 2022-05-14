@@ -1,9 +1,11 @@
 package api
 
 import (
+	"embed"
 	"errors"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -15,7 +17,75 @@ import (
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 )
 
-func (a *api) postHandler() http.Handler {
+//go:embed tpl
+var tplFS embed.FS
+
+func mustParseTpl(name string) *template.Template {
+
+	mustRead := func(fileName string) string {
+		path := filepath.Join("tpl", fileName)
+
+		b, err := fs.ReadFile(tplFS, path)
+		if err != nil {
+			panic(fmt.Errorf("reading file %q from tplFS: %w", path, err))
+		}
+
+		return string(b)
+	}
+
+	tpl := template.Must(template.New("").Parse(mustRead(name)))
+	tpl = template.Must(tpl.New("base.html").Parse(mustRead("base.html")))
+
+	return tpl
+}
+
+func (a *api) renderIndexHandler() http.Handler {
+
+	tpl := mustParseTpl("index.html")
+	const pageCount = 20
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		if path := r.URL.Path; !strings.HasSuffix(path, "/") && filepath.Base(path) != "index.html" {
+			http.Error(rw, "Page not found", 404)
+			return
+		}
+
+		page, err := apiutil.StrToInt(r.FormValue("p"), 0)
+		if err != nil {
+			apiutil.BadRequest(
+				rw, r, fmt.Errorf("invalid page number: %w", err),
+			)
+			return
+		}
+
+		posts, _, err := a.params.PostStore.Get(page, pageCount)
+		if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("fetching page %d of posts: %w", page, err),
+			)
+			return
+		}
+
+		tplData := struct {
+			Posts []post.StoredPost
+		}{
+			Posts: posts,
+		}
+
+		if err := tpl.Execute(rw, tplData); err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("rendering index: %w", err),
+			)
+			return
+		}
+	})
+}
+
+func (a *api) renderPostHandler() http.Handler {
+
+	tpl := mustParseTpl("post.html")
+
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		id := strings.TrimSuffix(filepath.Base(r.URL.Path), ".html")
@@ -81,7 +151,7 @@ func (a *api) postHandler() http.Handler {
 			}
 		}
 
-		if err := tpls.ExecuteTemplate(rw, "post.html", tplData); err != nil {
+		if err := tpl.Execute(rw, tplData); err != nil {
 			apiutil.InternalServerError(
 				rw, r, fmt.Errorf("rendering post with id %q: %w", id, err),
 			)

@@ -3,10 +3,8 @@ package api
 
 import (
 	"context"
-	"embed"
 	"errors"
 	"fmt"
-	"html/template"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -21,11 +19,6 @@ import (
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
-
-//go:embed tpl
-var fs embed.FS
-
-var tpls = template.Must(template.ParseFS(fs, "tpl/*"))
 
 // Params are used to instantiate a new API instance. All fields are required
 // unless otherwise noted.
@@ -184,10 +177,9 @@ func (a *api) handler() http.Handler {
 	)))
 
 	var apiHandler http.Handler = apiMux
-	apiHandler = postOnlyMiddleware(apiHandler) // TODO probably should be last?
 	apiHandler = checkCSRFMiddleware(apiHandler)
-	apiHandler = logMiddleware(a.params.Logger, apiHandler)
-	apiHandler = annotateMiddleware(apiHandler)
+	apiHandler = postOnlyMiddleware(apiHandler)
+	apiHandler = logReqMiddleware(apiHandler)
 	apiHandler = addResponseHeaders(map[string]string{
 		"Cache-Control": "no-store, max-age=0",
 		"Pragma":        "no-cache",
@@ -196,7 +188,12 @@ func (a *api) handler() http.Handler {
 
 	mux.Handle("/api/", http.StripPrefix("/api", apiHandler))
 
-	mux.Handle("/v2/posts/", a.postHandler())
+	// TODO need to setCSRFMiddleware on all these rendering endpoints
+	mux.Handle("/v2/posts/", a.renderPostHandler())
+	mux.Handle("/v2/", a.renderIndexHandler())
 
-	return mux
+	var globalHandler http.Handler = mux
+	globalHandler = setLoggerMiddleware(a.params.Logger, globalHandler)
+
+	return globalHandler
 }
