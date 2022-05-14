@@ -24,6 +24,6 @@ while [ ! -e $test_dir/run/redis ]; do
     sleep 1
 done
 
-nix-shell -A srv.test \
-    --arg baseConfig "$test_cfg"  \
-    --run "cd srv/src && go test ./... -count=1 -tags integration"
+nix-shell -A srv.shell \
+    --arg baseConfig "$test_cfg" \
+    "$@"

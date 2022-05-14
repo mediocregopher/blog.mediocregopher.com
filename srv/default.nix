@@ -52,18 +52,13 @@
 
     shell = stdenv.mkDerivation {
         name = "mediocre-blog-srv-shell";
-        buildInputs = [ go build ];
-        shellHook = ''
-          source ${init}
-          cd src
-        '';
+        buildInputs = [ go ];
+        shellHook = ''source ${init}'';
     };
 
-    test = stdenv.mkDerivation {
-        name = "mediocre-blog-srv-test";
-        buildInputs = [ go ];
-        shellHook = ''
-          source ${init}
-        '';
+    shellWithBuild = stdenv.mkDerivation {
+        name = "mediocre-blog-srv-shell-with-build";
+        buildInputs = [ go build ];
+        shellHook = ''source ${init}'';
     };
 }
