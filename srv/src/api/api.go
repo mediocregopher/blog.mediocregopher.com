@@ -3,8 +3,10 @@ package api
 
 import (
 	"context"
+	"embed"
 	"errors"
 	"fmt"
+	"html/template"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -20,14 +22,18 @@ import (
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
 
+//go:embed tpl
+var fs embed.FS
+
+var tpls = template.Must(template.ParseFS(fs, "tpl/*"))
+
 // Params are used to instantiate a new API instance. All fields are required
 // unless otherwise noted.
 type Params struct {
 	Logger     *mlog.Logger
 	PowManager pow.Manager
 
-	PostStore        post.Store
-	PostHTTPRenderer post.Renderer
+	PostStore post.Store
 
 	MailingList mailinglist.MailingList
 
@@ -190,7 +196,7 @@ func (a *api) handler() http.Handler {
 
 	mux.Handle("/api/", http.StripPrefix("/api", apiHandler))
 
-	mux.Handle("/posts/", a.postHandler())
+	mux.Handle("/v2/posts/", a.postHandler())
 
 	return mux
 }

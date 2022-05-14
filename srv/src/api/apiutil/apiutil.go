@@ -1,6 +1,6 @@
-// Package apiutils contains utilities which are useful for implementing api
+// Package apiutil contains utilities which are useful for implementing api
 // endpoints.
-package apiutils
+package apiutil
 
 import (
 	"context"

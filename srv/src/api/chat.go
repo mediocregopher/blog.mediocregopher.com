@@ -9,7 +9,7 @@ import (
 	"unicode"
 
 	"github.com/gorilla/websocket"
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutils"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 )
 
@@ -44,9 +44,9 @@ func newChatHandler(
 
 func (c *chatHandler) historyHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		limit, err := apiutils.StrToInt(r.PostFormValue("limit"), 0)
+		limit, err := apiutil.StrToInt(r.PostFormValue("limit"), 0)
 		if err != nil {
-			apiutils.BadRequest(rw, r, fmt.Errorf("invalid limit parameter: %w", err))
+			apiutil.BadRequest(rw, r, fmt.Errorf("invalid limit parameter: %w", err))
 			return
 		}
 
@@ -58,13 +58,13 @@ func (c *chatHandler) historyHandler() http.Handler {
 		})
 
 		if argErr := (chat.ErrInvalidArg{}); errors.As(err, &argErr) {
-			apiutils.BadRequest(rw, r, argErr.Err)
+			apiutil.BadRequest(rw, r, argErr.Err)
 			return
 		} else if err != nil {
-			apiutils.InternalServerError(rw, r, err)
+			apiutil.InternalServerError(rw, r, err)
 		}
 
-		apiutils.JSONResult(rw, r, struct {
+		apiutil.JSONResult(rw, r, struct {
 			Cursor   string         `json:"cursor"`
 			Messages []chat.Message `json:"messages"`
 		}{
@@ -107,11 +107,11 @@ func (c *chatHandler) userIDHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		userID, err := c.userID(r)
 		if err != nil {
-			apiutils.BadRequest(rw, r, err)
+			apiutil.BadRequest(rw, r, err)
 			return
 		}
 
-		apiutils.JSONResult(rw, r, struct {
+		apiutil.JSONResult(rw, r, struct {
 			UserID chat.UserID `json:"userID"`
 		}{
 			UserID: userID,
@@ -123,18 +123,18 @@ func (c *chatHandler) appendHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		userID, err := c.userID(r)
 		if err != nil {
-			apiutils.BadRequest(rw, r, err)
+			apiutil.BadRequest(rw, r, err)
 			return
 		}
 
 		body := r.PostFormValue("body")
 
 		if l := len(body); l == 0 {
-			apiutils.BadRequest(rw, r, errors.New("body is required"))
+			apiutil.BadRequest(rw, r, errors.New("body is required"))
 			return
 
 		} else if l > 300 {
-			apiutils.BadRequest(rw, r, errors.New("body too long"))
+			apiutil.BadRequest(rw, r, errors.New("body too long"))
 			return
 		}
 
@@ -144,11 +144,11 @@ func (c *chatHandler) appendHandler() http.Handler {
 		})
 
 		if err != nil {
-			apiutils.InternalServerError(rw, r, err)
+			apiutil.InternalServerError(rw, r, err)
 			return
 		}
 
-		apiutils.JSONResult(rw, r, struct {
+		apiutil.JSONResult(rw, r, struct {
 			MessageID string `json:"messageID"`
 		}{
 			MessageID: msg.ID,
@@ -164,7 +164,7 @@ func (c *chatHandler) listenHandler() http.Handler {
 
 		conn, err := c.wsUpgrader.Upgrade(rw, r, nil)
 		if err != nil {
-			apiutils.BadRequest(rw, r, err)
+			apiutil.BadRequest(rw, r, err)
 			return
 		}
 		defer conn.Close()
@@ -172,14 +172,14 @@ func (c *chatHandler) listenHandler() http.Handler {
 		it, err := c.room.Listen(ctx, sinceID)
 
 		if errors.As(err, new(chat.ErrInvalidArg)) {
-			apiutils.BadRequest(rw, r, err)
+			apiutil.BadRequest(rw, r, err)
 			return
 
 		} else if errors.Is(err, context.Canceled) {
 			return
 
 		} else if err != nil {
-			apiutils.InternalServerError(rw, r, err)
+			apiutil.InternalServerError(rw, r, err)
 			return
 		}
 
@@ -192,7 +192,7 @@ func (c *chatHandler) listenHandler() http.Handler {
 				return
 
 			} else if err != nil {
-				apiutils.InternalServerError(rw, r, err)
+				apiutil.InternalServerError(rw, r, err)
 				return
 			}
 
@@ -203,7 +203,7 @@ func (c *chatHandler) listenHandler() http.Handler {
 			})
 
 			if err != nil {
-				apiutils.GetRequestLogger(r).Error(ctx, "couldn't write message", err)
+				apiutil.GetRequestLogger(r).Error(ctx, "couldn't write message", err)
 				return
 			}
 		}

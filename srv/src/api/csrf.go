@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutils"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
 )
 
 const (
@@ -15,16 +15,16 @@ const (
 func setCSRFMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		csrfTok, err := apiutils.GetCookie(r, csrfTokenCookieName, "")
+		csrfTok, err := apiutil.GetCookie(r, csrfTokenCookieName, "")
 
 		if err != nil {
-			apiutils.InternalServerError(rw, r, err)
+			apiutil.InternalServerError(rw, r, err)
 			return
 
 		} else if csrfTok == "" {
 			http.SetCookie(rw, &http.Cookie{
 				Name:   csrfTokenCookieName,
-				Value:  apiutils.RandStr(32),
+				Value:  apiutil.RandStr(32),
 				Secure: true,
 			})
 		}
@@ -36,10 +36,10 @@ func setCSRFMiddleware(h http.Handler) http.Handler {
 func checkCSRFMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		csrfTok, err := apiutils.GetCookie(r, csrfTokenCookieName, "")
+		csrfTok, err := apiutil.GetCookie(r, csrfTokenCookieName, "")
 
 		if err != nil {
-			apiutils.InternalServerError(rw, r, err)
+			apiutil.InternalServerError(rw, r, err)
 			return
 		}
 
@@ -49,7 +49,7 @@ func checkCSRFMiddleware(h http.Handler) http.Handler {
 		}
 
 		if csrfTok == "" || givenCSRFTok != csrfTok {
-			apiutils.BadRequest(rw, r, errors.New("invalid CSRF token"))
+			apiutil.BadRequest(rw, r, errors.New("invalid CSRF token"))
 			return
 		}
 

@@ -124,7 +124,6 @@ func main() {
 	apiParams.Logger = logger.WithNamespace("api")
 	apiParams.PowManager = powMgr
 	apiParams.PostStore = postStore
-	apiParams.PostHTTPRenderer = post.NewMarkdownToHTMLRenderer()
 	apiParams.MailingList = ml
 	apiParams.GlobalRoom = chatGlobalRoom
 	apiParams.UserIDCalculator = chatUserIDCalc
