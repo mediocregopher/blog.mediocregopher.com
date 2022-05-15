@@ -1,28 +1,36 @@
 {{ define "body" }}
-<ul id="posts-list">
 
-  {{ range .Posts }}
-  <li>
-    <h2>
-      <a href="{{ .HTTPPath }}">{{ .Title }}</a>
-    </h2>
-    <span>{{ .PublishedAt.Format "2006-01-02" }}</span>
-    {{ if not .LastUpdatedAt.IsZero }}
-    <span>(Updated {{ .LastUpdatedAt.Format "2006-01-02" }})</span>
+  <ul id="posts-list">
+
+    {{ range .Posts }}
+    <li>
+      <h2>
+        <a href="posts/{{ .HTTPPath }}">{{ .Title }}</a>
+      </h2>
+      <span>{{ .PublishedAt.Format "2006-01-02" }}</span>
+      {{ if not .LastUpdatedAt.IsZero }}
+      <span>(Updated {{ .LastUpdatedAt.Format "2006-01-02" }})</span>
+      {{ end }}
+      <p>{{ .Description }}</p>
+    </li>
     {{ end }}
-    <p>{{ .Description }}</p>
-  </li>
+
+  </ul>
+
+  {{ if or (ge .PrevPage 0) (ge .NextPage 0) }}
+    <div id="page-turner">
+
+    {{ if ge .PrevPage 0 }}
+      <a style="float: left;" href="?p={{ .PrevPage}}">Newer</a>
+    {{ end }}
+
+    {{ if ge .NextPage 0 }}
+      <a style="float:right;" href="?p={{ .NextPage}}">Older</a>
+    {{ end }}
+
+    </div>
   {{ end }}
 
-</ul>
-{{ end }}
-
-{{ if ge .PrevPage 0 }}
-<a href="?p={{ .PrevPage}}">Previous</a>
-{{ end }}
-
-{{ if ge .NextPage 0 }}
-<a href="?p={{ .NextPage}}">Next</a>
 {{ end }}
 
 {{ template "base.html" . }}

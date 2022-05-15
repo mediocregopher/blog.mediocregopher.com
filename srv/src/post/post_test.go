@@ -159,6 +159,8 @@ func TestStore(t *testing.T) {
 			h.testStoredPost(3),
 		}
 
+		posts[1].Tags = []string{"1", "2"}
+
 		for _, post := range posts {
 			assert.NoError(t, h.store.Set(post.Post, now))
 		}

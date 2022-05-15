@@ -42,7 +42,7 @@ func mustParseTpl(name string) *template.Template {
 func (a *api) renderIndexHandler() http.Handler {
 
 	tpl := mustParseTpl("index.html")
-	const pageCount = 20
+	const pageCount = 10
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 

@@ -31,7 +31,7 @@ type Post struct {
 	ID          string
 	Title       string
 	Description string
-	Tags        []string
+	Tags        []string // only alphanumeric supported
 	Series      string
 	Body        string
 }
@@ -199,12 +199,13 @@ func (s *store) get(
 
 	query := fmt.Sprintf(
 		`SELECT
-			p.id, p.title, p.description, p.series, pt.tag,
+			p.id, p.title, p.description, p.series, GROUP_CONCAT(pt.tag),
 			p.published_at, p.last_updated_at,
 			p.body
 		FROM posts p
 		LEFT JOIN post_tags pt ON (p.id = pt.post_id)
 		`+where+`
+		GROUP BY (p.id)
 		ORDER BY p.published_at %s, p.title %s`,
 		s.order, s.order,
 	)
@@ -243,17 +244,11 @@ func (s *store) get(
 			return nil, fmt.Errorf("scanning row: %w", err)
 		}
 
-		if tag.Valid {
-
-			if l := len(posts); l > 0 && posts[l-1].ID == post.ID {
-				posts[l-1].Tags = append(posts[l-1].Tags, tag.String)
-				continue
-			}
-
-			post.Tags = append(post.Tags, tag.String)
-		}
-
 		post.Series = series.String
+
+		if tag.String != "" {
+			post.Tags = strings.Split(tag.String, ",")
+		}
 
 		if publishedAt.Valid {
 			post.PublishedAt = time.Unix(publishedAt.Int64, 0).UTC()

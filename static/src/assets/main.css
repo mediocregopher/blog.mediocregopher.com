@@ -98,3 +98,8 @@ footer {
 {
     max-width: 100%;
 }
+
+#page-turner {
+    height: 2rem;
+    font-size: 2rem;
+}
