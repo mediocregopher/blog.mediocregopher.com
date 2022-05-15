@@ -187,6 +187,47 @@ func TestStore(t *testing.T) {
 		assertPostsEqual(t, posts[4:], gotPosts)
 	})
 
+	t.Run("get_desc", func(t *testing.T) {
+		h := newStoreTestHarness(t)
+		h.store = h.store.WithOrderDesc()
+
+		now := h.clock.Now().UTC()
+
+		posts := []StoredPost{
+			h.testStoredPost(3),
+			h.testStoredPost(2),
+			h.testStoredPost(1),
+			h.testStoredPost(0),
+		}
+
+		for _, post := range posts {
+			assert.NoError(t, h.store.Set(post.Post, now))
+		}
+
+		gotPosts, hasMore, err := h.store.Get(0, 2)
+		assert.NoError(t, err)
+		assert.True(t, hasMore)
+		assertPostsEqual(t, posts[:2], gotPosts)
+
+		gotPosts, hasMore, err = h.store.Get(1, 2)
+		assert.NoError(t, err)
+		assert.False(t, hasMore)
+		assertPostsEqual(t, posts[2:4], gotPosts)
+
+		posts = append([]StoredPost{h.testStoredPost(4)}, posts...)
+		assert.NoError(t, h.store.Set(posts[0].Post, now))
+
+		gotPosts, hasMore, err = h.store.Get(1, 2)
+		assert.NoError(t, err)
+		assert.True(t, hasMore)
+		assertPostsEqual(t, posts[2:4], gotPosts)
+
+		gotPosts, hasMore, err = h.store.Get(2, 2)
+		assert.NoError(t, err)
+		assert.False(t, hasMore)
+		assertPostsEqual(t, posts[4:], gotPosts)
+	})
+
 	t.Run("get_by_series", func(t *testing.T) {
 		h := newStoreTestHarness(t)
 

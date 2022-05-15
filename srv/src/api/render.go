@@ -59,7 +59,7 @@ func (a *api) renderIndexHandler() http.Handler {
 			return
 		}
 
-		posts, _, err := a.params.PostStore.Get(page, pageCount)
+		posts, hasMore, err := a.params.PostStore.WithOrderDesc().Get(page, pageCount)
 		if err != nil {
 			apiutil.InternalServerError(
 				rw, r, fmt.Errorf("fetching page %d of posts: %w", page, err),
@@ -68,9 +68,20 @@ func (a *api) renderIndexHandler() http.Handler {
 		}
 
 		tplData := struct {
-			Posts []post.StoredPost
+			Posts              []post.StoredPost
+			PrevPage, NextPage int
 		}{
-			Posts: posts,
+			Posts:    posts,
+			PrevPage: -1,
+			NextPage: -1,
+		}
+
+		if page > 0 {
+			tplData.PrevPage = page - 1
+		}
+
+		if hasMore {
+			tplData.NextPage = page + 1
 		}
 
 		if err := tpl.Execute(rw, tplData); err != nil {

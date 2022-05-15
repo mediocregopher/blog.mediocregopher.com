@@ -15,7 +15,11 @@ test:
 
 srv.dev-shell:
 	$$(nix-build --no-out-link -A pkgs.bash)/bin/bash srv-dev-env.sh \
-    	--command "cd srv/src; return"
+		--command " \
+			cd srv/src; \
+			go run cmd/import-posts/main.go ../../static/src/_posts/*; \
+			return; \
+		"
 
 srv.shell:
 	nix-shell -A srv.shellWithBuild --arg baseConfig '(import ${CONFIG})' \

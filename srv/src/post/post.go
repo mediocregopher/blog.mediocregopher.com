@@ -74,19 +74,31 @@ type Store interface {
 	// ascending, or empty slice.
 	GetByTag(tag string) ([]StoredPost, error)
 
+	// WithOrderDesc will return a Store whose Get operations return Posts in
+	// time descending order, rather than ascending.
+	WithOrderDesc() Store
+
 	// Delete will delete the StoredPost with the given ID.
 	Delete(id string) error
 }
 
 type store struct {
-	db *sql.DB
+	db    *sql.DB
+	order string
 }
 
 // NewStore initializes a new Store using an existing SQLDB.
 func NewStore(db *SQLDB) Store {
 	return &store{
-		db: db.db,
+		db:    db.db,
+		order: "ASC",
 	}
+}
+
+func (s *store) WithOrderDesc() Store {
+	s2 := *s
+	s2.order = "DESC"
+	return &s2
 }
 
 // if the callback returns an error then the transaction is aborted.
@@ -185,15 +197,17 @@ func (s *store) get(
 	[]StoredPost, error,
 ) {
 
-	query := `
-		SELECT
+	query := fmt.Sprintf(
+		`SELECT
 			p.id, p.title, p.description, p.series, pt.tag,
 			p.published_at, p.last_updated_at,
 			p.body
 		FROM posts p
 		LEFT JOIN post_tags pt ON (p.id = pt.post_id)
-		` + where + `
-		ORDER BY p.published_at ASC, p.title ASC`
+		`+where+`
+		ORDER BY p.published_at %s, p.title %s`,
+		s.order, s.order,
+	)
 
 	if limit > 0 {
 		query += fmt.Sprintf(" LIMIT %d", limit)
