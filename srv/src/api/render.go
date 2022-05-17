@@ -178,3 +178,17 @@ func (a *api) renderPostHandler() http.Handler {
 		}
 	})
 }
+
+func (a *api) renderDumbHandler(tplName string) http.Handler {
+
+	tpl := a.mustParseTpl(tplName)
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		if err := tpl.Execute(rw, nil); err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("rendering %q: %w", tplName, err),
+			)
+			return
+		}
+	})
+}

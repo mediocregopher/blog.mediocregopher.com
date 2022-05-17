@@ -194,6 +194,7 @@ func (a *api) handler() http.Handler {
 	mux.Handle("/api/", http.StripPrefix("/api", apiHandler))
 
 	// TODO need to setCSRFMiddleware on all these rendering endpoints
+	mux.Handle("/v2/follow.html", a.renderDumbHandler("follow.html"))
 	mux.Handle("/v2/posts/", a.renderPostHandler())
 	mux.Handle("/v2/", a.renderIndexHandler())
 
