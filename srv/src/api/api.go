@@ -26,6 +26,10 @@ type Params struct {
 	Logger     *mlog.Logger
 	PowManager pow.Manager
 
+	// PathPrefix, if given, will be prefixed to all url paths which are
+	// rendered by the API's templating system.
+	PathPrefix string
+
 	PostStore      post.Store
 	PostAssetStore post.AssetStore
 

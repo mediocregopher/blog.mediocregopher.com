@@ -20,7 +20,7 @@ import (
 //go:embed tpl
 var tplFS embed.FS
 
-func mustParseTpl(name string) *template.Template {
+func (a *api) mustParseTpl(name string) *template.Template {
 
 	mustRead := func(fileName string) string {
 		path := filepath.Join("tpl", fileName)
@@ -33,7 +33,15 @@ func mustParseTpl(name string) *template.Template {
 		return string(b)
 	}
 
-	tpl := template.Must(template.New("").Parse(mustRead(name)))
+	blogURL := func(path string) string {
+		return filepath.Join(a.params.PathPrefix, "/v2", path)
+	}
+
+	tpl := template.New("").Funcs(template.FuncMap{
+		"BlogURL": blogURL,
+	})
+
+	tpl = template.Must(tpl.Parse(mustRead(name)))
 	tpl = template.Must(tpl.New("base.html").Parse(mustRead("base.html")))
 
 	return tpl
@@ -41,7 +49,7 @@ func mustParseTpl(name string) *template.Template {
 
 func (a *api) renderIndexHandler() http.Handler {
 
-	tpl := mustParseTpl("index.html")
+	tpl := a.mustParseTpl("index.html")
 	const pageCount = 10
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
@@ -95,7 +103,7 @@ func (a *api) renderIndexHandler() http.Handler {
 
 func (a *api) renderPostHandler() http.Handler {
 
-	tpl := mustParseTpl("post.html")
+	tpl := a.mustParseTpl("post.html")
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 

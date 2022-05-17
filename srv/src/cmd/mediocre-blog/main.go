@@ -53,6 +53,8 @@ func main() {
 	chatGlobalRoomMaxMsgs := cfg.Int("chat-global-room-max-messages", 1000, "Maximum number of messages the global chat room can retain")
 	chatUserIDCalcSecret := cfg.String("chat-user-id-calc-secret", "", "Secret to use when calculating user ids")
 
+	pathPrefix := cfg.String("path-prefix", "", "Prefix which is optionally applied to all URL paths rendered by the blog")
+
 	// initialization
 	err := cfg.Init(ctx)
 
@@ -69,6 +71,10 @@ func main() {
 	ctx = mctx.Annotate(ctx,
 		"chatGlobalRoomMaxMsgs", *chatGlobalRoomMaxMsgs,
 	)
+
+	if *pathPrefix != "" {
+		ctx = mctx.Annotate(ctx, "pathPrefix", *pathPrefix)
+	}
 
 	clock := clock.Realtime()
 
@@ -124,6 +130,7 @@ func main() {
 
 	apiParams.Logger = logger.WithNamespace("api")
 	apiParams.PowManager = powMgr
+	apiParams.PathPrefix = *pathPrefix
 	apiParams.PostStore = postStore
 	apiParams.PostAssetStore = postAssetStore
 	apiParams.MailingList = ml

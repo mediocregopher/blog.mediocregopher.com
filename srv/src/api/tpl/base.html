@@ -18,7 +18,7 @@
         <div class="row">
           <div class="seven columns" style="margin-bottom: 3rem;">
             <h1 class="title">
-              <a href="/">Mediocre Blog</a>
+              <a href="{{ BlogURL "/" }}">Mediocre Blog</a>
             </h1>
             <div class="light social">
               <span>By Brian Picciano</span>
@@ -31,13 +31,14 @@
 
           <div class="five columns light">
             <span style="display:block; margin-bottom:0.5rem;">Get notified when new posts are published!</span>
-            <a href="/follow.html">
+            <a href="{{ BlogURL "follow.html" }}">
               <button class="button-primary">
                 <i class="far fa-envelope"></i>
                 Follow
               </button>
             </a>
-            <a href="/feed.xml">
+
+            <a href="{{ BlogURL "feed.xml" }}">
               <button class="button">
                 <i class="fas fa-rss"></i>
                 RSS
