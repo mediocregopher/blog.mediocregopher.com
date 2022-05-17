@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
@@ -158,9 +159,9 @@ func (a *api) handler() http.Handler {
 		return a.requirePowMiddleware(h)
 	}
 
-	postFormMiddleware := func(h http.Handler) http.Handler {
+	formMiddleware := func(h http.Handler) http.Handler {
 		h = checkCSRFMiddleware(h)
-		h = postOnlyMiddleware(h)
+		h = disallowGetMiddleware(h)
 		h = logReqMiddleware(h)
 		h = addResponseHeaders(map[string]string{
 			"Cache-Control": "no-store, max-age=0",
@@ -193,14 +194,17 @@ func (a *api) handler() http.Handler {
 			a.requirePowMiddleware,
 		)))
 
-		mux.Handle("/api/", http.StripPrefix("/api", postFormMiddleware(apiMux)))
+		mux.Handle("/api/", http.StripPrefix("/api", formMiddleware(apiMux)))
 	}
 
 	{
 		v2Mux := http.NewServeMux()
 		v2Mux.Handle("/follow.html", a.renderDumbHandler("follow.html"))
 		v2Mux.Handle("/posts/", a.renderPostHandler())
-		v2Mux.Handle("/assets", a.renderPostAssetsIndexHandler())
+		v2Mux.Handle("/assets", apiutil.MethodMux(map[string]http.Handler{
+			"GET":  a.renderPostAssetsIndexHandler(),
+			"POST": formMiddleware(a.uploadPostAssetHandler()),
+		}))
 		v2Mux.Handle("/assets/", a.servePostAssetHandler())
 		v2Mux.Handle("/", a.renderIndexHandler())
 

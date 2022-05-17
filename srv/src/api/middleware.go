@@ -80,11 +80,11 @@ func logReqMiddleware(h http.Handler) http.Handler {
 	})
 }
 
-func postOnlyMiddleware(h http.Handler) http.Handler {
+func disallowGetMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		// we allow websockets to not be POSTs because, well, they can't be
-		if r.Method == "POST" || r.Header.Get("Upgrade") == "websocket" {
+		// we allow websockets to be GETs because, well, they must be
+		if r.Method != "GET" || r.Header.Get("Upgrade") == "websocket" {
 			h.ServeHTTP(rw, r)
 			return
 		}

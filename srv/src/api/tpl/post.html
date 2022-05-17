@@ -2,43 +2,43 @@
 
 <header id="post-header">
   <h1 id="post-headline">
-    {{ .Title }}
+    {{ .Payload.Title }}
   </h1>
   <div class="light">
-    {{ .PublishedAt.Format "2006-01-02" }}
+    {{ .Payload.PublishedAt.Format "2006-01-02" }}
     &nbsp;•&nbsp;
-    {{ if not .LastUpdatedAt.IsZero }}
-    (Updated {{ .LastUpdatedAt.Format "2006-01-02" }})
+    {{ if not .Payload.LastUpdatedAt.IsZero }}
+    (Updated {{ .Payload.LastUpdatedAt.Format "2006-01-02" }})
     &nbsp;•&nbsp;
     {{ end }}
-    <em>{{ .Description }}</em>
+    <em>{{ .Payload.Description }}</em>
   </div>
 </header>
 
-{{ if (or .SeriesPrevious .SeriesNext) }}
+{{ if (or .Payload.SeriesPrevious .Payload.SeriesNext) }}
 <p class="light"><em>
   This post is part of a series:<br/>
-  {{ if .SeriesPrevious }}
-  Previously: <a href="{{ .SeriesPrevious.HTTPPath }}">{{ .SeriesPrevious.Title }}</a></br>
+  {{ if .Payload.SeriesPrevious }}
+  Previously: <a href="{{ .Payload.SeriesPrevious.HTTPPath }}">{{ .Payload.SeriesPrevious.Title }}</a></br>
   {{ end }}
-  {{ if .SeriesNext }}
-  Next: <a href="{{ .SeriesNext.HTTPPath }}">{{ .SeriesNext.Title }}</a></br>
+  {{ if .Payload.SeriesNext }}
+  Next: <a href="{{ .Payload.SeriesNext.HTTPPath }}">{{ .Payload.SeriesNext.Title }}</a></br>
   {{ end }}
 </em></p>
 {{ end }}
 
 <div id="post-content">
-  {{ .Body }}
+  {{ .Payload.Body }}
 </div>
 
-{{ if (or .SeriesPrevious .SeriesNext) }}
+{{ if (or .Payload.SeriesPrevious .Payload.SeriesNext) }}
 <p class="light"><em>
   If you liked this post, consider checking out other posts in the series:<br/>
-  {{ if .SeriesPrevious }}
-  Previously: <a href="{{ .SeriesPrevious.HTTPPath }}">{{ .SeriesPrevious.Title }}</a></br>
+  {{ if .Payload.SeriesPrevious }}
+  Previously: <a href="{{ .Payload.SeriesPrevious.HTTPPath }}">{{ .Payload.SeriesPrevious.Title }}</a></br>
   {{ end }}
-  {{ if .SeriesNext }}
-  Next: <a href="{{ .SeriesNext.HTTPPath }}">{{ .SeriesNext.Title }}</a></br>
+  {{ if .Payload.SeriesNext }}
+  Next: <a href="{{ .Payload.SeriesNext.HTTPPath }}">{{ .Payload.SeriesNext.Title }}</a></br>
   {{ end }}
 </em></p>
 {{ end }}

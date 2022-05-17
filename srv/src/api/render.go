@@ -51,6 +51,39 @@ func (a *api) mustParseTpl(name string) *template.Template {
 	return tpl
 }
 
+type tplData struct {
+	Payload   interface{}
+	CSRFToken string
+}
+
+func (t tplData) CSRFFormInput() template.HTML {
+	return template.HTML(fmt.Sprintf(
+		`<input type="hidden" name="%s" value="%s" />`,
+		csrfTokenFormName, t.CSRFToken,
+	))
+}
+
+// executeTemplate expects to be the final action in an http.Handler
+func executeTemplate(
+	rw http.ResponseWriter, r *http.Request,
+	tpl *template.Template, payload interface{},
+) {
+
+	csrfToken, _ := apiutil.GetCookie(r, csrfTokenCookieName, "")
+
+	tplData := tplData{
+		Payload:   payload,
+		CSRFToken: csrfToken,
+	}
+
+	if err := tpl.Execute(rw, tplData); err != nil {
+		apiutil.InternalServerError(
+			rw, r, fmt.Errorf("rendering template: %w", err),
+		)
+		return
+	}
+}
+
 func (a *api) renderIndexHandler() http.Handler {
 
 	tpl := a.mustParseTpl("index.html")
@@ -79,7 +112,7 @@ func (a *api) renderIndexHandler() http.Handler {
 			return
 		}
 
-		tplData := struct {
+		tplPayload := struct {
 			Posts              []post.StoredPost
 			PrevPage, NextPage int
 		}{
@@ -89,19 +122,14 @@ func (a *api) renderIndexHandler() http.Handler {
 		}
 
 		if page > 0 {
-			tplData.PrevPage = page - 1
+			tplPayload.PrevPage = page - 1
 		}
 
 		if hasMore {
-			tplData.NextPage = page + 1
+			tplPayload.NextPage = page + 1
 		}
 
-		if err := tpl.Execute(rw, tplData); err != nil {
-			apiutil.InternalServerError(
-				rw, r, fmt.Errorf("rendering index: %w", err),
-			)
-			return
-		}
+		executeTemplate(rw, r, tpl, tplPayload)
 	})
 }
 
@@ -133,7 +161,7 @@ func (a *api) renderPostHandler() http.Handler {
 
 		renderedBody := markdown.ToHTML([]byte(storedPost.Body), parser, htmlRenderer)
 
-		tplData := struct {
+		tplPayload := struct {
 			post.StoredPost
 			SeriesPrevious, SeriesNext *post.StoredPost
 			Body                       template.HTML
@@ -165,21 +193,16 @@ func (a *api) renderPostHandler() http.Handler {
 				}
 
 				if !foundThis {
-					tplData.SeriesPrevious = &seriesPost
+					tplPayload.SeriesPrevious = &seriesPost
 					continue
 				}
 
-				tplData.SeriesNext = &seriesPost
+				tplPayload.SeriesNext = &seriesPost
 				break
 			}
 		}
 
-		if err := tpl.Execute(rw, tplData); err != nil {
-			apiutil.InternalServerError(
-				rw, r, fmt.Errorf("rendering post with id %q: %w", id, err),
-			)
-			return
-		}
+		executeTemplate(rw, r, tpl, tplPayload)
 	})
 }
 
@@ -212,17 +235,12 @@ func (a *api) renderPostAssetsIndexHandler() http.Handler {
 			return
 		}
 
-		tplData := struct {
+		tplPayload := struct {
 			IDs []string
 		}{
 			IDs: ids,
 		}
 
-		if err := tpl.Execute(rw, tplData); err != nil {
-			apiutil.InternalServerError(
-				rw, r, fmt.Errorf("rendering: %w", err),
-			)
-			return
-		}
+		executeTemplate(rw, r, tpl, tplPayload)
 	})
 }

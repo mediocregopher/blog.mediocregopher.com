@@ -10,6 +10,7 @@ import (
 const (
 	csrfTokenCookieName = "csrf_token"
 	csrfTokenHeaderName = "X-CSRF-Token"
+	csrfTokenFormName   = "csrfToken"
 )
 
 func setCSRFMiddleware(h http.Handler) http.Handler {
@@ -45,7 +46,7 @@ func checkCSRFMiddleware(h http.Handler) http.Handler {
 
 		givenCSRFTok := r.Header.Get(csrfTokenHeaderName)
 		if givenCSRFTok == "" {
-			givenCSRFTok = r.FormValue("csrfToken")
+			givenCSRFTok = r.FormValue(csrfTokenFormName)
 		}
 
 		if csrfTok == "" || givenCSRFTok != csrfTok {

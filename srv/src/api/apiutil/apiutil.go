@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
@@ -109,4 +110,24 @@ func RandStr(numBytes int) string {
 		panic(err)
 	}
 	return hex.EncodeToString(b)
+}
+
+// MethodMux will take the request method (GET, POST, etc...) and handle the
+// request using the corresponding Handler in the given map.
+//
+// If no Handler is defined for a method then a 405 Method Not Allowed error is
+// returned.
+func MethodMux(handlers map[string]http.Handler) http.Handler {
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		handler, ok := handlers[strings.ToUpper(r.Method)]
+
+		if !ok {
+			http.Error(rw, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		handler.ServeHTTP(rw, r)
+	})
 }

@@ -111,3 +111,31 @@ func (a *api) servePostAssetHandler() http.Handler {
 
 	})
 }
+
+func (a *api) uploadPostAssetHandler() http.Handler {
+
+	renderIndex := a.renderPostAssetsIndexHandler()
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		id := r.PostFormValue("id")
+		if id == "" {
+			apiutil.BadRequest(rw, r, errors.New("id is required"))
+			return
+		}
+
+		file, _, err := r.FormFile("file")
+		if err != nil {
+			apiutil.BadRequest(rw, r, fmt.Errorf("reading multipart file: %w", err))
+			return
+		}
+		defer file.Close()
+
+		if err := a.params.PostAssetStore.Set(id, file); err != nil {
+			apiutil.InternalServerError(rw, r, fmt.Errorf("storing file: %w", err))
+			return
+		}
+
+		renderIndex.ServeHTTP(rw, r)
+	})
+}

@@ -2,7 +2,7 @@
 
   <ul id="posts-list">
 
-    {{ range .Posts }}
+    {{ range .Payload.Posts }}
     <li>
       <h2>
         <a href="posts/{{ .HTTPPath }}">{{ .Title }}</a>
@@ -17,15 +17,15 @@
 
   </ul>
 
-  {{ if or (ge .PrevPage 0) (ge .NextPage 0) }}
+  {{ if or (ge .Payload.PrevPage 0) (ge .Payload.NextPage 0) }}
     <div id="page-turner">
 
-    {{ if ge .PrevPage 0 }}
-      <a style="float: left;" href="?p={{ .PrevPage}}">Newer</a>
+    {{ if ge .Payload.PrevPage 0 }}
+      <a style="float: left;" href="?p={{ .Payload.PrevPage}}">Newer</a>
     {{ end }}
 
-    {{ if ge .NextPage 0 }}
-      <a style="float:right;" href="?p={{ .NextPage}}">Older</a>
+    {{ if ge .Payload.NextPage 0 }}
+      <a style="float:right;" href="?p={{ .Payload.NextPage}}">Older</a>
     {{ end }}
 
     </div>
