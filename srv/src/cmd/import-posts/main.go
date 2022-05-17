@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/adrg/frontmatter"
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	cfgpkg "github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
@@ -107,7 +106,7 @@ func main() {
 
 	ctx := context.Background()
 
-	cfg := cfg.NewBlogCfg(cfg.Params{})
+	cfg := cfgpkg.NewBlogCfg(cfgpkg.Params{})
 
 	var dataDir cfgpkg.DataDir
 	dataDir.SetupCfg(cfg)
