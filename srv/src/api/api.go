@@ -26,7 +26,8 @@ type Params struct {
 	Logger     *mlog.Logger
 	PowManager pow.Manager
 
-	PostStore post.Store
+	PostStore      post.Store
+	PostAssetStore post.AssetStore
 
 	MailingList mailinglist.MailingList
 
@@ -191,6 +192,8 @@ func (a *api) handler() http.Handler {
 	// TODO need to setCSRFMiddleware on all these rendering endpoints
 	mux.Handle("/v2/posts/", a.renderPostHandler())
 	mux.Handle("/v2/", a.renderIndexHandler())
+
+	mux.Handle("/v2/assets/", a.servePostAssetHandler())
 
 	var globalHandler http.Handler = mux
 	globalHandler = setLoggerMiddleware(a.params.Logger, globalHandler)

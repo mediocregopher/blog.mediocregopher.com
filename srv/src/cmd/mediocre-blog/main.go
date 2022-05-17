@@ -120,10 +120,12 @@ func main() {
 	defer postSQLDB.Close()
 
 	postStore := post.NewStore(postSQLDB)
+	postAssetStore := post.NewAssetStore(postSQLDB)
 
 	apiParams.Logger = logger.WithNamespace("api")
 	apiParams.PowManager = powMgr
 	apiParams.PostStore = postStore
+	apiParams.PostAssetStore = postAssetStore
 	apiParams.MailingList = ml
 	apiParams.GlobalRoom = chatGlobalRoom
 	apiParams.UserIDCalculator = chatUserIDCalc
