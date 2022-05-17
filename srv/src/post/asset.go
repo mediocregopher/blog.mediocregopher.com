@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"sync"
 )
 
 var (
@@ -28,6 +27,9 @@ type AssetStore interface {
 
 	// Delete's the body stored for the id, if any.
 	Delete(id string) error
+
+	// List returns all ids which are currently stored.
+	List() ([]string, error)
 }
 
 type assetStore struct {
@@ -86,68 +88,27 @@ func (s *assetStore) Delete(id string) error {
 	return err
 }
 
-////////////////////////////////////////////////////////////////////////////////
+func (s *assetStore) List() ([]string, error) {
 
-type cachedAssetStore struct {
-	inner AssetStore
-	m     sync.Map
-}
+	rows, err := s.db.Query(`SELECT id FROM assets ORDER BY id ASC`)
 
-// NewCachedAssetStore wraps an AssetStore in an in-memory cache.
-func NewCachedAssetStore(assetStore AssetStore) AssetStore {
-	return &cachedAssetStore{
-		inner: assetStore,
-	}
-}
-
-func (s *cachedAssetStore) Set(id string, from io.Reader) error {
-
-	buf := new(bytes.Buffer)
-	from = io.TeeReader(from, buf)
-
-	if err := s.inner.Set(id, from); err != nil {
-		return err
+	if err != nil {
+		return nil, fmt.Errorf("querying: %w", err)
 	}
 
-	s.m.Store(id, buf.Bytes())
-	return nil
-}
+	defer rows.Close()
 
-func (s *cachedAssetStore) Get(id string, into io.Writer) error {
+	var ids []string
 
-	if bodyI, ok := s.m.Load(id); ok {
+	for rows.Next() {
 
-		if err, ok := bodyI.(error); ok {
-			return err
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return nil, fmt.Errorf("scanning row: %w", err)
 		}
 
-		if _, err := io.Copy(into, bytes.NewReader(bodyI.([]byte))); err != nil {
-			return fmt.Errorf("writing body to io.Writer: %w", err)
-		}
-
-		return nil
+		ids = append(ids, id)
 	}
 
-	buf := new(bytes.Buffer)
-	into = io.MultiWriter(into, buf)
-
-	if err := s.inner.Get(id, into); errors.Is(err, ErrAssetNotFound) {
-		s.m.Store(id, err)
-		return err
-	} else if err != nil {
-		return err
-	}
-
-	s.m.Store(id, buf.Bytes())
-	return nil
-}
-
-func (s *cachedAssetStore) Delete(id string) error {
-
-	if err := s.inner.Delete(id); err != nil {
-		return err
-	}
-
-	s.m.Delete(id)
-	return nil
+	return ids, nil
 }

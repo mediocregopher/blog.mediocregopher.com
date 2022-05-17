@@ -200,6 +200,8 @@ func (a *api) handler() http.Handler {
 
 	mux.Handle("/v2/assets/", a.servePostAssetHandler())
 
+	mux.Handle("/v2/admin/assets.html", a.renderAdminAssets())
+
 	var globalHandler http.Handler = mux
 	globalHandler = setLoggerMiddleware(a.params.Logger, globalHandler)
 

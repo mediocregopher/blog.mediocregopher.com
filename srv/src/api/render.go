@@ -39,6 +39,10 @@ func (a *api) mustParseTpl(name string) *template.Template {
 
 	tpl := template.New("").Funcs(template.FuncMap{
 		"BlogURL": blogURL,
+		"AssetURL": func(path string) string {
+			path = filepath.Join("assets", path)
+			return blogURL(path)
+		},
 	})
 
 	tpl = template.Must(tpl.Parse(mustRead(name)))
@@ -187,6 +191,36 @@ func (a *api) renderDumbHandler(tplName string) http.Handler {
 		if err := tpl.Execute(rw, nil); err != nil {
 			apiutil.InternalServerError(
 				rw, r, fmt.Errorf("rendering %q: %w", tplName, err),
+			)
+			return
+		}
+	})
+}
+
+func (a *api) renderAdminAssets() http.Handler {
+
+	tpl := a.mustParseTpl("admin/assets.html")
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		ids, err := a.params.PostAssetStore.List()
+
+		if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("getting list of asset ids: %w", err),
+			)
+			return
+		}
+
+		tplData := struct {
+			IDs []string
+		}{
+			IDs: ids,
+		}
+
+		if err := tpl.Execute(rw, tplData); err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("rendering: %w", err),
 			)
 			return
 		}

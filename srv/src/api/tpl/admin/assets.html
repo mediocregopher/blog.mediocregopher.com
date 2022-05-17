@@ -1,0 +1,18 @@
+{{ define "body" }}
+
+<table>
+
+  {{ range .IDs }}
+    <tr>
+      <td><a href="{{ AssetURL . }}" target="_blank">{{ . }}</a></td>
+      <td>
+        Delete (TODO)
+      </td>
+    </tr>
+  {{ end }}
+
+</table>
+
+{{ end }}
+
+{{ template "base.html" . }}

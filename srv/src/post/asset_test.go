@@ -65,16 +65,27 @@ func TestAssetStore(t *testing.T) {
 		assert.NoError(t, h.store.Delete("bar"))
 		h.assertNotFound(t, "foo")
 		h.assertNotFound(t, "bar")
+
+		// test list
+
+		ids, err := h.store.List()
+		assert.NoError(t, err)
+		assert.Empty(t, ids)
+
+		err = h.store.Set("foo", bytes.NewBufferString("FOOFOO"))
+		assert.NoError(t, err)
+		err = h.store.Set("foo", bytes.NewBufferString("FOOFOO"))
+		assert.NoError(t, err)
+		err = h.store.Set("bar", bytes.NewBufferString("FOOFOO"))
+		assert.NoError(t, err)
+
+		ids, err = h.store.List()
+		assert.NoError(t, err)
+		assert.Equal(t, []string{"bar", "foo"}, ids)
 	}
 
 	t.Run("sql", func(t *testing.T) {
 		h := newAssetTestHarness(t)
-		testAssetStore(t, h)
-	})
-
-	t.Run("mem", func(t *testing.T) {
-		h := newAssetTestHarness(t)
-		h.store = NewCachedAssetStore(h.store)
 		testAssetStore(t, h)
 	})
 }
