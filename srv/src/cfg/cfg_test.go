@@ -44,3 +44,24 @@ func TestIntVar(t *testing.T) {
 	assert.Equal(t, 222, bar)
 	assert.Equal(t, 333, baz)
 }
+
+func TestBoolVar(t *testing.T) {
+
+	cfg := New(Params{
+		Args: []string{"--foo=1"},
+		Env:  map[string]string{"FOO": "0", "BAR": "anything", "BIZ": "0"},
+	})
+
+	var foo, bar, baz, biz bool
+
+	cfg.BoolVar(&foo, "foo", false, "")
+	cfg.BoolVar(&bar, "bar", false, "")
+	cfg.BoolVar(&baz, "baz", false, "")
+	cfg.BoolVar(&biz, "biz", true, "")
+
+	assert.NoError(t, cfg.Init(context.Background()))
+	assert.Equal(t, true, foo)
+	assert.Equal(t, true, bar)
+	assert.Equal(t, false, baz)
+	assert.Equal(t, false, biz)
+}

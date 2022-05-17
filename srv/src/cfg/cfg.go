@@ -211,6 +211,27 @@ func (c *Cfg) Int(name string, value int, usage string) *int {
 	return p
 }
 
+// BoolVar is equivalent to flag.FlagSet's BoolVar method, but will additionally
+// set up an environment variable for the parameter.
+func (c *Cfg) BoolVar(p *bool, name string, value bool, usage string) {
+
+	envName := c.envifyName(name)
+
+	c.flagSet.BoolVar(p, name, value, envifyUsage(envName, usage))
+
+	if valStr := c.params.Env[envName]; valStr != "" {
+		*p = valStr != "" && valStr != "0" && valStr != "false"
+	}
+}
+
+// Bool is equivalent to flag.FlagSet's Bool method, but will additionally set
+// up an environment variable for the parameter.
+func (c *Cfg) Bool(name string, value bool, usage string) *bool {
+	p := new(bool)
+	c.BoolVar(p, name, value, usage)
+	return p
+}
+
 // SubCmd should be called _after_ Init. Init will have consumed all arguments
 // up until the first non-flag argument. This non-flag argument is a
 // sub-command, and is returned by this method. This method also resets Cfg's
