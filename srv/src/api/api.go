@@ -152,57 +152,63 @@ func (a *api) handler() http.Handler {
 		staticHandler = httputil.NewSingleHostReverseProxy(a.params.StaticProxy)
 	}
 
-	staticHandler = setCSRFMiddleware(staticHandler)
-
 	// sugar
+
 	requirePow := func(h http.Handler) http.Handler {
 		return a.requirePowMiddleware(h)
+	}
+
+	postFormMiddleware := func(h http.Handler) http.Handler {
+		h = checkCSRFMiddleware(h)
+		h = postOnlyMiddleware(h)
+		h = logReqMiddleware(h)
+		h = addResponseHeaders(map[string]string{
+			"Cache-Control": "no-store, max-age=0",
+			"Pragma":        "no-cache",
+			"Expires":       "0",
+		}, h)
+		return h
 	}
 
 	mux := http.NewServeMux()
 
 	mux.Handle("/", staticHandler)
 
-	apiMux := http.NewServeMux()
-	apiMux.Handle("/pow/challenge", a.newPowChallengeHandler())
-	apiMux.Handle("/pow/check",
-		requirePow(
-			http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {}),
-		),
-	)
+	{
+		apiMux := http.NewServeMux()
+		apiMux.Handle("/pow/challenge", a.newPowChallengeHandler())
+		apiMux.Handle("/pow/check",
+			requirePow(
+				http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {}),
+			),
+		)
 
-	apiMux.Handle("/mailinglist/subscribe", requirePow(a.mailingListSubscribeHandler()))
-	apiMux.Handle("/mailinglist/finalize", a.mailingListFinalizeHandler())
-	apiMux.Handle("/mailinglist/unsubscribe", a.mailingListUnsubscribeHandler())
+		apiMux.Handle("/mailinglist/subscribe", requirePow(a.mailingListSubscribeHandler()))
+		apiMux.Handle("/mailinglist/finalize", a.mailingListFinalizeHandler())
+		apiMux.Handle("/mailinglist/unsubscribe", a.mailingListUnsubscribeHandler())
 
-	apiMux.Handle("/chat/global/", http.StripPrefix("/chat/global", newChatHandler(
-		a.params.GlobalRoom,
-		a.params.UserIDCalculator,
-		a.requirePowMiddleware,
-	)))
+		apiMux.Handle("/chat/global/", http.StripPrefix("/chat/global", newChatHandler(
+			a.params.GlobalRoom,
+			a.params.UserIDCalculator,
+			a.requirePowMiddleware,
+		)))
 
-	var apiHandler http.Handler = apiMux
-	apiHandler = checkCSRFMiddleware(apiHandler)
-	apiHandler = postOnlyMiddleware(apiHandler)
-	apiHandler = logReqMiddleware(apiHandler)
-	apiHandler = addResponseHeaders(map[string]string{
-		"Cache-Control": "no-store, max-age=0",
-		"Pragma":        "no-cache",
-		"Expires":       "0",
-	}, apiHandler)
+		mux.Handle("/api/", http.StripPrefix("/api", postFormMiddleware(apiMux)))
+	}
 
-	mux.Handle("/api/", http.StripPrefix("/api", apiHandler))
+	{
+		v2Mux := http.NewServeMux()
+		v2Mux.Handle("/follow.html", a.renderDumbHandler("follow.html"))
+		v2Mux.Handle("/posts/", a.renderPostHandler())
+		v2Mux.Handle("/assets", a.renderPostAssetsIndexHandler())
+		v2Mux.Handle("/assets/", a.servePostAssetHandler())
+		v2Mux.Handle("/", a.renderIndexHandler())
 
-	// TODO need to setCSRFMiddleware on all these rendering endpoints
-	mux.Handle("/v2/follow.html", a.renderDumbHandler("follow.html"))
-	mux.Handle("/v2/posts/", a.renderPostHandler())
-	mux.Handle("/v2/", a.renderIndexHandler())
-
-	mux.Handle("/v2/assets/", a.servePostAssetHandler())
-
-	mux.Handle("/v2/admin/assets.html", a.renderAdminAssets())
+		mux.Handle("/v2/", http.StripPrefix("/v2", v2Mux))
+	}
 
 	var globalHandler http.Handler = mux
+	globalHandler = setCSRFMiddleware(globalHandler)
 	globalHandler = setLoggerMiddleware(a.params.Logger, globalHandler)
 
 	return globalHandler

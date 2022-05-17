@@ -197,9 +197,9 @@ func (a *api) renderDumbHandler(tplName string) http.Handler {
 	})
 }
 
-func (a *api) renderAdminAssets() http.Handler {
+func (a *api) renderPostAssetsIndexHandler() http.Handler {
 
-	tpl := a.mustParseTpl("admin/assets.html")
+	tpl := a.mustParseTpl("admin-assets.html")
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
