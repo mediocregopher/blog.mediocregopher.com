@@ -121,7 +121,13 @@ func MethodMux(handlers map[string]http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		handler, ok := handlers[strings.ToUpper(r.Method)]
+		method := strings.ToUpper(r.FormValue("method"))
+
+		if method == "" {
+			method = strings.ToUpper(r.Method)
+		}
+
+		handler, ok := handlers[method]
 
 		if !ok {
 			http.Error(rw, "Method not allowed", http.StatusMethodNotAllowed)

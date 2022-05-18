@@ -50,11 +50,18 @@ func resizeImage(out io.Writer, in io.Reader, maxWidth float64) error {
 	}
 }
 
-func (a *api) servePostAssetHandler() http.Handler {
+func (a *api) getPostAssetHandler() http.Handler {
+
+	renderHandler := a.renderPostAssetsIndexHandler()
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		id := filepath.Base(r.URL.Path)
+
+		if id == "/" {
+			renderHandler.ServeHTTP(rw, r)
+			return
+		}
 
 		maxWidth, err := apiutil.StrToInt(r.FormValue("w"), 0)
 		if err != nil {
@@ -112,9 +119,7 @@ func (a *api) servePostAssetHandler() http.Handler {
 	})
 }
 
-func (a *api) uploadPostAssetHandler() http.Handler {
-
-	renderIndex := a.renderPostAssetsIndexHandler()
+func (a *api) postPostAssetHandler() http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
@@ -136,6 +141,33 @@ func (a *api) uploadPostAssetHandler() http.Handler {
 			return
 		}
 
-		renderIndex.ServeHTTP(rw, r)
+		a.executeRedirectTpl(rw, r, "assets/")
+	})
+}
+
+func (a *api) deletePostAssetHandler() http.Handler {
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		id := filepath.Base(r.URL.Path)
+
+		if id == "" {
+			apiutil.BadRequest(rw, r, errors.New("id is required"))
+			return
+		}
+
+		err := a.params.PostAssetStore.Delete(id)
+
+		if errors.Is(err, post.ErrAssetNotFound) {
+			http.Error(rw, "Asset not found", 404)
+			return
+		} else if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("deleting asset with id %q: %w", id, err),
+			)
+			return
+		}
+
+		a.executeRedirectTpl(rw, r, "assets/")
 	})
 }

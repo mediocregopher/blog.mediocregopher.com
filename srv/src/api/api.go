@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"html/template"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -101,6 +102,8 @@ type API interface {
 type api struct {
 	params Params
 	srv    *http.Server
+
+	redirectTpl *template.Template
 }
 
 // New initializes and returns a new API instance, including setting up all
@@ -121,6 +124,8 @@ func New(params Params) (API, error) {
 	a := &api{
 		params: params,
 	}
+
+	a.redirectTpl = a.mustParseTpl("redirect.html")
 
 	a.srv = &http.Server{Handler: a.handler()}
 
@@ -201,11 +206,13 @@ func (a *api) handler() http.Handler {
 		v2Mux := http.NewServeMux()
 		v2Mux.Handle("/follow.html", a.renderDumbHandler("follow.html"))
 		v2Mux.Handle("/posts/", a.renderPostHandler())
-		v2Mux.Handle("/assets", apiutil.MethodMux(map[string]http.Handler{
-			"GET":  a.renderPostAssetsIndexHandler(),
-			"POST": formMiddleware(a.uploadPostAssetHandler()),
-		}))
-		v2Mux.Handle("/assets/", a.servePostAssetHandler())
+		v2Mux.Handle("/assets/", http.StripPrefix("/assets",
+			apiutil.MethodMux(map[string]http.Handler{
+				"GET":    a.getPostAssetHandler(),
+				"POST":   formMiddleware(a.postPostAssetHandler()),
+				"DELETE": formMiddleware(a.deletePostAssetHandler()),
+			}),
+		))
 		v2Mux.Handle("/", a.renderIndexHandler())
 
 		mux.Handle("/v2/", http.StripPrefix("/v2", v2Mux))

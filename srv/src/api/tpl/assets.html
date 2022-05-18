@@ -1,5 +1,7 @@
 {{ define "body" }}
 
+{{ $csrfFormInput := .CSRFFormInput }}
+
 <h2>Upload Asset</h2>
 
 <p>
@@ -7,8 +9,8 @@
   overwritten.
 </p>
 
-<form action={{ BlogURL "assets" }} method="POST" enctype="multipart/form-data">
-  {{ .CSRFFormInput }}
+<form action="{{ BlogURL "assets/" }}" method="POST" enctype="multipart/form-data">
+  {{ $csrfFormInput }}
   <div class="row">
     <div class="four columns">
       <input type="text" placeholder="Unique ID" name="id" />
@@ -30,7 +32,10 @@
     <tr>
       <td><a href="{{ AssetURL . }}" target="_blank">{{ . }}</a></td>
       <td>
-        Delete (TODO)
+        <form action="{{ BlogURL "assets/" }}{{ . }}?method=delete" method="POST">
+          {{ $csrfFormInput }}
+          <input type="submit" value="Delete" />
+        </form>
       </td>
     </tr>
   {{ end }}

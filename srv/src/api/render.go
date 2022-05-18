@@ -20,21 +20,29 @@ import (
 //go:embed tpl
 var tplFS embed.FS
 
-func (a *api) mustParseTpl(name string) *template.Template {
+func mustReadTplFile(fileName string) string {
+	path := filepath.Join("tpl", fileName)
 
-	mustRead := func(fileName string) string {
-		path := filepath.Join("tpl", fileName)
-
-		b, err := fs.ReadFile(tplFS, path)
-		if err != nil {
-			panic(fmt.Errorf("reading file %q from tplFS: %w", path, err))
-		}
-
-		return string(b)
+	b, err := fs.ReadFile(tplFS, path)
+	if err != nil {
+		panic(fmt.Errorf("reading file %q from tplFS: %w", path, err))
 	}
 
+	return string(b)
+}
+
+func (a *api) mustParseTpl(name string) *template.Template {
+
 	blogURL := func(path string) string {
-		return filepath.Join(a.params.PathPrefix, "/v2", path)
+
+		trailingSlash := strings.HasSuffix(path, "/")
+		path = filepath.Join(a.params.PathPrefix, "/v2", path)
+
+		if trailingSlash {
+			path += "/"
+		}
+
+		return path
 	}
 
 	tpl := template.New("").Funcs(template.FuncMap{
@@ -45,9 +53,14 @@ func (a *api) mustParseTpl(name string) *template.Template {
 		},
 	})
 
-	tpl = template.Must(tpl.Parse(mustRead(name)))
-	tpl = template.Must(tpl.New("base.html").Parse(mustRead("base.html")))
+	tpl = template.Must(tpl.Parse(mustReadTplFile(name)))
 
+	return tpl
+}
+
+func (a *api) mustParseBasedTpl(name string) *template.Template {
+	tpl := a.mustParseTpl(name)
+	tpl = template.Must(tpl.New("base.html").Parse(mustReadTplFile("base.html")))
 	return tpl
 }
 
@@ -84,9 +97,19 @@ func executeTemplate(
 	}
 }
 
+func (a *api) executeRedirectTpl(
+	rw http.ResponseWriter, r *http.Request, path string,
+) {
+	executeTemplate(rw, r, a.redirectTpl, struct {
+		Path string
+	}{
+		Path: path,
+	})
+}
+
 func (a *api) renderIndexHandler() http.Handler {
 
-	tpl := a.mustParseTpl("index.html")
+	tpl := a.mustParseBasedTpl("index.html")
 	const pageCount = 10
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
@@ -135,7 +158,7 @@ func (a *api) renderIndexHandler() http.Handler {
 
 func (a *api) renderPostHandler() http.Handler {
 
-	tpl := a.mustParseTpl("post.html")
+	tpl := a.mustParseBasedTpl("post.html")
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
@@ -208,7 +231,7 @@ func (a *api) renderPostHandler() http.Handler {
 
 func (a *api) renderDumbHandler(tplName string) http.Handler {
 
-	tpl := a.mustParseTpl(tplName)
+	tpl := a.mustParseBasedTpl(tplName)
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		if err := tpl.Execute(rw, nil); err != nil {
@@ -222,7 +245,7 @@ func (a *api) renderDumbHandler(tplName string) http.Handler {
 
 func (a *api) renderPostAssetsIndexHandler() http.Handler {
 
-	tpl := a.mustParseTpl("admin-assets.html")
+	tpl := a.mustParseBasedTpl("assets.html")
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
