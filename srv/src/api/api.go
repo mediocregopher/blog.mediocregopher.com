@@ -213,7 +213,12 @@ func (a *api) handler() http.Handler {
 		v2Mux := http.NewServeMux()
 		v2Mux.Handle("/follow.html", a.renderDumbTplHandler("follow.html"))
 		v2Mux.Handle("/posts/", http.StripPrefix("/posts",
-			a.renderPostHandler(),
+			apiutil.MethodMux(map[string]http.Handler{
+				"GET": a.renderPostHandler(),
+				"DELETE": authMiddleware(auther,
+					formMiddleware(a.deletePostHandler()),
+				),
+			}),
 		))
 		v2Mux.Handle("/assets/", http.StripPrefix("/assets",
 			apiutil.MethodMux(map[string]http.Handler{

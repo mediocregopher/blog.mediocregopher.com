@@ -137,3 +137,31 @@ func (a *api) renderPostsIndexHandler() http.Handler {
 		executeTemplate(rw, r, tpl, tplPayload)
 	})
 }
+
+func (a *api) deletePostHandler() http.Handler {
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		id := filepath.Base(r.URL.Path)
+
+		if id == "" {
+			apiutil.BadRequest(rw, r, errors.New("id is required"))
+			return
+		}
+
+		err := a.params.PostStore.Delete(id)
+
+		if errors.Is(err, post.ErrPostNotFound) {
+			http.Error(rw, "Post not found", 404)
+			return
+		} else if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("deleting post with id %q: %w", id, err),
+			)
+			return
+		}
+
+		a.executeRedirectTpl(rw, r, "posts/")
+
+	})
+}
