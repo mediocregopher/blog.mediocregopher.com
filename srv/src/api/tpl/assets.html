@@ -32,7 +32,11 @@
     <tr>
       <td><a href="{{ AssetURL . }}" target="_blank">{{ . }}</a></td>
       <td>
-        <form action="{{ BlogURL "assets/" }}{{ . }}?method=delete" method="POST">
+        <form
+          action="{{ BlogURL "assets/" }}{{ . }}?method=delete"
+          method="POST"
+          style="margin-bottom: 0;"
+          >
           {{ $csrfFormInput }}
           <input type="submit" value="Delete" />
         </form>
