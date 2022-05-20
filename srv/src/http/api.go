@@ -222,7 +222,9 @@ func (a *api) handler() http.Handler {
 				"DELETE": authMiddleware(auther,
 					formMiddleware(a.deletePostHandler()),
 				),
-				"PREVIEW": formMiddleware(a.previewPostHandler()),
+				"PREVIEW": authMiddleware(auther,
+					formMiddleware(a.previewPostHandler()),
+				),
 			}),
 		))
 		v2Mux.Handle("/assets/", http.StripPrefix("/assets",
