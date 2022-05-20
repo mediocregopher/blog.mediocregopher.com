@@ -5,7 +5,7 @@
     {{ range .Payload.Posts }}
     <li>
       <h2>
-        <a href="posts/{{ .HTTPPath }}">{{ .Title }}</a>
+        <a href="{{ PostURL .ID }}">{{ .Title }}</a>
       </h2>
       <span>{{ .PublishedAt.Format "2006-01-02" }}</span>
       {{ if not .LastUpdatedAt.IsZero }}

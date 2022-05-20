@@ -42,8 +42,12 @@ func (a *api) mustParseTpl(name string) *template.Template {
 
 	tpl := template.New("").Funcs(template.FuncMap{
 		"BlogURL": blogURL,
-		"AssetURL": func(path string) string {
-			path = filepath.Join("assets", path)
+		"AssetURL": func(id string) string {
+			path := filepath.Join("assets", id)
+			return blogURL(path)
+		},
+		"PostURL": func(id string) string {
+			path := filepath.Join("posts", id)
 			return blogURL(path)
 		},
 	})

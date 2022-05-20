@@ -1,0 +1,61 @@
+{{ define "posts-nextprev" }}
+
+  {{ if or (ge .Payload.PrevPage 0) (ge .Payload.NextPage 0) }}
+    <div id="page-turner">
+
+    {{ if ge .Payload.PrevPage 0 }}
+      <a style="float: left;" href="?p={{ .Payload.PrevPage}}">Newer</a>
+    {{ end }}
+
+    {{ if ge .Payload.NextPage 0 }}
+      <a style="float:right;" href="?p={{ .Payload.NextPage}}">Older</a>
+    {{ end }}
+
+    </div>
+  {{ end }}
+
+{{ end }}
+
+{{ define "body" }}
+
+  {{ $csrfFormInput := .CSRFFormInput }}
+
+
+  <p style="text-align: center;">
+    <a href="{{ BlogURL "posts/" }}?method=new">
+      <button>New Post</button>
+    </a>
+  </p>
+
+  {{ template "posts-nextprev" . }}
+
+  <table style="margin-top: 2rem;">
+
+    {{ range .Payload.Posts }}
+      <tr>
+        <td>{{ .PublishedAt }}</td>
+        <td><a href="{{ PostURL .ID }}" target="_blank">{{ .Title }}</a></td>
+        <td>
+          <a href="{{ PostURL .ID }}?method=edit">
+            <button>Edit</button>
+          </a>
+        </td>
+        <td>
+          <form
+            action="{{ PostURL .ID }}?method=delete"
+            method="POST"
+            >
+            {{ $csrfFormInput }}
+            <input type="submit" value="Delete" />
+          </form>
+        </td>
+      </tr>
+    {{ end }}
+
+  </table>
+
+  {{ template "posts-nextprev" . }}
+
+{{ end }}
+
+{{ template "base.html" . }}

@@ -18,10 +18,16 @@ import (
 func (a *api) renderPostHandler() http.Handler {
 
 	tpl := a.mustParseBasedTpl("post.html")
+	renderIndexHandler := a.renderPostsIndexHandler()
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		id := strings.TrimSuffix(filepath.Base(r.URL.Path), ".html")
+
+		if id == "/" {
+			renderIndexHandler.ServeHTTP(rw, r)
+			return
+		}
 
 		storedPost, err := a.params.PostStore.GetByID(id)
 
@@ -88,25 +94,44 @@ func (a *api) renderPostHandler() http.Handler {
 	})
 }
 
-func (a *api) renderPostAssetsIndexHandler() http.Handler {
+func (a *api) renderPostsIndexHandler() http.Handler {
 
-	tpl := a.mustParseBasedTpl("assets.html")
+	tpl := a.mustParseBasedTpl("posts.html")
+	const pageCount = 20
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		ids, err := a.params.PostAssetStore.List()
+		page, err := apiutil.StrToInt(r.FormValue("p"), 0)
+		if err != nil {
+			apiutil.BadRequest(
+				rw, r, fmt.Errorf("invalid page number: %w", err),
+			)
+			return
+		}
 
+		posts, hasMore, err := a.params.PostStore.WithOrderDesc().Get(page, pageCount)
 		if err != nil {
 			apiutil.InternalServerError(
-				rw, r, fmt.Errorf("getting list of asset ids: %w", err),
+				rw, r, fmt.Errorf("fetching page %d of posts: %w", page, err),
 			)
 			return
 		}
 
 		tplPayload := struct {
-			IDs []string
+			Posts              []post.StoredPost
+			PrevPage, NextPage int
 		}{
-			IDs: ids,
+			Posts:    posts,
+			PrevPage: -1,
+			NextPage: -1,
+		}
+
+		if page > 0 {
+			tplPayload.PrevPage = page - 1
+		}
+
+		if hasMore {
+			tplPayload.NextPage = page + 1
 		}
 
 		executeTemplate(rw, r, tpl, tplPayload)

@@ -50,16 +50,41 @@ func resizeImage(out io.Writer, in io.Reader, maxWidth float64) error {
 	}
 }
 
+func (a *api) renderPostAssetsIndexHandler() http.Handler {
+
+	tpl := a.mustParseBasedTpl("assets.html")
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		ids, err := a.params.PostAssetStore.List()
+
+		if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("getting list of asset ids: %w", err),
+			)
+			return
+		}
+
+		tplPayload := struct {
+			IDs []string
+		}{
+			IDs: ids,
+		}
+
+		executeTemplate(rw, r, tpl, tplPayload)
+	})
+}
+
 func (a *api) getPostAssetHandler() http.Handler {
 
-	renderHandler := a.renderPostAssetsIndexHandler()
+	renderIndexHandler := a.renderPostAssetsIndexHandler()
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		id := filepath.Base(r.URL.Path)
 
 		if id == "/" {
-			renderHandler.ServeHTTP(rw, r)
+			renderIndexHandler.ServeHTTP(rw, r)
 			return
 		}
 

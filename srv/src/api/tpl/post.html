@@ -19,10 +19,10 @@
 <p class="light"><em>
   This post is part of a series:<br/>
   {{ if .Payload.SeriesPrevious }}
-  Previously: <a href="{{ .Payload.SeriesPrevious.HTTPPath }}">{{ .Payload.SeriesPrevious.Title }}</a></br>
+  Previously: <a href="{{ PostURL .Payload.SeriesPrevious.ID }}">{{ .Payload.SeriesPrevious.Title }}</a></br>
   {{ end }}
   {{ if .Payload.SeriesNext }}
-  Next: <a href="{{ .Payload.SeriesNext.HTTPPath }}">{{ .Payload.SeriesNext.Title }}</a></br>
+  Next: <a href="{{ PostURL .Payload.SeriesNext.ID }}">{{ .Payload.SeriesNext.Title }}</a></br>
   {{ end }}
 </em></p>
 {{ end }}
@@ -35,10 +35,10 @@
 <p class="light"><em>
   If you liked this post, consider checking out other posts in the series:<br/>
   {{ if .Payload.SeriesPrevious }}
-  Previously: <a href="{{ .Payload.SeriesPrevious.HTTPPath }}">{{ .Payload.SeriesPrevious.Title }}</a></br>
+  Previously: <a href="{{ PostURL .Payload.SeriesPrevious.ID }}">{{ .Payload.SeriesPrevious.Title }}</a></br>
   {{ end }}
   {{ if .Payload.SeriesNext }}
-  Next: <a href="{{ .Payload.SeriesNext.HTTPPath }}">{{ .Payload.SeriesNext.Title }}</a></br>
+  Next: <a href="{{ PostURL .Payload.SeriesNext.ID }}">{{ .Payload.SeriesNext.Title }}</a></br>
   {{ end }}
 </em></p>
 {{ end }}
