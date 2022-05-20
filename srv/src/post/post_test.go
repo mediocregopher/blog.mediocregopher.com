@@ -252,5 +252,9 @@ func TestStore(t *testing.T) {
 		bazPosts, err := h.store.GetByTag("baz")
 		assert.NoError(t, err)
 		assert.Empty(t, bazPosts)
+
+		tags, err := h.store.GetTags()
+		assert.NoError(t, err)
+		assert.ElementsMatch(t, []string{"foo", "bar"}, tags)
 	})
 }

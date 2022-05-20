@@ -68,6 +68,9 @@ type Store interface {
 	// descending, or empty slice.
 	GetByTag(tag string) ([]StoredPost, error)
 
+	// GetTags returns all tags which have at least one Post using them.
+	GetTags() ([]string, error)
+
 	// Delete will delete the StoredPost with the given ID.
 	Delete(id string) error
 }
@@ -338,6 +341,30 @@ func (s *store) GetByTag(tag string) ([]StoredPost, error) {
 	})
 
 	return posts, err
+}
+
+func (s *store) GetTags() ([]string, error) {
+
+	rows, err := s.db.Query(`SELECT tag FROM post_tags GROUP BY tag`)
+	if err != nil {
+		return nil, fmt.Errorf("querying all tags: %w", err)
+	}
+	defer rows.Close()
+
+	var tags []string
+
+	for rows.Next() {
+
+		var tag string
+
+		if err := rows.Scan(&tag); err != nil {
+			return nil, fmt.Errorf("scanning tag: %w", err)
+		}
+
+		tags = append(tags, tag)
+	}
+
+	return tags, nil
 }
 
 func (s *store) Delete(id string) error {

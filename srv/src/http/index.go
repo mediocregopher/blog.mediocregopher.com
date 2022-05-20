@@ -30,7 +30,19 @@ func (a *api) renderIndexHandler() http.Handler {
 			return
 		}
 
-		posts, hasMore, err := a.params.PostStore.Get(page, pageCount)
+		tag := r.FormValue("tag")
+
+		var (
+			posts   []post.StoredPost
+			hasMore bool
+		)
+
+		if tag == "" {
+			posts, hasMore, err = a.params.PostStore.Get(page, pageCount)
+		} else {
+			posts, err = a.params.PostStore.GetByTag(tag)
+		}
+
 		if err != nil {
 			apiutil.InternalServerError(
 				rw, r, fmt.Errorf("fetching page %d of posts: %w", page, err),
@@ -38,13 +50,23 @@ func (a *api) renderIndexHandler() http.Handler {
 			return
 		}
 
+		tags, err := a.params.PostStore.GetTags()
+		if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("fething tags: %w", err),
+			)
+			return
+		}
+
 		tplPayload := struct {
 			Posts              []post.StoredPost
 			PrevPage, NextPage int
+			Tags               []string
 		}{
 			Posts:    posts,
 			PrevPage: -1,
 			NextPage: -1,
+			Tags:     tags,
 		}
 
 		if page > 0 {
