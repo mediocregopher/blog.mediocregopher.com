@@ -34,7 +34,7 @@
       export MEDIOCRE_BLOG_LISTEN_ADDR="${config.listenAddr}"
 
       # api
-      export MEDIOCRE_BLOG_API_AUTH_USERS='${builtins.toJSON config.apiAuthUsers}'
+      export MEDIOCRE_BLOG_API_AUTH_USERS='${builtins.toJSON config.httpAuthUsers}'
     '';
 
     build = buildGoModule {

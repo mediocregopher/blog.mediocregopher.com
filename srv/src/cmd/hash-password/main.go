@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http"
 )
 
 func main() {
@@ -19,5 +19,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(api.NewPasswordHash(strings.TrimSpace(line)))
+	fmt.Println(http.NewPasswordHash(strings.TrimSpace(line)))
 }

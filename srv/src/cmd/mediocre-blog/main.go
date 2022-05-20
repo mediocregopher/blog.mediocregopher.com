@@ -8,9 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api"
 	cfgpkg "github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"
@@ -42,9 +42,9 @@ func main() {
 	mlParams.SetupCfg(cfg)
 	ctx = mctx.WithAnnotator(ctx, &mlParams)
 
-	var apiParams api.Params
-	apiParams.SetupCfg(cfg)
-	ctx = mctx.WithAnnotator(ctx, &apiParams)
+	var httpParams http.Params
+	httpParams.SetupCfg(cfg)
+	ctx = mctx.WithAnnotator(ctx, &httpParams)
 
 	var radixClient cfgpkg.RadixClient
 	radixClient.SetupCfg(cfg)
@@ -56,7 +56,7 @@ func main() {
 
 	pathPrefix := cfg.String("path-prefix", "", "Prefix which is optionally applied to all URL paths rendered by the blog")
 
-	apiAuthUsersStr := cfg.String("api-auth-users", "{}", "JSON object with usernames as values and password hashes (produced by the hash-password binary) as values. Denotes users which are able to edit server-side data")
+	httpAuthUsersStr := cfg.String("http-auth-users", "{}", "JSON object with usernames as values and password hashes (produced by the hash-password binary) as values. Denotes users which are able to edit server-side data")
 
 	// initialization
 	err := cfg.Init(ctx)
@@ -131,32 +131,32 @@ func main() {
 	postStore := post.NewStore(postSQLDB)
 	postAssetStore := post.NewAssetStore(postSQLDB)
 
-	var apiAuthUsers map[string]string
-	if err := json.Unmarshal([]byte(*apiAuthUsersStr), &apiAuthUsers); err != nil {
-		logger.Fatal(ctx, "unmarshaling -api-auth-users", err)
+	var httpAuthUsers map[string]string
+	if err := json.Unmarshal([]byte(*httpAuthUsersStr), &httpAuthUsers); err != nil {
+		logger.Fatal(ctx, "unmarshaling -http-auth-users", err)
 	}
 
-	apiParams.Logger = logger.WithNamespace("api")
-	apiParams.PowManager = powMgr
-	apiParams.PathPrefix = *pathPrefix
-	apiParams.PostStore = postStore
-	apiParams.PostAssetStore = postAssetStore
-	apiParams.MailingList = ml
-	apiParams.GlobalRoom = chatGlobalRoom
-	apiParams.UserIDCalculator = chatUserIDCalc
-	apiParams.AuthUsers = apiAuthUsers
+	httpParams.Logger = logger.WithNamespace("http")
+	httpParams.PowManager = powMgr
+	httpParams.PathPrefix = *pathPrefix
+	httpParams.PostStore = postStore
+	httpParams.PostAssetStore = postAssetStore
+	httpParams.MailingList = ml
+	httpParams.GlobalRoom = chatGlobalRoom
+	httpParams.UserIDCalculator = chatUserIDCalc
+	httpParams.AuthUsers = httpAuthUsers
 
 	logger.Info(ctx, "listening")
-	a, err := api.New(apiParams)
+	httpAPI, err := http.New(httpParams)
 	if err != nil {
-		logger.Fatal(ctx, "initializing api", err)
+		logger.Fatal(ctx, "initializing http api", err)
 	}
 	defer func() {
 		shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 		defer cancel()
 
-		if err := a.Shutdown(shutdownCtx); err != nil {
-			logger.Fatal(ctx, "shutting down api", err)
+		if err := httpAPI.Shutdown(shutdownCtx); err != nil {
+			logger.Fatal(ctx, "shutting down http api", err)
 		}
 	}()
 

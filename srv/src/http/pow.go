@@ -1,4 +1,4 @@
-package api
+package http
 
 import (
 	"encoding/hex"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 )
 
 func (a *api) newPowChallengeHandler() http.Handler {

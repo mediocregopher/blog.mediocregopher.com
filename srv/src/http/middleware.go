@@ -1,11 +1,11 @@
-package api
+package http
 
 import (
 	"net"
 	"net/http"
 	"time"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )

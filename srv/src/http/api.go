@@ -1,5 +1,5 @@
 // Package api implements the HTTP-based api for the mediocre-blog.
-package api
+package http
 
 import (
 	"context"
@@ -12,9 +12,9 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/pow"

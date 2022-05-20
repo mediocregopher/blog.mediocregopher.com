@@ -1,11 +1,11 @@
-package api
+package http
 
 import (
 	"errors"
 	"net/http"
 	"strings"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/mailinglist"
 )
 

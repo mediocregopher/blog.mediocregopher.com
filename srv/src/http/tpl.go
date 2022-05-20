@@ -1,4 +1,4 @@
-package api
+package http
 
 import (
 	"embed"
@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 )
 
 //go:embed tpl

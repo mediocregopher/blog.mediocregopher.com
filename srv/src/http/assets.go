@@ -1,4 +1,4 @@
-package api
+package http
 
 import (
 	"bytes"
@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 	"golang.org/x/image/draw"
 )

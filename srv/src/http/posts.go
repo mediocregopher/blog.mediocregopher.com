@@ -1,4 +1,4 @@
-package api
+package http
 
 import (
 	"errors"
@@ -12,7 +12,7 @@ import (
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 )
 

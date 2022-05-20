@@ -1,10 +1,10 @@
-package api
+package http
 
 import (
 	"errors"
 	"net/http"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 )
 
 const (

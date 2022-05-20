@@ -1,9 +1,9 @@
-package api
+package http
 
 import (
 	"net/http"
 
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -1,4 +1,4 @@
-package api
+package http
 
 import (
 	"context"
@@ -9,8 +9,8 @@ import (
 	"unicode"
 
 	"github.com/gorilla/websocket"
-	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 )
 
 type chatHandler struct {
