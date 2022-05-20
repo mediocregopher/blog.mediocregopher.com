@@ -7,7 +7,6 @@
   stdenv,
 
   config,
-  staticBuild,
 }: rec {
 
     init = writeText "mediocre-blog-srv-init" ''
@@ -25,9 +24,6 @@
 
       # pow
       export MEDIOCRE_BLOG_POW_SECRET="${config.powSecret}"
-
-      # static proxy
-      export MEDIOCRE_BLOG_STATIC_DIR="${staticBuild}"
 
       # listening
       export MEDIOCRE_BLOG_LISTEN_PROTO="${config.listenProto}"

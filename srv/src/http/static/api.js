@@ -1,4 +1,4 @@
-import * as utils from "/assets/utils.js";
+import * as utils from "/static/utils.js";
 
 const csrfTokenCookie  = "csrf_token";
 
@@ -35,7 +35,7 @@ const solvePow = async () => {
 
   const res = await call('/api/pow/challenge');
 
-  const worker = new Worker('/assets/solvePow.js');
+  const worker = new Worker('/static/solvePow.js');
 
   const p = new Promise((resolve, reject) => {
     worker.postMessage({seedHex: res.seed, target: res.target});

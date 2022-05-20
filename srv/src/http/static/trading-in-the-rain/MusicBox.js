@@ -1,7 +1,7 @@
 var midiLoaded = false;
 function loadMIDI() {
   MIDI.loadPlugin({
-    soundfontUrl: "/assets/trading-in-the-rain/soundfont/",
+    soundfontUrl: "/static/trading-in-the-rain/soundfont/",
     instrument: "acoustic_grand_piano",
     onprogress: (state, progress) => {
       console.log("MIDI loading...", progress*100, "%");

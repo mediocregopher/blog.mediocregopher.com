@@ -11,7 +11,7 @@ test_cfg="(import ./config.nix) // {
 
 entrypoint=$(nix-build --no-out-link -A entrypoint \
     --arg baseConfig "$test_cfg" \
-    --arg baseSkipServices '["srv"]')
+    --arg skipServices '["srv"]')
 
 $entrypoint &
 trap "kill $!; wait; rm -rf $test_dir" EXIT

@@ -31,10 +31,12 @@ func (a *api) mustParseTpl(name string) *template.Template {
 
 	blogURL := func(path string) string {
 
+		// filepath.Join strips trailing slash, but we want to keep it
 		trailingSlash := strings.HasSuffix(path, "/")
-		path = filepath.Join(a.params.PathPrefix, "/v2", path)
 
-		if trailingSlash {
+		path = filepath.Join("/", a.params.PathPrefix, path)
+
+		if trailingSlash && path != "/" {
 			path += "/"
 		}
 
@@ -43,6 +45,10 @@ func (a *api) mustParseTpl(name string) *template.Template {
 
 	tpl := template.New("").Funcs(template.FuncMap{
 		"BlogURL": blogURL,
+		"StaticURL": func(path string) string {
+			path = filepath.Join("static", path)
+			return blogURL(path)
+		},
 		"AssetURL": func(id string) string {
 			path := filepath.Join("assets", id)
 			return blogURL(path)

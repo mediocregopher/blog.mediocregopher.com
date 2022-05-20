@@ -1,6 +1,6 @@
 {{ define "body" }}
 
-<script async type="module" src="/assets/api.js"></script>
+<script async type="module" src="{{ StaticURL "api.js" }}"></script>
 
 <p>
   Here's your options for receiving updates about new blog posts:
@@ -67,7 +67,7 @@ const emailStatus = document.getElementById("emailStatus");
 
 emailSubscribe.onclick = async () => {
 
-    const api = await import("/assets/api.js");
+    const api = await import("{{ StaticURL "api.js" }}");
 
     emailSubscribe.disabled = true;
     emailSubscribe.className = "";

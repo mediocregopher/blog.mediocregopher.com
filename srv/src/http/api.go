@@ -3,13 +3,12 @@ package http
 
 import (
 	"context"
+	"embed"
 	"errors"
 	"fmt"
 	"html/template"
 	"net"
 	"net/http"
-	"net/http/httputil"
-	"net/url"
 	"os"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
@@ -21,6 +20,9 @@ import (
 	"github.com/mediocregopher/mediocre-go-lib/v2/mctx"
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
+
+//go:embed static
+var staticFS embed.FS
 
 // Params are used to instantiate a new API instance. All fields are required
 // unless otherwise noted.
@@ -45,16 +47,6 @@ type Params struct {
 	// supported.
 	ListenProto, ListenAddr string
 
-	// StaticDir and StaticProxy are mutually exclusive.
-	//
-	// If StaticDir is set then that directory on the filesystem will be used to
-	// serve the static site.
-	//
-	// Otherwise if StaticProxy is set all requests for the static site will be
-	// reverse-proxied there.
-	StaticDir   string
-	StaticProxy *url.URL
-
 	// AuthUsers keys are usernames which are allowed to edit server-side data,
 	// and the values are the password hash which accompanies those users. The
 	// password hash must have been produced by NewPasswordHash.
@@ -63,39 +55,14 @@ type Params struct {
 
 // SetupCfg implement the cfg.Cfger interface.
 func (p *Params) SetupCfg(cfg *cfg.Cfg) {
-
 	cfg.StringVar(&p.ListenProto, "listen-proto", "tcp", "Protocol to listen for HTTP requests with")
 	cfg.StringVar(&p.ListenAddr, "listen-addr", ":4000", "Address/path to listen for HTTP requests on")
-
-	cfg.StringVar(&p.StaticDir, "static-dir", "", "Directory from which static files are served (mutually exclusive with -static-proxy-url)")
-	staticProxyURLStr := cfg.String("static-proxy-url", "", "HTTP address from which static files are served (mutually exclusive with -static-dir)")
-
-	cfg.OnInit(func(ctx context.Context) error {
-		if *staticProxyURLStr != "" {
-			var err error
-			if p.StaticProxy, err = url.Parse(*staticProxyURLStr); err != nil {
-				return fmt.Errorf("parsing -static-proxy-url: %w", err)
-			}
-
-		} else if p.StaticDir == "" {
-			return errors.New("-static-dir or -static-proxy-url is required")
-		}
-
-		return nil
-	})
 }
 
 // Annotate implements mctx.Annotator interface.
 func (p *Params) Annotate(a mctx.Annotations) {
 	a["listenProto"] = p.ListenProto
 	a["listenAddr"] = p.ListenAddr
-
-	if p.StaticProxy != nil {
-		a["staticProxy"] = p.StaticProxy.String()
-		return
-	}
-
-	a["staticDir"] = p.StaticDir
 }
 
 // API will listen on the port configured for it, and serve HTTP requests for
@@ -156,15 +123,6 @@ func (a *api) Shutdown(ctx context.Context) error {
 
 func (a *api) handler() http.Handler {
 
-	var staticHandler http.Handler
-	if a.params.StaticDir != "" {
-		staticHandler = http.FileServer(http.Dir(a.params.StaticDir))
-	} else {
-		staticHandler = httputil.NewSingleHostReverseProxy(a.params.StaticProxy)
-	}
-
-	// sugar
-
 	requirePow := func(h http.Handler) http.Handler {
 		return a.requirePowMiddleware(h)
 	}
@@ -184,8 +142,6 @@ func (a *api) handler() http.Handler {
 	auther := NewAuther(a.params.AuthUsers)
 
 	mux := http.NewServeMux()
-
-	mux.Handle("/", staticHandler)
 
 	{
 		apiMux := http.NewServeMux()
@@ -209,39 +165,37 @@ func (a *api) handler() http.Handler {
 		mux.Handle("/api/", http.StripPrefix("/api", formMiddleware(apiMux)))
 	}
 
-	{
-		v2Mux := http.NewServeMux()
-		v2Mux.Handle("/follow.html", a.renderDumbTplHandler("follow.html"))
-		v2Mux.Handle("/posts/", http.StripPrefix("/posts",
-			apiutil.MethodMux(map[string]http.Handler{
-				"GET":  a.renderPostHandler(),
-				"EDIT": a.editPostHandler(),
-				"POST": authMiddleware(auther,
-					formMiddleware(a.postPostHandler()),
-				),
-				"DELETE": authMiddleware(auther,
-					formMiddleware(a.deletePostHandler()),
-				),
-				"PREVIEW": authMiddleware(auther,
-					formMiddleware(a.previewPostHandler()),
-				),
-			}),
-		))
-		v2Mux.Handle("/assets/", http.StripPrefix("/assets",
-			apiutil.MethodMux(map[string]http.Handler{
-				"GET": a.getPostAssetHandler(),
-				"POST": authMiddleware(auther,
-					formMiddleware(a.postPostAssetHandler()),
-				),
-				"DELETE": authMiddleware(auther,
-					formMiddleware(a.deletePostAssetHandler()),
-				),
-			}),
-		))
-		v2Mux.Handle("/", a.renderIndexHandler())
+	mux.Handle("/posts/", http.StripPrefix("/posts",
+		apiutil.MethodMux(map[string]http.Handler{
+			"GET":  a.renderPostHandler(),
+			"EDIT": a.editPostHandler(),
+			"POST": authMiddleware(auther,
+				formMiddleware(a.postPostHandler()),
+			),
+			"DELETE": authMiddleware(auther,
+				formMiddleware(a.deletePostHandler()),
+			),
+			"PREVIEW": authMiddleware(auther,
+				formMiddleware(a.previewPostHandler()),
+			),
+		}),
+	))
 
-		mux.Handle("/v2/", http.StripPrefix("/v2", v2Mux))
-	}
+	mux.Handle("/assets/", http.StripPrefix("/assets",
+		apiutil.MethodMux(map[string]http.Handler{
+			"GET": a.getPostAssetHandler(),
+			"POST": authMiddleware(auther,
+				formMiddleware(a.postPostAssetHandler()),
+			),
+			"DELETE": authMiddleware(auther,
+				formMiddleware(a.deletePostAssetHandler()),
+			),
+		}),
+	))
+
+	mux.Handle("/static/", http.FileServer(http.FS(staticFS)))
+	mux.Handle("/follow.html", a.renderDumbTplHandler("follow.html"))
+	mux.Handle("/", a.renderIndexHandler())
 
 	var globalHandler http.Handler = mux
 	globalHandler = setCSRFMiddleware(globalHandler)
