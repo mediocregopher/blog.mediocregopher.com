@@ -204,7 +204,7 @@ func (a *api) handler() http.Handler {
 	))
 
 	mux.Handle("/static/", http.FileServer(http.FS(staticFS)))
-	mux.Handle("/follow.html", a.renderDumbTplHandler("follow.html"))
+	mux.Handle("/follow", a.renderDumbTplHandler("follow.html"))
 	mux.Handle("/", a.renderIndexHandler())
 
 	var globalHandler http.Handler = mux
