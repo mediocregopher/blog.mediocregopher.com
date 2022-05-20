@@ -11,6 +11,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
@@ -52,6 +53,10 @@ type Params struct {
 	// and the values are the password hash which accompanies those users. The
 	// password hash must have been produced by NewPasswordHash.
 	AuthUsers map[string]string
+
+	// AuthRatelimit indicates how much time must pass between subsequent auth
+	// attempts.
+	AuthRatelimit time.Duration
 }
 
 // SetupCfg implement the cfg.Cfger interface.
@@ -61,10 +66,20 @@ func (p *Params) SetupCfg(cfg *cfg.Cfg) {
 
 	httpAuthUsersStr := cfg.String("http-auth-users", "{}", "JSON object with usernames as values and password hashes (produced by the hash-password binary) as values. Denotes users which are able to edit server-side data")
 
+	httpAuthRatelimitStr := cfg.String("http-auth-ratelimit", "5s", "Minimum duration which must be waited between subsequent auth attempts")
+
 	cfg.OnInit(func(context.Context) error {
-		if err := json.Unmarshal([]byte(*httpAuthUsersStr), &p.AuthUsers); err != nil {
+
+		err := json.Unmarshal([]byte(*httpAuthUsersStr), &p.AuthUsers)
+
+		if err != nil {
 			return fmt.Errorf("unmarshaling -http-auth-users: %w", err)
 		}
+
+		if p.AuthRatelimit, err = time.ParseDuration(*httpAuthRatelimitStr); err != nil {
+			return fmt.Errorf("unmarshaling -http-auth-ratelimit: %w", err)
+		}
+
 		return nil
 	})
 }
@@ -73,6 +88,7 @@ func (p *Params) SetupCfg(cfg *cfg.Cfg) {
 func (p *Params) Annotate(a mctx.Annotations) {
 	a["listenProto"] = p.ListenProto
 	a["listenAddr"] = p.ListenAddr
+	a["authRatelimit"] = p.AuthRatelimit
 }
 
 // API will listen on the port configured for it, and serve HTTP requests for
@@ -86,6 +102,7 @@ type api struct {
 	srv    *http.Server
 
 	redirectTpl *template.Template
+	auther      Auther
 }
 
 // New initializes and returns a new API instance, including setting up all
@@ -105,6 +122,7 @@ func New(params Params) (API, error) {
 
 	a := &api{
 		params: params,
+		auther: NewAuther(params.AuthUsers, params.AuthRatelimit),
 	}
 
 	a.redirectTpl = a.mustParseTpl("redirect.html")
@@ -124,6 +142,7 @@ func New(params Params) (API, error) {
 }
 
 func (a *api) Shutdown(ctx context.Context) error {
+	defer a.auther.Close()
 	if err := a.srv.Shutdown(ctx); err != nil {
 		return err
 	}
@@ -148,8 +167,6 @@ func (a *api) handler() http.Handler {
 		}, h)
 		return h
 	}
-
-	auther := NewAuther(a.params.AuthUsers)
 
 	mux := http.NewServeMux()
 
@@ -179,13 +196,13 @@ func (a *api) handler() http.Handler {
 		apiutil.MethodMux(map[string]http.Handler{
 			"GET":  a.renderPostHandler(),
 			"EDIT": a.editPostHandler(),
-			"POST": authMiddleware(auther,
+			"POST": authMiddleware(a.auther,
 				formMiddleware(a.postPostHandler()),
 			),
-			"DELETE": authMiddleware(auther,
+			"DELETE": authMiddleware(a.auther,
 				formMiddleware(a.deletePostHandler()),
 			),
-			"PREVIEW": authMiddleware(auther,
+			"PREVIEW": authMiddleware(a.auther,
 				formMiddleware(a.previewPostHandler()),
 			),
 		}),
@@ -194,10 +211,10 @@ func (a *api) handler() http.Handler {
 	mux.Handle("/assets/", http.StripPrefix("/assets",
 		apiutil.MethodMux(map[string]http.Handler{
 			"GET": a.getPostAssetHandler(),
-			"POST": authMiddleware(auther,
+			"POST": authMiddleware(a.auther,
 				formMiddleware(a.postPostAssetHandler()),
 			),
-			"DELETE": authMiddleware(auther,
+			"DELETE": authMiddleware(a.auther,
 				formMiddleware(a.deletePostAssetHandler()),
 			),
 		}),

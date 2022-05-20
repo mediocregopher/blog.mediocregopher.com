@@ -29,6 +29,8 @@
       export MEDIOCRE_BLOG_LISTEN_PROTO="${config.listenProto}"
       export MEDIOCRE_BLOG_LISTEN_ADDR="${config.listenAddr}"
       export MEDIOCRE_BLOG_HTTP_AUTH_USERS='${builtins.toJSON config.httpAuthUsers}'
+
+      export MEDIOCRE_BLOG_HTTP_AUTH_RATELIMIT='${config.httpAuthRatelimit}'
     '';
 
     build = buildGoModule {

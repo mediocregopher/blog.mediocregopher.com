@@ -197,7 +197,7 @@ func (a *api) editPostHandler() http.Handler {
 	})
 }
 
-func postFromPostReq(r *http.Request) post.Post {
+func postFromPostReq(r *http.Request) (post.Post, error) {
 
 	p := post.Post{
 		ID:          r.PostFormValue("id"),
@@ -207,18 +207,30 @@ func postFromPostReq(r *http.Request) post.Post {
 		Series:      r.PostFormValue("series"),
 	}
 
-	p.Body = strings.TrimSpace(r.PostFormValue("body"))
 	// textareas encode newlines as CRLF for historical reasons
 	p.Body = strings.ReplaceAll(p.Body, "\r\n", "\n")
+	p.Body = strings.TrimSpace(r.PostFormValue("body"))
 
-	return p
+	if p.ID == "" ||
+		p.Title == "" ||
+		p.Description == "" ||
+		p.Body == "" ||
+		len(p.Tags) == 0 {
+		return post.Post{}, errors.New("ID, Title, Description, Tags, and Body are all required")
+	}
+
+	return p, nil
 }
 
 func (a *api) postPostHandler() http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		p := postFromPostReq(r)
+		p, err := postFromPostReq(r)
+		if err != nil {
+			apiutil.BadRequest(rw, r, err)
+			return
+		}
 
 		if err := a.params.PostStore.Set(p, time.Now()); err != nil {
 			apiutil.InternalServerError(
@@ -267,8 +279,14 @@ func (a *api) previewPostHandler() http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
+		p, err := postFromPostReq(r)
+		if err != nil {
+			apiutil.BadRequest(rw, r, err)
+			return
+		}
+
 		storedPost := post.StoredPost{
-			Post:        postFromPostReq(r),
+			Post:        p,
 			PublishedAt: time.Now(),
 		}
 

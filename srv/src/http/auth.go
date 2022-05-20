@@ -1,7 +1,9 @@
 package http
 
 import (
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 	"golang.org/x/crypto/bcrypt"
@@ -19,21 +21,37 @@ func NewPasswordHash(plaintext string) string {
 
 // Auther determines who can do what.
 type Auther interface {
-	Allowed(username, password string) bool
+	Allowed(ctx context.Context, username, password string) bool
+	Close() error
 }
 
 type auther struct {
-	users map[string]string
+	users  map[string]string
+	ticker *time.Ticker
 }
 
 // NewAuther initializes and returns an Auther will which allow the given
 // username and password hash combinations. Password hashes must have been
 // created using NewPasswordHash.
-func NewAuther(users map[string]string) Auther {
-	return &auther{users: users}
+func NewAuther(users map[string]string, ratelimit time.Duration) Auther {
+	return &auther{
+		users:  users,
+		ticker: time.NewTicker(ratelimit),
+	}
 }
 
-func (a *auther) Allowed(username, password string) bool {
+func (a *auther) Close() error {
+	a.ticker.Stop()
+	return nil
+}
+
+func (a *auther) Allowed(ctx context.Context, username, password string) bool {
+
+	select {
+	case <-ctx.Done():
+		return false
+	case <-a.ticker.C:
+	}
 
 	hashedPassword, ok := a.users[username]
 	if !ok {
@@ -64,7 +82,7 @@ func authMiddleware(auther Auther, h http.Handler) http.Handler {
 			return
 		}
 
-		if !auther.Allowed(username, password) {
+		if !auther.Allowed(r.Context(), username, password) {
 			respondUnauthorized(rw, r)
 			return
 		}
