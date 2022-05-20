@@ -1,0 +1,82 @@
+{{ define "body" }}
+
+  <form method="POST" action="{{ BlogURL "posts/" }}">
+
+    <div class="row">
+
+      <div class="columns six">
+        <label for="idInput">Unique ID (e.g. "how-to-fly-a-kite")</label>
+        <input
+            id="idInput"
+            name="id"
+            class="u-full-width"
+            type="text"
+            value="{{ .Payload.ID }}" />
+      </div>
+
+      <div class="columns three">
+        <label for="tagsInput">Tags (space separated)</label>
+        <input
+            id="tagsInput"
+            name="tags"
+            class="u-full-width"
+            type="text"
+            value="{{ range $i, $tag := .Payload.Tags }}{{ if ne $i 0 }} {{ end }}{{ $tag }}{{ end }}" />
+      </div>
+
+      <div class="columns three">
+        <label for="seriesInput">Series</label>
+        <input
+            id="seriesInput"
+            name="series"
+            class="u-full-width"
+            type="text"
+            value="{{ .Payload.Series }}" />
+      </div>
+
+    </div>
+
+    <div class="row">
+
+      <div class="columns six">
+        <label for="titleInput">Title</label>
+        <input
+            id="titleInput"
+            name="title"
+            class="u-full-width"
+            type="text"
+            value="{{ .Payload.Title }}" />
+      </div>
+
+      <div class="columns six">
+        <label for="descrInput">Description</label>
+        <input
+            id="descrInput"
+            name="description"
+            class="u-full-width"
+            type="text"
+            value="{{ .Payload.Description }}" />
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="columns twelve">
+       <textarea
+         name="body"
+         class="u-full-width"
+         placeholder="Blog body"
+         style="height: 50vh;"
+         >
+         {{ .Payload.Body }}
+       </textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="Save" />
+
+  </form>
+
+{{ end }}
+
+{{ template "base.html" . }}

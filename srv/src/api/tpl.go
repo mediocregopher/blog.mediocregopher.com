@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
 )
@@ -49,6 +50,9 @@ func (a *api) mustParseTpl(name string) *template.Template {
 		"PostURL": func(id string) string {
 			path := filepath.Join("posts", id)
 			return blogURL(path)
+		},
+		"DateTimeFormat": func(t time.Time) string {
+			return t.Format("2006-01-02")
 		},
 	})
 

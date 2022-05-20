@@ -5,10 +5,10 @@
     {{ .Payload.Title }}
   </h1>
   <div class="light">
-    {{ .Payload.PublishedAt.Format "2006-01-02" }}
+    {{ DateTimeFormat .Payload.PublishedAt }}
     &nbsp;•&nbsp;
     {{ if not .Payload.LastUpdatedAt.IsZero }}
-    (Updated {{ .Payload.LastUpdatedAt.Format "2006-01-02" }})
+    (Updated {{ DateTimeFormat .Payload.LastUpdatedAt }})
     &nbsp;•&nbsp;
     {{ end }}
     <em>{{ .Payload.Description }}</em>

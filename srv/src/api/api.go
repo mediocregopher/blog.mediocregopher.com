@@ -214,7 +214,8 @@ func (a *api) handler() http.Handler {
 		v2Mux.Handle("/follow.html", a.renderDumbTplHandler("follow.html"))
 		v2Mux.Handle("/posts/", http.StripPrefix("/posts",
 			apiutil.MethodMux(map[string]http.Handler{
-				"GET": a.renderPostHandler(),
+				"GET":  a.renderPostHandler(),
+				"EDIT": a.editPostHandler(),
 				"DELETE": authMiddleware(auther,
 					formMiddleware(a.deletePostHandler()),
 				),

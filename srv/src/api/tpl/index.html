@@ -7,9 +7,9 @@
       <h2>
         <a href="{{ PostURL .ID }}">{{ .Title }}</a>
       </h2>
-      <span>{{ .PublishedAt.Format "2006-01-02" }}</span>
+      <span>{{ DateTimeFormat .PublishedAt }}</span>
       {{ if not .LastUpdatedAt.IsZero }}
-      <span>(Updated {{ .LastUpdatedAt.Format "2006-01-02" }})</span>
+      <span>(Updated {{ DateTimeFormat .LastUpdatedAt }})</span>
       {{ end }}
       <p>{{ .Description }}</p>
     </li>

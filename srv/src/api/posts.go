@@ -138,13 +138,43 @@ func (a *api) renderPostsIndexHandler() http.Handler {
 	})
 }
 
+func (a *api) editPostHandler() http.Handler {
+
+	tpl := a.mustParseBasedTpl("edit-post.html")
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		id := filepath.Base(r.URL.Path)
+
+		var storedPost post.StoredPost
+
+		if id != "/" {
+
+			var err error
+			storedPost, err = a.params.PostStore.GetByID(id)
+
+			if errors.Is(err, post.ErrPostNotFound) {
+				http.Error(rw, "Post not found", 404)
+				return
+			} else if err != nil {
+				apiutil.InternalServerError(
+					rw, r, fmt.Errorf("fetching post with id %q: %w", id, err),
+				)
+				return
+			}
+		}
+
+		executeTemplate(rw, r, tpl, storedPost)
+	})
+}
+
 func (a *api) deletePostHandler() http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		id := filepath.Base(r.URL.Path)
 
-		if id == "" {
+		if id == "/" {
 			apiutil.BadRequest(rw, r, errors.New("id is required"))
 			return
 		}

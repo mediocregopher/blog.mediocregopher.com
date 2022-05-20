@@ -149,7 +149,7 @@ func (a *api) postPostAssetHandler() http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		id := r.PostFormValue("id")
-		if id == "" {
+		if id == "/" {
 			apiutil.BadRequest(rw, r, errors.New("id is required"))
 			return
 		}
@@ -176,7 +176,7 @@ func (a *api) deletePostAssetHandler() http.Handler {
 
 		id := filepath.Base(r.URL.Path)
 
-		if id == "" {
+		if id == "/" {
 			apiutil.BadRequest(rw, r, errors.New("id is required"))
 			return
 		}
