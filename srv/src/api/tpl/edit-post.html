@@ -1,11 +1,5 @@
 {{ define "body" }}
 
-  <p>
-    <a href="{{ BlogURL "posts/" }}">
-      <button>Back to Posts</button>
-    </a>
-  </p>
-
   <form method="POST" action="{{ BlogURL "posts/" }}">
 
     {{ .CSRFFormInput }}
@@ -87,7 +81,18 @@
       </div>
     </div>
 
-    <input type="submit" value="Save" />
+    <input
+      type="submit"
+      value="Preview"
+      formaction="{{ BlogURL "posts/" }}{{ .Payload.ID }}?method=preview"
+      formtarget="_blank"
+      />
+
+    <input type="submit" value="Save" formaction="{{ BlogURL "posts/" }}" />
+
+    <a href="{{ BlogURL "posts/" }}">
+      <button type="button">Cancel</button>
+    </a>
 
   </form>
 

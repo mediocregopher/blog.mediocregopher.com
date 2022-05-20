@@ -16,6 +16,59 @@ import (
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 )
 
+type postTplPayload struct {
+	post.StoredPost
+	SeriesPrevious, SeriesNext *post.StoredPost
+	Body                       template.HTML
+}
+
+func (a *api) postToPostTplPayload(storedPost post.StoredPost) (postTplPayload, error) {
+	parserExt := parser.CommonExtensions | parser.AutoHeadingIDs
+	parser := parser.NewWithExtensions(parserExt)
+
+	htmlFlags := html.CommonFlags | html.HrefTargetBlank
+	htmlRenderer := html.NewRenderer(html.RendererOptions{Flags: htmlFlags})
+
+	renderedBody := markdown.ToHTML([]byte(storedPost.Body), parser, htmlRenderer)
+
+	tplPayload := postTplPayload{
+		StoredPost: storedPost,
+		Body:       template.HTML(renderedBody),
+	}
+
+	if series := storedPost.Series; series != "" {
+
+		seriesPosts, err := a.params.PostStore.GetBySeries(series)
+		if err != nil {
+			return postTplPayload{}, fmt.Errorf(
+				"fetching posts for series %q: %w", series, err,
+			)
+		}
+
+		var foundThis bool
+
+		for i := range seriesPosts {
+
+			seriesPost := seriesPosts[i]
+
+			if seriesPost.ID == storedPost.ID {
+				foundThis = true
+				continue
+			}
+
+			if !foundThis {
+				tplPayload.SeriesPrevious = &seriesPost
+				continue
+			}
+
+			tplPayload.SeriesNext = &seriesPost
+			break
+		}
+	}
+
+	return tplPayload, nil
+}
+
 func (a *api) renderPostHandler() http.Handler {
 
 	tpl := a.mustParseBasedTpl("post.html")
@@ -42,53 +95,16 @@ func (a *api) renderPostHandler() http.Handler {
 			return
 		}
 
-		parserExt := parser.CommonExtensions | parser.AutoHeadingIDs
-		parser := parser.NewWithExtensions(parserExt)
+		tplPayload, err := a.postToPostTplPayload(storedPost)
 
-		htmlFlags := html.CommonFlags | html.HrefTargetBlank
-		htmlRenderer := html.NewRenderer(html.RendererOptions{Flags: htmlFlags})
-
-		renderedBody := markdown.ToHTML([]byte(storedPost.Body), parser, htmlRenderer)
-
-		tplPayload := struct {
-			post.StoredPost
-			SeriesPrevious, SeriesNext *post.StoredPost
-			Body                       template.HTML
-		}{
-			StoredPost: storedPost,
-			Body:       template.HTML(renderedBody),
-		}
-
-		if series := storedPost.Series; series != "" {
-
-			seriesPosts, err := a.params.PostStore.GetBySeries(series)
-			if err != nil {
-				apiutil.InternalServerError(
-					rw, r,
-					fmt.Errorf("fetching posts for series %q: %w", series, err),
-				)
-				return
-			}
-
-			var foundThis bool
-
-			for i := range seriesPosts {
-
-				seriesPost := seriesPosts[i]
-
-				if seriesPost.ID == storedPost.ID {
-					foundThis = true
-					continue
-				}
-
-				if !foundThis {
-					tplPayload.SeriesPrevious = &seriesPost
-					continue
-				}
-
-				tplPayload.SeriesNext = &seriesPost
-				break
-			}
+		if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf(
+					"generating template payload for post with id %q: %w",
+					id, err,
+				),
+			)
+			return
 		}
 
 		executeTemplate(rw, r, tpl, tplPayload)
@@ -169,21 +185,28 @@ func (a *api) editPostHandler() http.Handler {
 	})
 }
 
+func postFromPostReq(r *http.Request) post.Post {
+
+	p := post.Post{
+		ID:          r.PostFormValue("id"),
+		Title:       r.PostFormValue("title"),
+		Description: r.PostFormValue("description"),
+		Tags:        strings.Fields(r.PostFormValue("tags")),
+		Series:      r.PostFormValue("series"),
+	}
+
+	p.Body = strings.TrimSpace(r.PostFormValue("body"))
+	// textareas encode newlines as CRLF for historical reasons
+	p.Body = strings.ReplaceAll(p.Body, "\r\n", "\n")
+
+	return p
+}
+
 func (a *api) postPostHandler() http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		p := post.Post{
-			ID:          r.PostFormValue("id"),
-			Title:       r.PostFormValue("title"),
-			Description: r.PostFormValue("description"),
-			Tags:        strings.Fields(r.PostFormValue("tags")),
-			Series:      r.PostFormValue("series"),
-		}
-
-		p.Body = strings.TrimSpace(r.PostFormValue("body"))
-		// textareas encode newlines as CRLF for historical reasons
-		p.Body = strings.ReplaceAll(p.Body, "\r\n", "\n")
+		p := postFromPostReq(r)
 
 		if err := a.params.PostStore.Set(p, time.Now()); err != nil {
 			apiutil.InternalServerError(
@@ -223,5 +246,29 @@ func (a *api) deletePostHandler() http.Handler {
 
 		a.executeRedirectTpl(rw, r, "posts/")
 
+	})
+}
+
+func (a *api) previewPostHandler() http.Handler {
+
+	tpl := a.mustParseBasedTpl("post.html")
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		storedPost := post.StoredPost{
+			Post:        postFromPostReq(r),
+			PublishedAt: time.Now(),
+		}
+
+		tplPayload, err := a.postToPostTplPayload(storedPost)
+
+		if err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("generating template payload: %w", err),
+			)
+			return
+		}
+
+		executeTemplate(rw, r, tpl, tplPayload)
 	})
 }
