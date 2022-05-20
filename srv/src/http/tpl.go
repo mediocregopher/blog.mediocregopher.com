@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
 	"html/template"
@@ -27,7 +28,7 @@ func mustReadTplFile(fileName string) string {
 	return string(b)
 }
 
-func (a *api) mustParseTpl(name string) *template.Template {
+func (a *api) parseTpl(tplBody string) (*template.Template, error) {
 
 	blogURL := func(path string) string {
 
@@ -43,7 +44,9 @@ func (a *api) mustParseTpl(name string) *template.Template {
 		return path
 	}
 
-	tpl := template.New("").Funcs(template.FuncMap{
+	tpl := template.New("root")
+
+	tpl = tpl.Funcs(template.FuncMap{
 		"BlogURL": blogURL,
 		"StaticURL": func(path string) string {
 			path = filepath.Join("static", path)
@@ -62,9 +65,39 @@ func (a *api) mustParseTpl(name string) *template.Template {
 		},
 	})
 
-	tpl = template.Must(tpl.Parse(mustReadTplFile(name)))
+	tpl = template.Must(tpl.New("image.html").Parse(mustReadTplFile("image.html")))
 
-	return tpl
+	tpl = tpl.Funcs(template.FuncMap{
+		"Image": func(id string) (template.HTML, error) {
+
+			tplPayload := struct {
+				ID        string
+				Resizable bool
+			}{
+				ID:        id,
+				Resizable: isImgResizable(id),
+			}
+
+			buf := new(bytes.Buffer)
+			if err := tpl.ExecuteTemplate(buf, "image.html", tplPayload); err != nil {
+				return "", err
+			}
+
+			return template.HTML(buf.Bytes()), nil
+		},
+	})
+
+	var err error
+
+	if tpl, err = tpl.New("").Parse(tplBody); err != nil {
+		return nil, err
+	}
+
+	return tpl, nil
+}
+
+func (a *api) mustParseTpl(name string) *template.Template {
+	return template.Must(a.parseTpl(mustReadTplFile(name)))
 }
 
 func (a *api) mustParseBasedTpl(name string) *template.Template {

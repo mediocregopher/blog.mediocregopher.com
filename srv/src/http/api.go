@@ -4,6 +4,7 @@ package http
 import (
 	"context"
 	"embed"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
@@ -57,6 +58,15 @@ type Params struct {
 func (p *Params) SetupCfg(cfg *cfg.Cfg) {
 	cfg.StringVar(&p.ListenProto, "listen-proto", "tcp", "Protocol to listen for HTTP requests with")
 	cfg.StringVar(&p.ListenAddr, "listen-addr", ":4000", "Address/path to listen for HTTP requests on")
+
+	httpAuthUsersStr := cfg.String("http-auth-users", "{}", "JSON object with usernames as values and password hashes (produced by the hash-password binary) as values. Denotes users which are able to edit server-side data")
+
+	cfg.OnInit(func(context.Context) error {
+		if err := json.Unmarshal([]byte(*httpAuthUsersStr), &p.AuthUsers); err != nil {
+			return fmt.Errorf("unmarshaling -http-auth-users: %w", err)
+		}
+		return nil
+	})
 }
 
 // Annotate implements mctx.Annotator interface.

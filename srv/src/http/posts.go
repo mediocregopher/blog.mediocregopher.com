@@ -1,6 +1,7 @@
 package http
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"html/template"
@@ -23,13 +24,24 @@ type postTplPayload struct {
 }
 
 func (a *api) postToPostTplPayload(storedPost post.StoredPost) (postTplPayload, error) {
+
+	bodyTpl, err := a.parseTpl(storedPost.Body)
+	if err != nil {
+		return postTplPayload{}, fmt.Errorf("parsing post body as template: %w", err)
+	}
+
+	bodyBuf := new(bytes.Buffer)
+	if err := bodyTpl.Execute(bodyBuf, nil); err != nil {
+		return postTplPayload{}, fmt.Errorf("executing post body as template: %w", err)
+	}
+
 	parserExt := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(parserExt)
 
 	htmlFlags := html.CommonFlags | html.HrefTargetBlank
 	htmlRenderer := html.NewRenderer(html.RendererOptions{Flags: htmlFlags})
 
-	renderedBody := markdown.ToHTML([]byte(storedPost.Body), parser, htmlRenderer)
+	renderedBody := markdown.ToHTML(bodyBuf.Bytes(), parser, htmlRenderer)
 
 	tplPayload := postTplPayload{
 		StoredPost: storedPost,

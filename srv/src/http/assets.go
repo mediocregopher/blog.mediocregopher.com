@@ -17,6 +17,15 @@ import (
 	"golang.org/x/image/draw"
 )
 
+func isImgResizable(id string) bool {
+	switch strings.ToLower(filepath.Ext(id)) {
+	case ".jpg", ".jpeg", ".png":
+		return true
+	default:
+		return false
+	}
+}
+
 func resizeImage(out io.Writer, in io.Reader, maxWidth float64) error {
 
 	img, format, err := image.Decode(in)
@@ -123,22 +132,19 @@ func (a *api) getPostAssetHandler() http.Handler {
 			return
 		}
 
-		switch ext := strings.ToLower(strings.TrimPrefix(filepath.Ext(id), ".")); ext {
-		case "jpg", "jpeg", "png":
-
-			if err := resizeImage(rw, buf, float64(maxWidth)); err != nil {
-				apiutil.InternalServerError(
-					rw, r,
-					fmt.Errorf(
-						"resizing image with id %q to size %d: %w",
-						id, maxWidth, err,
-					),
-				)
-			}
-
-		default:
-			apiutil.BadRequest(rw, r, fmt.Errorf("cannot resize file with extension %q", ext))
+		if !isImgResizable(id) {
+			apiutil.BadRequest(rw, r, fmt.Errorf("cannot resize file %q", id))
 			return
+		}
+
+		if err := resizeImage(rw, buf, float64(maxWidth)); err != nil {
+			apiutil.InternalServerError(
+				rw, r,
+				fmt.Errorf(
+					"resizing image with id %q to size %d: %w",
+					id, maxWidth, err,
+				),
+			)
 		}
 
 	})

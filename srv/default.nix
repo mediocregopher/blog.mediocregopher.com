@@ -25,12 +25,10 @@
       # pow
       export MEDIOCRE_BLOG_POW_SECRET="${config.powSecret}"
 
-      # listening
+      # http
       export MEDIOCRE_BLOG_LISTEN_PROTO="${config.listenProto}"
       export MEDIOCRE_BLOG_LISTEN_ADDR="${config.listenAddr}"
-
-      # api
-      export MEDIOCRE_BLOG_API_AUTH_USERS='${builtins.toJSON config.httpAuthUsers}'
+      export MEDIOCRE_BLOG_HTTP_AUTH_USERS='${builtins.toJSON config.httpAuthUsers}'
     '';
 
     build = buildGoModule {
