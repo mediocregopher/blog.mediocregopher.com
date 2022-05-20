@@ -16,7 +16,7 @@
       # mailing list
       export MEDIOCRE_BLOG_ML_SMTP_ADDR="${config.mlSMTPAddr}"
       export MEDIOCRE_BLOG_ML_SMTP_AUTH="${config.mlSMTPAuth}"
-      export MEDIOCRE_BLOG_ML_PUBLIC_URL="${config.mlPublicURL}"
+      export MEDIOCRE_BLOG_ML_PUBLIC_URL="${config.publicURL}"
 
       # redis
       export MEDIOCRE_BLOG_REDIS_PROTO=unix
@@ -26,8 +26,9 @@
       export MEDIOCRE_BLOG_POW_SECRET="${config.powSecret}"
 
       # http
-      export MEDIOCRE_BLOG_LISTEN_PROTO="${config.httpListenProto}"
-      export MEDIOCRE_BLOG_LISTEN_ADDR="${config.httpListenAddr}"
+      export MEDIOCRE_BLOG_HTTP_PUBLIC_URL="${config.publicURL}"
+      export MEDIOCRE_BLOG_HTTP_LISTEN_PROTO="${config.httpListenProto}"
+      export MEDIOCRE_BLOG_HTTP_LISTEN_ADDR="${config.httpListenAddr}"
       export MEDIOCRE_BLOG_HTTP_AUTH_USERS='${builtins.toJSON config.httpAuthUsers}'
       export MEDIOCRE_BLOG_HTTP_AUTH_RATELIMIT='${config.httpAuthRatelimit}'
     '';

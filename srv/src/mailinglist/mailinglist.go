@@ -57,8 +57,9 @@ func (p *Params) SetupCfg(cfg *cfg.Cfg) {
 
 	cfg.OnInit(func(ctx context.Context) error {
 		var err error
+		*publicURLStr = strings.TrimSuffix(*publicURLStr, "/")
 		if p.PublicURL, err = url.Parse(*publicURLStr); err != nil {
-			return fmt.Errorf("parsing -public-url: %w", err)
+			return fmt.Errorf("parsing -ml-public-url: %w", err)
 		}
 
 		return nil
@@ -67,7 +68,7 @@ func (p *Params) SetupCfg(cfg *cfg.Cfg) {
 
 // Annotate implements mctx.Annotator interface.
 func (p *Params) Annotate(a mctx.Annotations) {
-	a["publicURL"] = p.PublicURL
+	a["mlPublicURL"] = p.PublicURL
 }
 
 // New initializes and returns a MailingList instance using the given Params.

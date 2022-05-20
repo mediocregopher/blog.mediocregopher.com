@@ -10,7 +10,9 @@ import (
 	"html/template"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
@@ -40,6 +42,9 @@ type Params struct {
 	GlobalRoom       chat.Room
 	UserIDCalculator *chat.UserIDCalculator
 
+	// PublicURL is the base URL which site visitors can navigate to.
+	PublicURL *url.URL
+
 	// ListenProto and ListenAddr are passed into net.Listen to create the
 	// API's listener. Both "tcp" and "unix" protocols are explicitly
 	// supported.
@@ -57,6 +62,9 @@ type Params struct {
 
 // SetupCfg implement the cfg.Cfger interface.
 func (p *Params) SetupCfg(cfg *cfg.Cfg) {
+
+	publicURLStr := cfg.String("http-public-url", "http://localhost:4000", "URL this service is accessible at")
+
 	cfg.StringVar(&p.ListenProto, "http-listen-proto", "tcp", "Protocol to listen for HTTP requests with")
 	cfg.StringVar(&p.ListenAddr, "http-listen-addr", ":4000", "Address/path to listen for HTTP requests on")
 
@@ -76,15 +84,21 @@ func (p *Params) SetupCfg(cfg *cfg.Cfg) {
 			return fmt.Errorf("unmarshaling -http-auth-ratelimit: %w", err)
 		}
 
+		*publicURLStr = strings.TrimSuffix(*publicURLStr, "/")
+		if p.PublicURL, err = url.Parse(*publicURLStr); err != nil {
+			return fmt.Errorf("parsing -http-public-url: %w", err)
+		}
+
 		return nil
 	})
 }
 
 // Annotate implements mctx.Annotator interface.
 func (p *Params) Annotate(a mctx.Annotations) {
-	a["listenProto"] = p.ListenProto
-	a["listenAddr"] = p.ListenAddr
-	a["authRatelimit"] = p.AuthRatelimit
+	a["httpPublicURL"] = p.PublicURL
+	a["httpListenProto"] = p.ListenProto
+	a["httpListenAddr"] = p.ListenAddr
+	a["httpAuthRatelimit"] = p.AuthRatelimit
 }
 
 // API will listen on the port configured for it, and serve HTTP requests for
@@ -218,6 +232,7 @@ func (a *api) handler() http.Handler {
 
 	mux.Handle("/static/", http.FileServer(http.FS(staticFS)))
 	mux.Handle("/follow", a.renderDumbTplHandler("follow.html"))
+	mux.Handle("/feed.xml", a.renderFeedHandler())
 	mux.Handle("/", a.renderIndexHandler())
 
 	var globalHandler http.Handler = mux

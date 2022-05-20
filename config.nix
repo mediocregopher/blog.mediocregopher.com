@@ -1,11 +1,11 @@
 {
   runDir = "/tmp/mediocre-blog/run";
   dataDir = "/tmp/mediocre-blog/data";
+  publicURL = "http://localhost:4000";
 
   powSecret = "ssshhh";
   mlSMTPAddr = "";
   mlSMTPAuth = "";
-  mlPublicURL = "http://localhost:4000";
   httpListenProto = "tcp";
   httpListenAddr = ":4000";
 
