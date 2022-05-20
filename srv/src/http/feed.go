@@ -26,7 +26,7 @@ func (a *api) renderFeedHandler() http.Handler {
 			Author:      author,
 		}
 
-		recentPosts, _, err := a.params.PostStore.WithOrderDesc().Get(0, 20)
+		recentPosts, _, err := a.params.PostStore.Get(0, 20)
 		if err != nil {
 			apiutil.InternalServerError(rw, r, fmt.Errorf("fetching recent posts: %w", err))
 			return

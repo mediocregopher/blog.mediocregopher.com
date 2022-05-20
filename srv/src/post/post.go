@@ -61,38 +61,26 @@ type Store interface {
 	GetByID(id string) (StoredPost, error)
 
 	// GetBySeries returns all StoredPosts with the given series, sorted time
-	// ascending, or empty slice.
+	// descending, or empty slice.
 	GetBySeries(series string) ([]StoredPost, error)
 
 	// GetByTag returns all StoredPosts with the given tag, sorted time
-	// ascending, or empty slice.
+	// descending, or empty slice.
 	GetByTag(tag string) ([]StoredPost, error)
-
-	// WithOrderDesc will return a Store whose Get operations return Posts in
-	// time descending order, rather than ascending.
-	WithOrderDesc() Store
 
 	// Delete will delete the StoredPost with the given ID.
 	Delete(id string) error
 }
 
 type store struct {
-	db    *sql.DB
-	order string
+	db *sql.DB
 }
 
 // NewStore initializes a new Store using an existing SQLDB.
 func NewStore(db *SQLDB) Store {
 	return &store{
-		db:    db.db,
-		order: "ASC",
+		db: db.db,
 	}
-}
-
-func (s *store) WithOrderDesc() Store {
-	s2 := *s
-	s2.order = "DESC"
-	return &s2
 }
 
 // if the callback returns an error then the transaction is aborted.
@@ -196,18 +184,16 @@ func (s *store) get(
 	[]StoredPost, error,
 ) {
 
-	query := fmt.Sprintf(
-		`SELECT
+	query := `
+		SELECT
 			p.id, p.title, p.description, p.series, GROUP_CONCAT(pt.tag),
 			p.published_at, p.last_updated_at,
 			p.body
 		FROM posts p
 		LEFT JOIN post_tags pt ON (p.id = pt.post_id)
-		`+where+`
+		` + where + `
 		GROUP BY (p.id)
-		ORDER BY p.published_at %s, p.title %s`,
-		s.order, s.order,
-	)
+		ORDER BY p.published_at DESC, p.title DESC`
 
 	if limit > 0 {
 		query += fmt.Sprintf(" LIMIT %d", limit)

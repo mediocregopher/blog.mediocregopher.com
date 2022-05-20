@@ -153,49 +153,6 @@ func TestStore(t *testing.T) {
 		now := h.clock.Now().UTC()
 
 		posts := []StoredPost{
-			h.testStoredPost(0),
-			h.testStoredPost(1),
-			h.testStoredPost(2),
-			h.testStoredPost(3),
-		}
-
-		posts[1].Tags = []string{"1", "2"}
-
-		for _, post := range posts {
-			assert.NoError(t, h.store.Set(post.Post, now))
-		}
-
-		gotPosts, hasMore, err := h.store.Get(0, 2)
-		assert.NoError(t, err)
-		assert.True(t, hasMore)
-		assertPostsEqual(t, posts[:2], gotPosts)
-
-		gotPosts, hasMore, err = h.store.Get(1, 2)
-		assert.NoError(t, err)
-		assert.False(t, hasMore)
-		assertPostsEqual(t, posts[2:4], gotPosts)
-
-		posts = append(posts, h.testStoredPost(4))
-		assert.NoError(t, h.store.Set(posts[4].Post, now))
-
-		gotPosts, hasMore, err = h.store.Get(1, 2)
-		assert.NoError(t, err)
-		assert.True(t, hasMore)
-		assertPostsEqual(t, posts[2:4], gotPosts)
-
-		gotPosts, hasMore, err = h.store.Get(2, 2)
-		assert.NoError(t, err)
-		assert.False(t, hasMore)
-		assertPostsEqual(t, posts[4:], gotPosts)
-	})
-
-	t.Run("get_desc", func(t *testing.T) {
-		h := newStoreTestHarness(t)
-		h.store = h.store.WithOrderDesc()
-
-		now := h.clock.Now().UTC()
-
-		posts := []StoredPost{
 			h.testStoredPost(3),
 			h.testStoredPost(2),
 			h.testStoredPost(1),
@@ -236,10 +193,10 @@ func TestStore(t *testing.T) {
 		now := h.clock.Now().UTC()
 
 		posts := []StoredPost{
-			h.testStoredPost(0),
-			h.testStoredPost(1),
-			h.testStoredPost(2),
 			h.testStoredPost(3),
+			h.testStoredPost(2),
+			h.testStoredPost(1),
+			h.testStoredPost(0),
 		}
 
 		posts[0].Series = "foo"
@@ -270,10 +227,10 @@ func TestStore(t *testing.T) {
 		now := h.clock.Now().UTC()
 
 		posts := []StoredPost{
-			h.testStoredPost(0),
-			h.testStoredPost(1),
-			h.testStoredPost(2),
 			h.testStoredPost(3),
+			h.testStoredPost(2),
+			h.testStoredPost(1),
+			h.testStoredPost(0),
 		}
 
 		posts[0].Tags = []string{"foo"}

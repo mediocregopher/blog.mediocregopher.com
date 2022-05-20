@@ -69,11 +69,11 @@ func (a *api) postToPostTplPayload(storedPost post.StoredPost) (postTplPayload, 
 			}
 
 			if !foundThis {
-				tplPayload.SeriesPrevious = &seriesPost
+				tplPayload.SeriesNext = &seriesPost
 				continue
 			}
 
-			tplPayload.SeriesNext = &seriesPost
+			tplPayload.SeriesPrevious = &seriesPost
 			break
 		}
 	}
@@ -138,7 +138,7 @@ func (a *api) renderPostsIndexHandler() http.Handler {
 			return
 		}
 
-		posts, hasMore, err := a.params.PostStore.WithOrderDesc().Get(page, pageCount)
+		posts, hasMore, err := a.params.PostStore.Get(page, pageCount)
 		if err != nil {
 			apiutil.InternalServerError(
 				rw, r, fmt.Errorf("fetching page %d of posts: %w", page, err),

@@ -30,7 +30,7 @@ func (a *api) renderIndexHandler() http.Handler {
 			return
 		}
 
-		posts, hasMore, err := a.params.PostStore.WithOrderDesc().Get(page, pageCount)
+		posts, hasMore, err := a.params.PostStore.Get(page, pageCount)
 		if err != nil {
 			apiutil.InternalServerError(
 				rw, r, fmt.Errorf("fetching page %d of posts: %w", page, err),
