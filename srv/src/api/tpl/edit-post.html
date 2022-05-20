@@ -1,17 +1,31 @@
 {{ define "body" }}
 
+  <p>
+    <a href="{{ BlogURL "posts/" }}">
+      <button>Back to Posts</button>
+    </a>
+  </p>
+
   <form method="POST" action="{{ BlogURL "posts/" }}">
+
+    {{ .CSRFFormInput }}
 
     <div class="row">
 
       <div class="columns six">
-        <label for="idInput">Unique ID (e.g. "how-to-fly-a-kite")</label>
-        <input
-            id="idInput"
-            name="id"
-            class="u-full-width"
-            type="text"
-            value="{{ .Payload.ID }}" />
+        <label for="idInput">Unique ID</label>
+        {{ if eq .Payload.ID "" }}
+          <input
+              id="idInput"
+              name="id"
+              class="u-full-width"
+              type="text"
+              placeholder="e.g. how-to-fly-a-kite"
+              value="{{ .Payload.ID }}" />
+        {{ else }}
+          <a href="{{ PostURL .Payload.ID }}" target="_blank">{{ .Payload.ID }}</a>
+          <input name="id" type="hidden" value="{{ .Payload.ID }}" />
+        {{ end }}
       </div>
 
       <div class="columns three">
@@ -68,7 +82,7 @@
          placeholder="Blog body"
          style="height: 50vh;"
          >
-         {{ .Payload.Body }}
+         {{- .Payload.Body -}}
        </textarea>
       </div>
     </div>

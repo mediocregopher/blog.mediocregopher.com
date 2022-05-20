@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -165,6 +166,35 @@ func (a *api) editPostHandler() http.Handler {
 		}
 
 		executeTemplate(rw, r, tpl, storedPost)
+	})
+}
+
+func (a *api) postPostHandler() http.Handler {
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		p := post.Post{
+			ID:          r.PostFormValue("id"),
+			Title:       r.PostFormValue("title"),
+			Description: r.PostFormValue("description"),
+			Tags:        strings.Fields(r.PostFormValue("tags")),
+			Series:      r.PostFormValue("series"),
+		}
+
+		p.Body = strings.TrimSpace(r.PostFormValue("body"))
+		// textareas encode newlines as CRLF for historical reasons
+		p.Body = strings.ReplaceAll(p.Body, "\r\n", "\n")
+
+		if err := a.params.PostStore.Set(p, time.Now()); err != nil {
+			apiutil.InternalServerError(
+				rw, r, fmt.Errorf("storing post with id %q: %w", p.ID, err),
+			)
+			return
+		}
+
+		redirectPath := fmt.Sprintf("posts/%s?method=edit", p.ID)
+
+		a.executeRedirectTpl(rw, r, redirectPath)
 	})
 }
 

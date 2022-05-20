@@ -216,6 +216,9 @@ func (a *api) handler() http.Handler {
 			apiutil.MethodMux(map[string]http.Handler{
 				"GET":  a.renderPostHandler(),
 				"EDIT": a.editPostHandler(),
+				"POST": authMiddleware(auther,
+					formMiddleware(a.postPostHandler()),
+				),
 				"DELETE": authMiddleware(auther,
 					formMiddleware(a.deletePostHandler()),
 				),

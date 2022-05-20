@@ -124,6 +124,11 @@ func (s *store) withTx(cb func(*sql.Tx) error) error {
 }
 
 func (s *store) Set(post Post, now time.Time) error {
+
+	if post.ID == "" {
+		return errors.New("post ID can't be empty")
+	}
+
 	return s.withTx(func(tx *sql.Tx) error {
 
 		nowTS := now.Unix()
