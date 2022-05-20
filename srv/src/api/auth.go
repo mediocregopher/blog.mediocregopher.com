@@ -3,13 +3,14 @@ package api
 import (
 	"net/http"
 
+	"github.com/mediocregopher/blog.mediocregopher.com/srv/api/apiutil"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // NewPasswordHash returns the hash of the given plaintext password, for use
 // with Auther.
 func NewPasswordHash(plaintext string) string {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(plaintext), 12)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(plaintext), 13)
 	if err != nil {
 		panic(err)
 	}
@@ -48,9 +49,10 @@ func (a *auther) Allowed(username, password string) bool {
 
 func authMiddleware(auther Auther, h http.Handler) http.Handler {
 
-	respondUnauthorized := func(rw http.ResponseWriter) {
+	respondUnauthorized := func(rw http.ResponseWriter, r *http.Request) {
 		rw.Header().Set("WWW-Authenticate", `Basic realm="NOPE"`)
 		rw.WriteHeader(http.StatusUnauthorized)
+		apiutil.GetRequestLogger(r).WarnString(r.Context(), "unauthorized")
 	}
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
@@ -58,12 +60,12 @@ func authMiddleware(auther Auther, h http.Handler) http.Handler {
 		username, password, ok := r.BasicAuth()
 
 		if !ok {
-			respondUnauthorized(rw)
+			respondUnauthorized(rw, r)
 			return
 		}
 
 		if !auther.Allowed(username, password) {
-			respondUnauthorized(rw)
+			respondUnauthorized(rw, r)
 			return
 		}
 

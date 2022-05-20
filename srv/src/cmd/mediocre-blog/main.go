@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"os/signal"
 	"syscall"
@@ -54,6 +55,8 @@ func main() {
 	chatUserIDCalcSecret := cfg.String("chat-user-id-calc-secret", "", "Secret to use when calculating user ids")
 
 	pathPrefix := cfg.String("path-prefix", "", "Prefix which is optionally applied to all URL paths rendered by the blog")
+
+	apiAuthUsersStr := cfg.String("api-auth-users", "{}", "JSON object with usernames as values and password hashes (produced by the hash-password binary) as values. Denotes users which are able to edit server-side data")
 
 	// initialization
 	err := cfg.Init(ctx)
@@ -128,6 +131,11 @@ func main() {
 	postStore := post.NewStore(postSQLDB)
 	postAssetStore := post.NewAssetStore(postSQLDB)
 
+	var apiAuthUsers map[string]string
+	if err := json.Unmarshal([]byte(*apiAuthUsersStr), &apiAuthUsers); err != nil {
+		logger.Fatal(ctx, "unmarshaling -api-auth-users", err)
+	}
+
 	apiParams.Logger = logger.WithNamespace("api")
 	apiParams.PowManager = powMgr
 	apiParams.PathPrefix = *pathPrefix
@@ -136,6 +144,7 @@ func main() {
 	apiParams.MailingList = ml
 	apiParams.GlobalRoom = chatGlobalRoom
 	apiParams.UserIDCalculator = chatUserIDCalc
+	apiParams.AuthUsers = apiAuthUsers
 
 	logger.Info(ctx, "listening")
 	a, err := api.New(apiParams)

@@ -54,6 +54,11 @@ type Params struct {
 	// reverse-proxied there.
 	StaticDir   string
 	StaticProxy *url.URL
+
+	// AuthUsers keys are usernames which are allowed to edit server-side data,
+	// and the values are the password hash which accompanies those users. The
+	// password hash must have been produced by NewPasswordHash.
+	AuthUsers map[string]string
 }
 
 // SetupCfg implement the cfg.Cfger interface.
@@ -176,6 +181,8 @@ func (a *api) handler() http.Handler {
 		return h
 	}
 
+	auther := NewAuther(a.params.AuthUsers)
+
 	mux := http.NewServeMux()
 
 	mux.Handle("/", staticHandler)
@@ -208,9 +215,13 @@ func (a *api) handler() http.Handler {
 		v2Mux.Handle("/posts/", a.renderPostHandler())
 		v2Mux.Handle("/assets/", http.StripPrefix("/assets",
 			apiutil.MethodMux(map[string]http.Handler{
-				"GET":    a.getPostAssetHandler(),
-				"POST":   formMiddleware(a.postPostAssetHandler()),
-				"DELETE": formMiddleware(a.deletePostAssetHandler()),
+				"GET": a.getPostAssetHandler(),
+				"POST": authMiddleware(auther,
+					formMiddleware(a.postPostAssetHandler()),
+				),
+				"DELETE": authMiddleware(auther,
+					formMiddleware(a.deletePostAssetHandler()),
+				),
 			}),
 		))
 		v2Mux.Handle("/", a.renderIndexHandler())
