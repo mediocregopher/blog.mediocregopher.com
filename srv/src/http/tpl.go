@@ -35,7 +35,7 @@ func (a *api) parseTpl(tplBody string) (*template.Template, error) {
 		// filepath.Join strips trailing slash, but we want to keep it
 		trailingSlash := strings.HasSuffix(path, "/")
 
-		path = filepath.Join("/", a.params.PathPrefix, path)
+		path = filepath.Join("/", path)
 
 		if trailingSlash && path != "/" {
 			path += "/"

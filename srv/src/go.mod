@@ -8,6 +8,7 @@ require (
 	github.com/emersion/go-smtp v0.15.0
 	github.com/gomarkdown/markdown v0.0.0-20220510115730-2372b9aa33e5
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/feeds v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.2
 	github.com/mattn/go-sqlite3 v1.14.8
 	github.com/mediocregopher/mediocre-go-lib/v2 v2.0.0-beta.0.0.20220506011745-cbeee71cb1ee

@@ -32,10 +32,6 @@ type Params struct {
 	Logger     *mlog.Logger
 	PowManager pow.Manager
 
-	// PathPrefix, if given, will be prefixed to all url paths which are
-	// rendered by the API's templating system.
-	PathPrefix string
-
 	PostStore      post.Store
 	PostAssetStore post.AssetStore
 
@@ -61,8 +57,8 @@ type Params struct {
 
 // SetupCfg implement the cfg.Cfger interface.
 func (p *Params) SetupCfg(cfg *cfg.Cfg) {
-	cfg.StringVar(&p.ListenProto, "listen-proto", "tcp", "Protocol to listen for HTTP requests with")
-	cfg.StringVar(&p.ListenAddr, "listen-addr", ":4000", "Address/path to listen for HTTP requests on")
+	cfg.StringVar(&p.ListenProto, "http-listen-proto", "tcp", "Protocol to listen for HTTP requests with")
+	cfg.StringVar(&p.ListenAddr, "http-listen-addr", ":4000", "Address/path to listen for HTTP requests on")
 
 	httpAuthUsersStr := cfg.String("http-auth-users", "{}", "JSON object with usernames as values and password hashes (produced by the hash-password binary) as values. Denotes users which are able to edit server-side data")
 
