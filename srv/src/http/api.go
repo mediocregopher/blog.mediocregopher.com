@@ -167,15 +167,21 @@ func (a *api) handler() http.Handler {
 	}
 
 	formMiddleware := func(h http.Handler) http.Handler {
-		h = checkCSRFMiddleware(h)
-		h = disallowGetMiddleware(h)
-		h = logReqMiddleware(h)
-		h = addResponseHeaders(map[string]string{
+		wh := checkCSRFMiddleware(h)
+		wh = logReqMiddleware(wh)
+		wh = addResponseHeaders(map[string]string{
 			"Cache-Control": "no-store, max-age=0",
 			"Pragma":        "no-cache",
 			"Expires":       "0",
-		}, h)
-		return h
+		}, wh)
+
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			if r.Method != "GET" {
+				wh.ServeHTTP(rw, r)
+			} else {
+				h.ServeHTTP(rw, r)
+			}
+		})
 	}
 
 	mux := http.NewServeMux()
@@ -199,33 +205,27 @@ func (a *api) handler() http.Handler {
 			a.requirePowMiddleware,
 		)))
 
-		mux.Handle("/api/", http.StripPrefix("/api", formMiddleware(apiMux)))
+		mux.Handle("/api/", http.StripPrefix("/api",
+			// disallowGetMiddleware is used rather than a MethodMux because it
+			// has an exception for websockets, which is needed for chat.
+			disallowGetMiddleware(apiMux),
+		))
 	}
 
 	mux.Handle("/posts/", http.StripPrefix("/posts",
 		apiutil.MethodMux(map[string]http.Handler{
-			"GET": a.renderPostHandler(),
-			"POST": authMiddleware(a.auther,
-				formMiddleware(a.postPostHandler()),
-			),
-			"DELETE": authMiddleware(a.auther,
-				formMiddleware(a.deletePostHandler()),
-			),
-			"PREVIEW": authMiddleware(a.auther,
-				formMiddleware(a.previewPostHandler()),
-			),
+			"GET":     a.renderPostHandler(),
+			"POST":    authMiddleware(a.auther, a.postPostHandler()),
+			"DELETE":  authMiddleware(a.auther, a.deletePostHandler()),
+			"PREVIEW": authMiddleware(a.auther, a.previewPostHandler()),
 		}),
 	))
 
 	mux.Handle("/assets/", http.StripPrefix("/assets",
 		apiutil.MethodMux(map[string]http.Handler{
-			"GET": a.getPostAssetHandler(),
-			"POST": authMiddleware(a.auther,
-				formMiddleware(a.postPostAssetHandler()),
-			),
-			"DELETE": authMiddleware(a.auther,
-				formMiddleware(a.deletePostAssetHandler()),
-			),
+			"GET":    a.getPostAssetHandler(),
+			"POST":   authMiddleware(a.auther, a.postPostAssetHandler()),
+			"DELETE": authMiddleware(a.auther, a.deletePostAssetHandler()),
 		}),
 	))
 
@@ -235,6 +235,7 @@ func (a *api) handler() http.Handler {
 	mux.Handle("/", a.renderIndexHandler())
 
 	var globalHandler http.Handler = mux
+	globalHandler = formMiddleware(globalHandler)
 	globalHandler = setCSRFMiddleware(globalHandler)
 	globalHandler = setLoggerMiddleware(a.params.Logger, globalHandler)
 

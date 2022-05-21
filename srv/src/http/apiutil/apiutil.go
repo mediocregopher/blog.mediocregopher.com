@@ -121,10 +121,11 @@ func MethodMux(handlers map[string]http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		method := strings.ToUpper(r.FormValue("method"))
+		method := strings.ToUpper(r.Method)
+		formMethod := strings.ToUpper(r.FormValue("method"))
 
-		if method == "" {
-			method = strings.ToUpper(r.Method)
+		if method == "POST" && formMethod != "" {
+			method = formMethod
 		}
 
 		handler, ok := handlers[method]
