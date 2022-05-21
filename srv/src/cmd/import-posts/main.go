@@ -76,7 +76,7 @@ func importPost(postStore post.Store, path string) (post.StoredPost, error) {
 		Body:        string(body),
 	}
 
-	if err := postStore.Set(p, publishedAt); err != nil {
+	if _, err := postStore.Set(p, publishedAt); err != nil {
 		return post.StoredPost{}, fmt.Errorf("storing post id %q: %w", p.ID, err)
 	}
 
@@ -89,7 +89,7 @@ func importPost(postStore post.Store, path string) (post.StoredPost, error) {
 
 		// as a hack, we store the post again with the updated date as now. This
 		// will update the LastUpdatedAt field in the Store.
-		if err := postStore.Set(p, lastUpdatedAt); err != nil {
+		if _, err := postStore.Set(p, lastUpdatedAt); err != nil {
 			return post.StoredPost{}, fmt.Errorf("updating post id %q: %w", p.ID, err)
 		}
 	}
