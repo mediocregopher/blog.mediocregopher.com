@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
+	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -28,37 +29,54 @@ func mustReadTplFile(fileName string) string {
 	return string(b)
 }
 
-func (a *api) parseTpl(tplBody string) (*template.Template, error) {
+func (a *api) blogURL(path string, abs bool) string {
+	// filepath.Join strips trailing slash, but we want to keep it
+	trailingSlash := strings.HasSuffix(path, "/")
 
-	blogURL := func(path string) string {
+	res := filepath.Join("/", path)
 
-		// filepath.Join strips trailing slash, but we want to keep it
-		trailingSlash := strings.HasSuffix(path, "/")
-
-		path = filepath.Join("/", path)
-
-		if trailingSlash && path != "/" {
-			path += "/"
-		}
-
-		return path
+	if trailingSlash && res != "/" {
+		res += "/"
 	}
+
+	if abs {
+		res = a.params.PublicURL.String() + res
+	}
+
+	return res
+}
+
+func (a *api) postURL(id string, abs bool) string {
+	path := filepath.Join("posts", id)
+	return a.blogURL(path, abs)
+}
+
+func (a *api) postsURL(abs bool) string {
+	return a.blogURL("posts", abs)
+}
+
+func (a *api) assetsURL(abs bool) string {
+	return a.blogURL("assets", abs)
+}
+
+func (a *api) parseTpl(name, tplBody string) (*template.Template, error) {
 
 	tpl := template.New("root")
 
 	tpl = tpl.Funcs(template.FuncMap{
-		"BlogURL": blogURL,
+		"BlogURL": func(path string) string {
+			return a.blogURL(path, false)
+		},
 		"StaticURL": func(path string) string {
 			path = filepath.Join("static", path)
-			return blogURL(path)
+			return a.blogURL(path, false)
 		},
 		"AssetURL": func(id string) string {
 			path := filepath.Join("assets", id)
-			return blogURL(path)
+			return a.blogURL(path, false)
 		},
 		"PostURL": func(id string) string {
-			path := filepath.Join("posts", id)
-			return blogURL(path)
+			return a.postURL(id, false)
 		},
 		"DateTimeFormat": func(t time.Time) string {
 			return t.Format("2006-01-02")
@@ -89,7 +107,7 @@ func (a *api) parseTpl(tplBody string) (*template.Template, error) {
 
 	var err error
 
-	if tpl, err = tpl.New("").Parse(tplBody); err != nil {
+	if tpl, err = tpl.New(name).Parse(tplBody); err != nil {
 		return nil, err
 	}
 
@@ -97,7 +115,7 @@ func (a *api) parseTpl(tplBody string) (*template.Template, error) {
 }
 
 func (a *api) mustParseTpl(name string) *template.Template {
-	return template.Must(a.parseTpl(mustReadTplFile(name)))
+	return template.Must(a.parseTpl(name, mustReadTplFile(name)))
 }
 
 func (a *api) mustParseBasedTpl(name string) *template.Template {
@@ -140,12 +158,13 @@ func executeTemplate(
 }
 
 func (a *api) executeRedirectTpl(
-	rw http.ResponseWriter, r *http.Request, path string,
+	rw http.ResponseWriter, r *http.Request, url string,
 ) {
+	log.Printf("here url:%q", url)
 	executeTemplate(rw, r, a.redirectTpl, struct {
-		Path string
+		URL string
 	}{
-		Path: path,
+		URL: url,
 	})
 }
 

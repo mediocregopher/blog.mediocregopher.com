@@ -25,7 +25,7 @@ type postTplPayload struct {
 
 func (a *api) postToPostTplPayload(storedPost post.StoredPost) (postTplPayload, error) {
 
-	bodyTpl, err := a.parseTpl(storedPost.Body)
+	bodyTpl, err := a.parseTpl(storedPost.ID+"-body.html", storedPost.Body)
 	if err != nil {
 		return postTplPayload{}, fmt.Errorf("parsing post body as template: %w", err)
 	}
@@ -271,7 +271,7 @@ func (a *api) postPostHandler() http.Handler {
 		if first {
 
 			a.params.Logger.Info(r.Context(), "publishing blog post to mailing list")
-			urlStr := a.params.PublicURL.String() + filepath.Join("/posts", p.ID)
+			urlStr := a.postURL(p.ID, true)
 
 			if err := a.params.MailingList.Publish(p.Title, urlStr); err != nil {
 				apiutil.InternalServerError(
@@ -281,9 +281,7 @@ func (a *api) postPostHandler() http.Handler {
 			}
 		}
 
-		redirectPath := fmt.Sprintf("posts/%s?edit", p.ID)
-
-		a.executeRedirectTpl(rw, r, redirectPath)
+		a.executeRedirectTpl(rw, r, a.postURL(p.ID, false)+"?edit")
 	})
 }
 
@@ -310,7 +308,7 @@ func (a *api) deletePostHandler() http.Handler {
 			return
 		}
 
-		a.executeRedirectTpl(rw, r, "posts/")
+		a.executeRedirectTpl(rw, r, a.postsURL(false))
 
 	})
 }

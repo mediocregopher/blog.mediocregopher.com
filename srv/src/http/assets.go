@@ -172,7 +172,7 @@ func (a *api) postPostAssetHandler() http.Handler {
 			return
 		}
 
-		a.executeRedirectTpl(rw, r, "assets/")
+		a.executeRedirectTpl(rw, r, a.assetsURL(false))
 	})
 }
 
@@ -199,6 +199,6 @@ func (a *api) deletePostAssetHandler() http.Handler {
 			return
 		}
 
-		a.executeRedirectTpl(rw, r, "assets/")
+		a.executeRedirectTpl(rw, r, a.assetsURL(false))
 	})
 }
