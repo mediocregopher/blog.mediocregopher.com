@@ -10,6 +10,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/feeds v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.2
+	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/mattn/go-sqlite3 v1.14.8
 	github.com/mediocregopher/mediocre-go-lib/v2 v2.0.0-beta.0.0.20220506011745-cbeee71cb1ee
 	github.com/mediocregopher/radix/v4 v4.0.0-beta.1.0.20210726230805-d62fa1b2e3cb

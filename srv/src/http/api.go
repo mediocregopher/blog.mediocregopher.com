@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	lru "github.com/hashicorp/golang-lru"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/cfg"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/chat"
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
@@ -162,8 +163,11 @@ func (a *api) Shutdown(ctx context.Context) error {
 
 func (a *api) handler() http.Handler {
 
-	requirePow := func(h http.Handler) http.Handler {
-		return a.requirePowMiddleware(h)
+	cache, err := lru.New(5000)
+
+	// instantiating the lru cache can't realistically fail
+	if err != nil {
+		panic(err)
 	}
 
 	mux := http.NewServeMux()
@@ -172,12 +176,12 @@ func (a *api) handler() http.Handler {
 		apiMux := http.NewServeMux()
 		apiMux.Handle("/pow/challenge", a.newPowChallengeHandler())
 		apiMux.Handle("/pow/check",
-			requirePow(
+			a.requirePowMiddleware(
 				http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {}),
 			),
 		)
 
-		apiMux.Handle("/mailinglist/subscribe", requirePow(a.mailingListSubscribeHandler()))
+		apiMux.Handle("/mailinglist/subscribe", a.requirePowMiddleware(a.mailingListSubscribeHandler()))
 		apiMux.Handle("/mailinglist/finalize", a.mailingListFinalizeHandler())
 		apiMux.Handle("/mailinglist/unsubscribe", a.mailingListUnsubscribeHandler())
 
@@ -222,10 +226,12 @@ func (a *api) handler() http.Handler {
 		"GET": applyMiddlewares(
 			globalHandler,
 			logReqMiddleware,
+			cacheMiddleware(cache),
 			setCSRFMiddleware,
 		),
 		"*": applyMiddlewares(
 			globalHandler,
+			purgeCacheOnOKMiddleware(cache),
 			authMiddleware(a.auther),
 			checkCSRFMiddleware,
 			addResponseHeadersMiddleware(map[string]string{
