@@ -131,10 +131,16 @@ func (a *api) renderPostHandler() http.Handler {
 
 func (a *api) renderPostsIndexHandler() http.Handler {
 
+	renderEditPostHandler := a.renderEditPostHandler()
 	tpl := a.mustParseBasedTpl("posts.html")
 	const pageCount = 20
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		if _, ok := r.URL.Query()["edit"]; ok {
+			renderEditPostHandler.ServeHTTP(rw, r)
+			return
+		}
 
 		page, err := apiutil.StrToInt(r.FormValue("p"), 0)
 		if err != nil {
@@ -239,11 +245,26 @@ func (a *api) postPostHandler() http.Handler {
 			return
 		}
 
-		if err := a.params.PostStore.Set(p, time.Now()); err != nil {
+		first, err := a.params.PostStore.Set(p, time.Now())
+
+		if err != nil {
 			apiutil.InternalServerError(
 				rw, r, fmt.Errorf("storing post with id %q: %w", p.ID, err),
 			)
 			return
+		}
+
+		if first {
+
+			a.params.Logger.Info(r.Context(), "publishing blog post to mailing list")
+			urlStr := a.params.PublicURL.String() + filepath.Join("/posts", p.ID)
+
+			if err := a.params.MailingList.Publish(p.Title, urlStr); err != nil {
+				apiutil.InternalServerError(
+					rw, r, fmt.Errorf("publishing post with id %q: %w", p.ID, err),
+				)
+				return
+			}
 		}
 
 		redirectPath := fmt.Sprintf("posts/%s?edit", p.ID)

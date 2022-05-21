@@ -108,7 +108,9 @@ func TestStore(t *testing.T) {
 		post := testPost(0)
 		post.Tags = []string{"foo", "bar"}
 
-		assert.NoError(t, h.store.Set(post, now))
+		first, err := h.store.Set(post, now)
+		assert.NoError(t, err)
+		assert.True(t, first)
 
 		gotPost, err := h.store.GetByID(post.ID)
 		assert.NoError(t, err)
@@ -129,7 +131,9 @@ func TestStore(t *testing.T) {
 		post.Body = "anything"
 		post.Tags = []string{"bar", "baz"}
 
-		assert.NoError(t, h.store.Set(post, newNow))
+		first, err = h.store.Set(post, newNow)
+		assert.NoError(t, err)
+		assert.False(t, first)
 
 		gotPost, err = h.store.GetByID(post.ID)
 		assert.NoError(t, err)
@@ -160,7 +164,8 @@ func TestStore(t *testing.T) {
 		}
 
 		for _, post := range posts {
-			assert.NoError(t, h.store.Set(post.Post, now))
+			_, err := h.store.Set(post.Post, now)
+			assert.NoError(t, err)
 		}
 
 		gotPosts, hasMore, err := h.store.Get(0, 2)
@@ -174,7 +179,8 @@ func TestStore(t *testing.T) {
 		assertPostsEqual(t, posts[2:4], gotPosts)
 
 		posts = append([]StoredPost{h.testStoredPost(4)}, posts...)
-		assert.NoError(t, h.store.Set(posts[0].Post, now))
+		_, err = h.store.Set(posts[0].Post, now)
+		assert.NoError(t, err)
 
 		gotPosts, hasMore, err = h.store.Get(1, 2)
 		assert.NoError(t, err)
@@ -204,7 +210,8 @@ func TestStore(t *testing.T) {
 		posts[2].Series = "bar"
 
 		for _, post := range posts {
-			assert.NoError(t, h.store.Set(post.Post, now))
+			_, err := h.store.Set(post.Post, now)
+			assert.NoError(t, err)
 		}
 
 		fooPosts, err := h.store.GetBySeries("foo")
@@ -238,7 +245,8 @@ func TestStore(t *testing.T) {
 		posts[2].Tags = []string{"bar"}
 
 		for _, post := range posts {
-			assert.NoError(t, h.store.Set(post.Post, now))
+			_, err := h.store.Set(post.Post, now)
+			assert.NoError(t, err)
 		}
 
 		fooPosts, err := h.store.GetByTag("foo")

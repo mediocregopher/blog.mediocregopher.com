@@ -48,9 +48,10 @@ type StoredPost struct {
 // Store is used for storing posts to a persistent storage.
 type Store interface {
 
-	// Set sets the Post data into the storage, keyed by the Post's ID. It
-	// overwrites a previous Post with the same ID, if there was one.
-	Set(post Post, now time.Time) error
+	// Set sets the Post data into the storage, keyed by the Post's ID. If there
+	// was not a previously existing Post with the same ID then Set returns
+	// true. It overwrites the previous Post with the same ID otherwise.
+	Set(post Post, now time.Time) (bool, error)
 
 	// Get returns count StoredPosts, sorted time descending, offset by the
 	// given page number. The returned boolean indicates if there are more pages
@@ -114,13 +115,15 @@ func (s *store) withTx(cb func(*sql.Tx) error) error {
 	return nil
 }
 
-func (s *store) Set(post Post, now time.Time) error {
+func (s *store) Set(post Post, now time.Time) (bool, error) {
 
 	if post.ID == "" {
-		return errors.New("post ID can't be empty")
+		return false, errors.New("post ID can't be empty")
 	}
 
-	return s.withTx(func(tx *sql.Tx) error {
+	var first bool
+
+	err := s.withTx(func(tx *sql.Tx) error {
 
 		nowTS := now.Unix()
 
@@ -173,8 +176,17 @@ func (s *store) Set(post Post, now time.Time) error {
 			}
 		}
 
+		err = tx.QueryRow(
+			`SELECT 1 FROM posts WHERE id=? AND last_updated_at IS NULL`,
+			post.ID,
+		).Scan(new(int))
+
+		first = !errors.Is(err, sql.ErrNoRows)
+
 		return nil
 	})
+
+	return first, err
 }
 
 func (s *store) get(
