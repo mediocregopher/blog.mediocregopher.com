@@ -84,14 +84,20 @@ func (a *api) postToPostTplPayload(storedPost post.StoredPost) (postTplPayload, 
 func (a *api) renderPostHandler() http.Handler {
 
 	tpl := a.mustParseBasedTpl("post.html")
-	renderIndexHandler := a.renderPostsIndexHandler()
+	renderPostsIndexHandler := a.renderPostsIndexHandler()
+	renderEditPostHandler := a.renderEditPostHandler()
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
 		id := strings.TrimSuffix(filepath.Base(r.URL.Path), ".html")
 
 		if id == "/" {
-			renderIndexHandler.ServeHTTP(rw, r)
+			renderPostsIndexHandler.ServeHTTP(rw, r)
+			return
+		}
+
+		if _, ok := r.URL.Query()["edit"]; ok {
+			renderEditPostHandler.ServeHTTP(rw, r)
 			return
 		}
 
@@ -167,7 +173,7 @@ func (a *api) renderPostsIndexHandler() http.Handler {
 	})
 }
 
-func (a *api) editPostHandler() http.Handler {
+func (a *api) renderEditPostHandler() http.Handler {
 
 	tpl := a.mustParseBasedTpl("edit-post.html")
 
@@ -208,8 +214,9 @@ func postFromPostReq(r *http.Request) (post.Post, error) {
 	}
 
 	// textareas encode newlines as CRLF for historical reasons
+	p.Body = r.PostFormValue("body")
 	p.Body = strings.ReplaceAll(p.Body, "\r\n", "\n")
-	p.Body = strings.TrimSpace(r.PostFormValue("body"))
+	p.Body = strings.TrimSpace(p.Body)
 
 	if p.ID == "" ||
 		p.Title == "" ||
@@ -239,7 +246,7 @@ func (a *api) postPostHandler() http.Handler {
 			return
 		}
 
-		redirectPath := fmt.Sprintf("posts/%s?method=edit", p.ID)
+		redirectPath := fmt.Sprintf("posts/%s?edit", p.ID)
 
 		a.executeRedirectTpl(rw, r, redirectPath)
 	})

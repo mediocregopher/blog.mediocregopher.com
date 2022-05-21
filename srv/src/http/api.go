@@ -204,8 +204,7 @@ func (a *api) handler() http.Handler {
 
 	mux.Handle("/posts/", http.StripPrefix("/posts",
 		apiutil.MethodMux(map[string]http.Handler{
-			"GET":  a.renderPostHandler(),
-			"EDIT": a.editPostHandler(),
+			"GET": a.renderPostHandler(),
 			"POST": authMiddleware(a.auther,
 				formMiddleware(a.postPostHandler()),
 			),

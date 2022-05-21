@@ -22,7 +22,7 @@
 
 
   <p style="text-align: center;">
-    <a href="{{ BlogURL "posts/" }}?method=edit">
+    <a href="{{ BlogURL "posts/" }}?edit">
       <button>New Post</button>
     </a>
   </p>
@@ -36,7 +36,7 @@
         <td>{{ .PublishedAt }}</td>
         <td><a href="{{ PostURL .ID }}" target="_blank">{{ .Title }}</a></td>
         <td>
-          <a href="{{ PostURL .ID }}?method=edit">
+          <a href="{{ PostURL .ID }}?edit">
             <button>Edit</button>
           </a>
         </td>
