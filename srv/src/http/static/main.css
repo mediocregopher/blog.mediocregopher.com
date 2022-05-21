@@ -7,6 +7,11 @@ html {
     src: url("overpass-regular.woff") format('woff');
 }
 
+@font-face {
+    font-family: "SourceCodePro";
+    src: url(SourceCodePro-VariableFont_wght.ttf);
+}
+
 h1, h2, h3, h4, h5, h6, .button-primary, .button {
     font-family: "Overpass", Helvetica;
 }
@@ -17,6 +22,11 @@ ul {
 
 form {
     margin-bottom: 0;
+}
+
+code {
+    font-family: "SourceCodePro", monospace;
+    background: #f0f0f0;
 }
 
 .light {
