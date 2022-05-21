@@ -216,6 +216,8 @@ func (a *api) blogHandler() http.Handler {
 
 	mux.Handle("/static/", http.FileServer(http.FS(staticFS)))
 	mux.Handle("/follow", a.renderDumbTplHandler("follow.html"))
+	mux.Handle("/mailinglist/unsubscribe", a.renderDumbTplHandler("unsubscribe.html"))
+	mux.Handle("/mailinglist/finalize", a.renderDumbTplHandler("finalize.html"))
 	mux.Handle("/feed.xml", a.renderFeedHandler())
 	mux.Handle("/", a.renderIndexHandler())
 

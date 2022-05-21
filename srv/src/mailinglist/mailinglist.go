@@ -126,7 +126,7 @@ func (m *mailingList) BeginSubscription(email string) error {
 		SubLink string
 	}{
 		SubLink: fmt.Sprintf(
-			"%s/mailinglist/finalize.html?subToken=%s",
+			"%s/mailinglist/finalize?subToken=%s",
 			m.params.PublicURL.String(),
 			emailRecord.SubToken,
 		),
@@ -242,7 +242,7 @@ func (m *mailingList) Publish(postTitle, postURL string) error {
 			PostTitle: postTitle,
 			PostURL:   postURL,
 			UnsubURL: fmt.Sprintf(
-				"%s/mailinglist/unsubscribe.html?unsubToken=%s",
+				"%s/mailinglist/unsubscribe?unsubToken=%s",
 				m.params.PublicURL.String(),
 				emailRecord.UnsubToken,
 			),
