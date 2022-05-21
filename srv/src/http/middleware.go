@@ -182,6 +182,7 @@ func purgeCacheOnOKMiddleware(cache *lru.Cache) middleware {
 			h.ServeHTTP(wrw, r)
 
 			if wrw.statusCode == 200 {
+				apiutil.GetRequestLogger(r).Info(r.Context(), "purging cache!")
 				cache.Purge()
 			}
 		})

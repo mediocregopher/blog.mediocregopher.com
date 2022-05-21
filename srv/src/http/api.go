@@ -161,7 +161,32 @@ func (a *api) Shutdown(ctx context.Context) error {
 	return nil
 }
 
-func (a *api) handler() http.Handler {
+func (a *api) apiHandler() http.Handler {
+	mux := http.NewServeMux()
+	mux.Handle("/pow/challenge", a.newPowChallengeHandler())
+	mux.Handle("/pow/check",
+		a.requirePowMiddleware(
+			http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {}),
+		),
+	)
+
+	mux.Handle("/mailinglist/subscribe", a.requirePowMiddleware(a.mailingListSubscribeHandler()))
+	mux.Handle("/mailinglist/finalize", a.mailingListFinalizeHandler())
+	mux.Handle("/mailinglist/unsubscribe", a.mailingListUnsubscribeHandler())
+
+	mux.Handle("/chat/global/", http.StripPrefix("/chat/global", newChatHandler(
+		a.params.GlobalRoom,
+		a.params.UserIDCalculator,
+		a.requirePowMiddleware,
+	)))
+
+	// disallowGetMiddleware is used rather than a MethodMux because it has an
+	// exception for websockets, which is needed for chat.
+	return disallowGetMiddleware(mux)
+
+}
+
+func (a *api) blogHandler() http.Handler {
 
 	cache, err := lru.New(5000)
 
@@ -171,32 +196,6 @@ func (a *api) handler() http.Handler {
 	}
 
 	mux := http.NewServeMux()
-
-	{
-		apiMux := http.NewServeMux()
-		apiMux.Handle("/pow/challenge", a.newPowChallengeHandler())
-		apiMux.Handle("/pow/check",
-			a.requirePowMiddleware(
-				http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {}),
-			),
-		)
-
-		apiMux.Handle("/mailinglist/subscribe", a.requirePowMiddleware(a.mailingListSubscribeHandler()))
-		apiMux.Handle("/mailinglist/finalize", a.mailingListFinalizeHandler())
-		apiMux.Handle("/mailinglist/unsubscribe", a.mailingListUnsubscribeHandler())
-
-		apiMux.Handle("/chat/global/", http.StripPrefix("/chat/global", newChatHandler(
-			a.params.GlobalRoom,
-			a.params.UserIDCalculator,
-			a.requirePowMiddleware,
-		)))
-
-		mux.Handle("/api/", http.StripPrefix("/api",
-			// disallowGetMiddleware is used rather than a MethodMux because it
-			// has an exception for websockets, which is needed for chat.
-			disallowGetMiddleware(apiMux),
-		))
-	}
 
 	mux.Handle("/posts/", http.StripPrefix("/posts",
 		apiutil.MethodMux(map[string]http.Handler{
@@ -220,19 +219,36 @@ func (a *api) handler() http.Handler {
 	mux.Handle("/feed.xml", a.renderFeedHandler())
 	mux.Handle("/", a.renderIndexHandler())
 
-	globalHandler := http.Handler(mux)
-
-	globalHandler = apiutil.MethodMux(map[string]http.Handler{
+	h := apiutil.MethodMux(map[string]http.Handler{
 		"GET": applyMiddlewares(
-			globalHandler,
-			logReqMiddleware,
+			mux,
+			logReqMiddleware, // only log GETs on cache miss
 			cacheMiddleware(cache),
+		),
+		"*": applyMiddlewares(
+			mux,
+			purgeCacheOnOKMiddleware(cache),
+			authMiddleware(a.auther),
+		),
+	})
+
+	return h
+}
+
+func (a *api) handler() http.Handler {
+
+	mux := http.NewServeMux()
+
+	mux.Handle("/api/", http.StripPrefix("/api", a.apiHandler()))
+	mux.Handle("/", a.blogHandler())
+
+	h := apiutil.MethodMux(map[string]http.Handler{
+		"GET": applyMiddlewares(
+			mux,
 			setCSRFMiddleware,
 		),
 		"*": applyMiddlewares(
-			globalHandler,
-			purgeCacheOnOKMiddleware(cache),
-			authMiddleware(a.auther),
+			mux,
 			checkCSRFMiddleware,
 			addResponseHeadersMiddleware(map[string]string{
 				"Cache-Control": "no-store, max-age=0",
@@ -243,7 +259,7 @@ func (a *api) handler() http.Handler {
 		),
 	})
 
-	globalHandler = setLoggerMiddleware(a.params.Logger)(globalHandler)
+	h = setLoggerMiddleware(a.params.Logger)(h)
 
-	return globalHandler
+	return h
 }
