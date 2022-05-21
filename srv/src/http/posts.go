@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	txttpl "text/template"
 	"time"
 
 	"github.com/gomarkdown/markdown"
@@ -17,6 +18,40 @@ import (
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/post"
 )
 
+func (a *api) parsePostBody(storedPost post.StoredPost) (*txttpl.Template, error) {
+	tpl := txttpl.New("root")
+	tpl = tpl.Funcs(txttpl.FuncMap(a.tplFuncs()))
+
+	tpl = txttpl.Must(tpl.New("image.html").Parse(mustReadTplFile("image.html")))
+	tpl = tpl.Funcs(txttpl.FuncMap{
+		"Image": func(id string) (string, error) {
+
+			tplPayload := struct {
+				ID        string
+				Resizable bool
+			}{
+				ID:        id,
+				Resizable: isImgResizable(id),
+			}
+
+			buf := new(bytes.Buffer)
+			if err := tpl.ExecuteTemplate(buf, "image.html", tplPayload); err != nil {
+				return "", err
+			}
+
+			return buf.String(), nil
+		},
+	})
+
+	tpl, err := tpl.New(storedPost.ID + "-body.html").Parse(storedPost.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return tpl, nil
+}
+
 type postTplPayload struct {
 	post.StoredPost
 	SeriesPrevious, SeriesNext *post.StoredPost
@@ -25,7 +60,7 @@ type postTplPayload struct {
 
 func (a *api) postToPostTplPayload(storedPost post.StoredPost) (postTplPayload, error) {
 
-	bodyTpl, err := a.parseTpl(storedPost.ID+"-body.html", storedPost.Body)
+	bodyTpl, err := a.parsePostBody(storedPost)
 	if err != nil {
 		return postTplPayload{}, fmt.Errorf("parsing post body as template: %w", err)
 	}

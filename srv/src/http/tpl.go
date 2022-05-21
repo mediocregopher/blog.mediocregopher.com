@@ -1,7 +1,6 @@
 package http
 
 import (
-	"bytes"
 	"embed"
 	"fmt"
 	"html/template"
@@ -59,11 +58,8 @@ func (a *api) assetsURL(abs bool) string {
 	return a.blogURL("assets", abs)
 }
 
-func (a *api) parseTpl(name, tplBody string) (*template.Template, error) {
-
-	tpl := template.New("root")
-
-	tpl = tpl.Funcs(template.FuncMap{
+func (a *api) tplFuncs() template.FuncMap {
+	return template.FuncMap{
 		"BlogURL": func(path string) string {
 			return a.blogURL(path, false)
 		},
@@ -81,33 +77,17 @@ func (a *api) parseTpl(name, tplBody string) (*template.Template, error) {
 		"DateTimeFormat": func(t time.Time) string {
 			return t.Format("2006-01-02")
 		},
-	})
+	}
+}
 
-	tpl = template.Must(tpl.New("image.html").Parse(mustReadTplFile("image.html")))
+func (a *api) parseTpl(name, tplBody string) (*template.Template, error) {
 
-	tpl = tpl.Funcs(template.FuncMap{
-		"Image": func(id string) (template.HTML, error) {
-
-			tplPayload := struct {
-				ID        string
-				Resizable bool
-			}{
-				ID:        id,
-				Resizable: isImgResizable(id),
-			}
-
-			buf := new(bytes.Buffer)
-			if err := tpl.ExecuteTemplate(buf, "image.html", tplPayload); err != nil {
-				return "", err
-			}
-
-			return template.HTML(buf.Bytes()), nil
-		},
-	})
+	tpl := template.New(name)
+	tpl = tpl.Funcs(a.tplFuncs())
 
 	var err error
 
-	if tpl, err = tpl.New(name).Parse(tplBody); err != nil {
+	if tpl, err = tpl.Parse(tplBody); err != nil {
 		return nil, err
 	}
 
