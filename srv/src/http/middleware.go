@@ -10,33 +10,46 @@ import (
 	"github.com/mediocregopher/mediocre-go-lib/v2/mlog"
 )
 
-func addResponseHeaders(headers map[string]string, h http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		for k, v := range headers {
-			rw.Header().Set(k, v)
-		}
-		h.ServeHTTP(rw, r)
-	})
+type middleware func(http.Handler) http.Handler
+
+func applyMiddlewares(h http.Handler, middlewares ...middleware) http.Handler {
+	for _, m := range middlewares {
+		h = m(h)
+	}
+	return h
 }
 
-func setLoggerMiddleware(logger *mlog.Logger, h http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+func addResponseHeadersMiddleware(headers map[string]string) middleware {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+			for k, v := range headers {
+				rw.Header().Set(k, v)
+			}
+			h.ServeHTTP(rw, r)
+		})
+	}
+}
 
-		type reqInfoKey string
+func setLoggerMiddleware(logger *mlog.Logger) middleware {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+			type logCtxKey string
 
-		ctx := r.Context()
-		ctx = mctx.Annotate(ctx,
-			reqInfoKey("remote_ip"), ip,
-			reqInfoKey("url"), r.URL,
-			reqInfoKey("method"), r.Method,
-		)
+			ip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
-		r = r.WithContext(ctx)
-		r = apiutil.SetRequestLogger(r, logger)
-		h.ServeHTTP(rw, r)
-	})
+			ctx := r.Context()
+			ctx = mctx.Annotate(ctx,
+				logCtxKey("remote_ip"), ip,
+				logCtxKey("url"), r.URL,
+				logCtxKey("method"), r.Method,
+			)
+
+			r = r.WithContext(ctx)
+			r = apiutil.SetRequestLogger(r, logger)
+			h.ServeHTTP(rw, r)
+		})
+	}
 }
 
 type logResponseWriter struct {

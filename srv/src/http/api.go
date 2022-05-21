@@ -166,24 +166,6 @@ func (a *api) handler() http.Handler {
 		return a.requirePowMiddleware(h)
 	}
 
-	formMiddleware := func(h http.Handler) http.Handler {
-		wh := checkCSRFMiddleware(h)
-		wh = logReqMiddleware(wh)
-		wh = addResponseHeaders(map[string]string{
-			"Cache-Control": "no-store, max-age=0",
-			"Pragma":        "no-cache",
-			"Expires":       "0",
-		}, wh)
-
-		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-			if r.Method != "GET" {
-				wh.ServeHTTP(rw, r)
-			} else {
-				h.ServeHTTP(rw, r)
-			}
-		})
-	}
-
 	mux := http.NewServeMux()
 
 	{
@@ -215,17 +197,17 @@ func (a *api) handler() http.Handler {
 	mux.Handle("/posts/", http.StripPrefix("/posts",
 		apiutil.MethodMux(map[string]http.Handler{
 			"GET":     a.renderPostHandler(),
-			"POST":    authMiddleware(a.auther, a.postPostHandler()),
-			"DELETE":  authMiddleware(a.auther, a.deletePostHandler()),
-			"PREVIEW": authMiddleware(a.auther, a.previewPostHandler()),
+			"POST":    a.postPostHandler(),
+			"DELETE":  a.deletePostHandler(),
+			"PREVIEW": a.previewPostHandler(),
 		}),
 	))
 
 	mux.Handle("/assets/", http.StripPrefix("/assets",
 		apiutil.MethodMux(map[string]http.Handler{
 			"GET":    a.getPostAssetHandler(),
-			"POST":   authMiddleware(a.auther, a.postPostAssetHandler()),
-			"DELETE": authMiddleware(a.auther, a.deletePostAssetHandler()),
+			"POST":   a.postPostAssetHandler(),
+			"DELETE": a.deletePostAssetHandler(),
 		}),
 	))
 
@@ -234,10 +216,28 @@ func (a *api) handler() http.Handler {
 	mux.Handle("/feed.xml", a.renderFeedHandler())
 	mux.Handle("/", a.renderIndexHandler())
 
-	var globalHandler http.Handler = mux
-	globalHandler = formMiddleware(globalHandler)
-	globalHandler = setCSRFMiddleware(globalHandler)
-	globalHandler = setLoggerMiddleware(a.params.Logger, globalHandler)
+	globalHandler := http.Handler(mux)
+
+	globalHandler = apiutil.MethodMux(map[string]http.Handler{
+		"GET": applyMiddlewares(
+			globalHandler,
+			logReqMiddleware,
+			setCSRFMiddleware,
+		),
+		"*": applyMiddlewares(
+			globalHandler,
+			authMiddleware(a.auther),
+			checkCSRFMiddleware,
+			addResponseHeadersMiddleware(map[string]string{
+				"Cache-Control": "no-store, max-age=0",
+				"Pragma":        "no-cache",
+				"Expires":       "0",
+			}),
+			logReqMiddleware,
+		),
+	})
+
+	globalHandler = setLoggerMiddleware(a.params.Logger)(globalHandler)
 
 	return globalHandler
 }

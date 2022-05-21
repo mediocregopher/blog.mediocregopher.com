@@ -117,6 +117,9 @@ func RandStr(numBytes int) string {
 //
 // If no Handler is defined for a method then a 405 Method Not Allowed error is
 // returned.
+//
+// If the method "*" is defined then all methods not defined will be directed to
+// that handler, and 405 Method Not Allowed is never returned.
 func MethodMux(handlers map[string]http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
@@ -128,13 +131,16 @@ func MethodMux(handlers map[string]http.Handler) http.Handler {
 			method = formMethod
 		}
 
-		handler, ok := handlers[method]
-
-		if !ok {
-			http.Error(rw, "Method not allowed", http.StatusMethodNotAllowed)
+		if handler, ok := handlers[method]; ok {
+			handler.ServeHTTP(rw, r)
 			return
 		}
 
-		handler.ServeHTTP(rw, r)
+		if handler, ok := handlers["*"]; ok {
+			handler.ServeHTTP(rw, r)
+			return
+		}
+
+		http.Error(rw, "Method not allowed", http.StatusMethodNotAllowed)
 	})
 }

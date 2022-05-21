@@ -65,7 +65,7 @@ func (a *auther) Allowed(ctx context.Context, username, password string) bool {
 	return err == nil
 }
 
-func authMiddleware(auther Auther, h http.Handler) http.Handler {
+func authMiddleware(auther Auther) middleware {
 
 	respondUnauthorized := func(rw http.ResponseWriter, r *http.Request) {
 		rw.Header().Set("WWW-Authenticate", `Basic realm="NOPE"`)
@@ -73,20 +73,22 @@ func authMiddleware(auther Auther, h http.Handler) http.Handler {
 		apiutil.GetRequestLogger(r).WarnString(r.Context(), "unauthorized")
 	}
 
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		username, password, ok := r.BasicAuth()
+			username, password, ok := r.BasicAuth()
 
-		if !ok {
-			respondUnauthorized(rw, r)
-			return
-		}
+			if !ok {
+				respondUnauthorized(rw, r)
+				return
+			}
 
-		if !auther.Allowed(r.Context(), username, password) {
-			respondUnauthorized(rw, r)
-			return
-		}
+			if !auther.Allowed(r.Context(), username, password) {
+				respondUnauthorized(rw, r)
+				return
+			}
 
-		h.ServeHTTP(rw, r)
-	})
+			h.ServeHTTP(rw, r)
+		})
+	}
 }
