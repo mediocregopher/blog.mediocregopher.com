@@ -66,14 +66,19 @@ func (a *api) postToPostTplPayload(storedPost post.StoredPost) (postTplPayload, 
 	}
 
 	bodyBuf := new(bytes.Buffer)
+
 	if err := bodyTpl.Execute(bodyBuf, nil); err != nil {
 		return postTplPayload{}, fmt.Errorf("executing post body as template: %w", err)
 	}
 
+	// this helps the markdown renderer properly parse pages which end in a
+	// `</script>` tag... I don't know why.
+	_, _ = bodyBuf.WriteString("\n")
+
 	parserExt := parser.CommonExtensions | parser.AutoHeadingIDs
 	parser := parser.NewWithExtensions(parserExt)
 
-	htmlFlags := html.CommonFlags | html.HrefTargetBlank
+	htmlFlags := html.HrefTargetBlank
 	htmlRenderer := html.NewRenderer(html.RendererOptions{Flags: htmlFlags})
 
 	renderedBody := markdown.ToHTML(bodyBuf.Bytes(), parser, htmlRenderer)
