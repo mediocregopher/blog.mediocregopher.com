@@ -205,7 +205,21 @@ func (a *api) renderEditPostHandler() http.Handler {
 			}
 		}
 
-		executeTemplate(rw, r, tpl, storedPost)
+		tags, err := a.params.PostStore.GetTags()
+		if err != nil {
+			apiutil.InternalServerError(rw, r, fmt.Errorf("fetching tags: %w", err))
+			return
+		}
+
+		tplPayload := struct {
+			Post post.StoredPost
+			Tags []string
+		}{
+			Post: storedPost,
+			Tags: tags,
+		}
+
+		executeTemplate(rw, r, tpl, tplPayload)
 	})
 }
 

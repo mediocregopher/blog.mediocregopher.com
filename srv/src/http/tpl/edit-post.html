@@ -8,17 +8,17 @@
 
       <div class="columns six">
         <label for="idInput">Unique ID</label>
-        {{ if eq .Payload.ID "" }}
+        {{ if eq .Payload.Post.ID "" }}
           <input
               id="idInput"
               name="id"
               class="u-full-width"
               type="text"
               placeholder="e.g. how-to-fly-a-kite"
-              value="{{ .Payload.ID }}" />
+              value="{{ .Payload.Post.ID }}" />
         {{ else }}
-          <a href="{{ PostURL .Payload.ID }}" target="_blank">{{ .Payload.ID }}</a>
-          <input name="id" type="hidden" value="{{ .Payload.ID }}" />
+          <a href="{{ PostURL .Payload.Post.ID }}" target="_blank">{{ .Payload.Post.ID }}</a>
+          <input name="id" type="hidden" value="{{ .Payload.Post.ID }}" />
         {{ end }}
       </div>
 
@@ -29,7 +29,10 @@
             name="tags"
             class="u-full-width"
             type="text"
-            value="{{ range $i, $tag := .Payload.Tags }}{{ if ne $i 0 }} {{ end }}{{ $tag }}{{ end }}" />
+            value="{{ range $i, $tag := .Payload.Post.Tags }}{{ if ne $i 0 }} {{ end }}{{ $tag }}{{ end }}" />
+        <p class="light">
+          Existing tags: {{ range $i, $tag := .Payload.Tags }}{{ if ne $i 0 }} {{ end }}{{ $tag }}{{ end }}
+        </p>
       </div>
 
       <div class="columns three">
@@ -39,7 +42,7 @@
             name="series"
             class="u-full-width"
             type="text"
-            value="{{ .Payload.Series }}" />
+            value="{{ .Payload.Post.Series }}" />
       </div>
 
     </div>
@@ -53,7 +56,7 @@
             name="title"
             class="u-full-width"
             type="text"
-            value="{{ .Payload.Title }}" />
+            value="{{ .Payload.Post.Title }}" />
       </div>
 
       <div class="columns six">
@@ -63,7 +66,7 @@
             name="description"
             class="u-full-width"
             type="text"
-            value="{{ .Payload.Description }}" />
+            value="{{ .Payload.Post.Description }}" />
       </div>
 
     </div>
@@ -76,7 +79,7 @@
          placeholder="Blog body"
          style="height: 50vh;"
          >
-         {{- .Payload.Body -}}
+         {{- .Payload.Post.Body -}}
        </textarea>
       </div>
     </div>
@@ -84,7 +87,7 @@
     <input
       type="submit"
       value="Preview"
-      formaction="{{ BlogURL "posts/" }}{{ .Payload.ID }}?method=preview"
+      formaction="{{ BlogURL "posts/" }}{{ .Payload.Post.ID }}?method=preview"
       formtarget="_blank"
       />
 
