@@ -57,15 +57,16 @@ func (a *api) renderFeedHandler() http.Handler {
 
 			postURL := publicURL + filepath.Join("/posts", post.ID)
 
-			feed.Items = append(feed.Items, &feeds.Item{
+			item := &feeds.Item{
 				Title:       post.Title,
 				Link:        &feeds.Link{Href: postURL},
 				Author:      author,
 				Description: post.Description,
 				Id:          postURL,
-				Updated:     post.LastUpdatedAt,
 				Created:     post.PublishedAt,
-			})
+			}
+
+			feed.Items = append(feed.Items, item)
 		}
 
 		if err := feed.WriteAtom(rw); err != nil {
