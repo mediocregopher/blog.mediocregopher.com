@@ -1,7 +1,5 @@
 {{ define "body" }}
 
-{{ $csrfFormInput := .CSRFFormInput }}
-
 <h2>Upload Asset</h2>
 
 <p>
@@ -10,7 +8,6 @@
 </p>
 
 <form action="{{ BlogURL "assets/" }}" method="POST" enctype="multipart/form-data">
-  {{ $csrfFormInput }}
   <div class="row">
     <div class="four columns">
       <input type="text" placeholder="Unique ID" name="id" />
@@ -37,7 +34,6 @@
           method="POST"
           style="margin-bottom: 0;"
           >
-          {{ $csrfFormInput }}
           <input type="submit" value="Delete" />
         </form>
       </td>
@@ -45,8 +41,6 @@
   {{ end }}
 
 </table>
-
-{{ template "load-csrf.html" . }}
 
 {{ end }}
 

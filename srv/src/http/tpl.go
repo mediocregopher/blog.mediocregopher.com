@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
-	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -100,21 +99,12 @@ func (a *api) mustParseTpl(name string) *template.Template {
 
 func (a *api) mustParseBasedTpl(name string) *template.Template {
 	tpl := a.mustParseTpl(name)
-	tpl = template.Must(tpl.New("load-csrf.html").Parse(mustReadTplFile("load-csrf.html")))
 	tpl = template.Must(tpl.New("base.html").Parse(mustReadTplFile("base.html")))
 	return tpl
 }
 
 type tplData struct {
-	Payload   interface{}
-	CSRFToken string
-}
-
-func (t tplData) CSRFFormInput() template.HTML {
-	return template.HTML(fmt.Sprintf(
-		`<input type="hidden" name="%s" class="csrfHiddenInput" />`,
-		csrfTokenFormName,
-	))
+	Payload interface{}
 }
 
 // executeTemplate expects to be the final action in an http.Handler
@@ -123,11 +113,8 @@ func executeTemplate(
 	tpl *template.Template, payload interface{},
 ) {
 
-	csrfToken, _ := apiutil.GetCookie(r, csrfTokenCookieName, "")
-
 	tplData := tplData{
-		Payload:   payload,
-		CSRFToken: csrfToken,
+		Payload: payload,
 	}
 
 	if err := tpl.Execute(rw, tplData); err != nil {
@@ -141,7 +128,6 @@ func executeTemplate(
 func (a *api) executeRedirectTpl(
 	rw http.ResponseWriter, r *http.Request, url string,
 ) {
-	log.Printf("here url:%q", url)
 	executeTemplate(rw, r, a.redirectTpl, struct {
 		URL string
 	}{

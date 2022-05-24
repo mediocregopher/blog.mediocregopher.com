@@ -2,8 +2,6 @@
 
   <form method="POST" action="{{ BlogURL "posts/" }}">
 
-    {{ .CSRFFormInput }}
-
     <div class="row">
 
       <div class="columns six">
@@ -98,8 +96,6 @@
     </a>
 
   </form>
-
-  {{ template "load-csrf.html" . }}
 
 {{ end }}
 

@@ -3,76 +3,26 @@ package http
 import (
 	"errors"
 	"net/http"
+	"net/url"
 
 	"github.com/mediocregopher/blog.mediocregopher.com/srv/http/apiutil"
 )
 
-const (
-	csrfTokenCookieName = "csrf_token"
-	csrfTokenHeaderName = "X-CSRF-Token"
-	csrfTokenFormName   = "csrfToken"
-)
-
-func setCSRFMiddleware(h http.Handler) http.Handler {
+func (a *api) checkCSRFMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 
-		csrfTok, err := apiutil.GetCookie(r, csrfTokenCookieName, "")
-
+		refererURL, err := url.Parse(r.Referer())
 		if err != nil {
-			apiutil.InternalServerError(rw, r, err)
-			return
-
-		} else if csrfTok == "" {
-			http.SetCookie(rw, &http.Cookie{
-				Name:   csrfTokenCookieName,
-				Value:  apiutil.RandStr(32),
-				Secure: true,
-			})
-		}
-
-		h.ServeHTTP(rw, r)
-	})
-}
-
-func checkCSRFMiddleware(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-
-		csrfTok, err := apiutil.GetCookie(r, csrfTokenCookieName, "")
-
-		if err != nil {
-			apiutil.InternalServerError(rw, r, err)
+			apiutil.BadRequest(rw, r, errors.New("invalid Referer"))
 			return
 		}
 
-		givenCSRFTok := r.Header.Get(csrfTokenHeaderName)
-		if givenCSRFTok == "" {
-			givenCSRFTok = r.FormValue(csrfTokenFormName)
-		}
-
-		if csrfTok == "" || givenCSRFTok != csrfTok {
-			apiutil.BadRequest(rw, r, errors.New("invalid CSRF token"))
+		if refererURL.Scheme != a.params.PublicURL.Scheme ||
+			refererURL.Host != a.params.PublicURL.Host {
+			apiutil.BadRequest(rw, r, errors.New("invalid Referer"))
 			return
 		}
 
 		h.ServeHTTP(rw, r)
-	})
-}
-
-func (a *api) getCSRFTokenHandler() http.Handler {
-
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-
-		csrfTok, err := apiutil.GetCookie(r, csrfTokenCookieName, "")
-
-		if err != nil {
-			apiutil.InternalServerError(rw, r, err)
-			return
-		}
-
-		apiutil.JSONResult(rw, r, struct {
-			CSRFToken string
-		}{
-			CSRFToken: csrfTok,
-		})
 	})
 }

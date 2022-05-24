@@ -18,8 +18,6 @@
 
 {{ define "body" }}
 
-  {{ $csrfFormInput := .CSRFFormInput }}
-
   <p style="text-align: center;">
     <a href="{{ BlogURL "posts/" }}?edit">
       <button>New Post</button>
@@ -44,7 +42,6 @@
             action="{{ PostURL .ID }}?method=delete"
             method="POST"
             >
-            {{ $csrfFormInput }}
             <input type="submit" value="Delete" />
           </form>
         </td>
@@ -54,8 +51,6 @@
   </table>
 
   {{ template "posts-nextprev" . }}
-
-  {{ template "load-csrf.html" . }}
 
 {{ end }}
 
