@@ -20,7 +20,6 @@
 
   {{ $csrfFormInput := .CSRFFormInput }}
 
-
   <p style="text-align: center;">
     <a href="{{ BlogURL "posts/" }}?edit">
       <button>New Post</button>
@@ -55,6 +54,8 @@
   </table>
 
   {{ template "posts-nextprev" . }}
+
+  {{ template "load-csrf.html" . }}
 
 {{ end }}
 

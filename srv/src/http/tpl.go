@@ -100,6 +100,7 @@ func (a *api) mustParseTpl(name string) *template.Template {
 
 func (a *api) mustParseBasedTpl(name string) *template.Template {
 	tpl := a.mustParseTpl(name)
+	tpl = template.Must(tpl.New("load-csrf.html").Parse(mustReadTplFile("load-csrf.html")))
 	tpl = template.Must(tpl.New("base.html").Parse(mustReadTplFile("base.html")))
 	return tpl
 }
@@ -111,8 +112,8 @@ type tplData struct {
 
 func (t tplData) CSRFFormInput() template.HTML {
 	return template.HTML(fmt.Sprintf(
-		`<input type="hidden" name="%s" value="%s" />`,
-		csrfTokenFormName, t.CSRFToken,
+		`<input type="hidden" name="%s" class="csrfHiddenInput" />`,
+		csrfTokenFormName,
 	))
 }
 

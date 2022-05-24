@@ -1,0 +1,13 @@
+<script async type="module" src="{{ StaticURL "api.js" }}"></script>
+
+<script type="text/javascript">
+  (async () => {
+    const api = await import("{{ StaticURL "api.js" }}");
+    const res = await api.call("/api/csrf");
+
+    const els = document.getElementsByClassName("csrfHiddenInput");
+    for (let i = 0; i < els.length; i++) {
+      els[i].value = res.CSRFToken;
+    }
+  })();
+</script>

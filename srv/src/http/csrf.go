@@ -57,3 +57,22 @@ func checkCSRFMiddleware(h http.Handler) http.Handler {
 		h.ServeHTTP(rw, r)
 	})
 }
+
+func (a *api) getCSRFTokenHandler() http.Handler {
+
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+
+		csrfTok, err := apiutil.GetCookie(r, csrfTokenCookieName, "")
+
+		if err != nil {
+			apiutil.InternalServerError(rw, r, err)
+			return
+		}
+
+		apiutil.JSONResult(rw, r, struct {
+			CSRFToken string
+		}{
+			CSRFToken: csrfTok,
+		})
+	})
+}

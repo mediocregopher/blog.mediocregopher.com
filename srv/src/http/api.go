@@ -163,6 +163,9 @@ func (a *api) Shutdown(ctx context.Context) error {
 
 func (a *api) apiHandler() http.Handler {
 	mux := http.NewServeMux()
+
+	mux.Handle("/csrf", a.getCSRFTokenHandler())
+
 	mux.Handle("/pow/challenge", a.newPowChallengeHandler())
 	mux.Handle("/pow/check",
 		a.requirePowMiddleware(
