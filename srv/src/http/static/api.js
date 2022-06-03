@@ -1,7 +1,5 @@
 import * as utils from "/static/utils.js";
 
-const csrfTokenCookie  = "csrf_token";
-
 const doFetch = async (req) => {
   let res, jsonRes;
   try {
@@ -55,14 +53,8 @@ const call = async (route, opts = {}) => {
     requiresPow = false,
   } = opts;
 
-  if (!utils.cookies[csrfTokenCookie]) 
-    throw `${csrfTokenCookie} cookie not set, can't make api call`;
-
   const reqOpts = {
     method,
-    headers: {
-      "X-CSRF-Token": utils.cookies[csrfTokenCookie],
-    },
   };
 
   if (requiresPow) {
@@ -92,12 +84,6 @@ const ws = async (route, opts = {}) => {
   const protocol = docURL.protocol == "http:" ? "ws:" : "wss:";
 
   const fullParams = new URLSearchParams(params);
-  const csrfToken = utils.cookies[csrfTokenCookie];
-
-  if (!csrfToken)
-    throw `${csrfTokenCookie} cookie not set, can't make api call`;
-
-  fullParams.set("csrfToken", csrfToken);
 
   if (requiresPow) {
     const {seed, solution} = await solvePow();
