@@ -40,14 +40,23 @@ func setLoggerMiddleware(logger *mlog.Logger) middleware {
 
 			type logCtxKey string
 
-			ip, _, _ := net.SplitHostPort(r.RemoteAddr)
-
 			ctx := r.Context()
 			ctx = mctx.Annotate(ctx,
-				logCtxKey("remote_ip"), ip,
 				logCtxKey("url"), r.URL,
 				logCtxKey("method"), r.Method,
 			)
+
+			if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
+				ctx = mctx.Annotate(ctx, logCtxKey("x_forwarded_for"), xff)
+			}
+
+			if xrip := r.Header.Get("X-Real-IP"); xrip != "" {
+				ctx = mctx.Annotate(ctx, logCtxKey("x_real_ip"), xrip)
+			}
+
+			if ip, _, _ := net.SplitHostPort(r.RemoteAddr); ip != "" {
+				ctx = mctx.Annotate(ctx, logCtxKey("remote_ip"), ip)
+			}
 
 			r = r.WithContext(ctx)
 			r = apiutil.SetRequestLogger(r, logger)
