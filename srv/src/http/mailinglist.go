@@ -18,6 +18,10 @@ func (a *api) mailingListSubscribeHandler() http.Handler {
 			len(email) >= 512 {
 			apiutil.BadRequest(rw, r, errors.New("invalid email"))
 			return
+
+		} else if strings.ToLower(parts[1]) == "gmail.com" {
+			apiutil.BadRequest(rw, r, errors.New("gmail does not allow its users to receive email from me, sorry"))
+			return
 		}
 
 		err := a.params.MailingList.BeginSubscription(email)
